@@ -1,0 +1,17 @@
+
+/*login page*/
+
+@media(min-width: 992px){
+	.login.login-1 .login-aside {
+		width: 100%;
+		max-width: 600px;
+	}
+}
+
+@media(min-width: 992px) and (max-width: 1399.98px){
+	.login.login-1 .login-aside {
+		width: 100%;
+		max-width: 400px;
+	}
+}
+
