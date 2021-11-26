@@ -16,6 +16,6 @@ class Assign extends Model
     ];
 
     public function candidates() {
-        return $this->hasmany(Assigncandidate::class,  'id', 'assign_id');
+        return $this->hasMany(Assigncandidate::class, 'assign_id', 'id');
     }
 }

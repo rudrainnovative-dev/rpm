@@ -9,6 +9,7 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 import VTooltip from 'v-tooltip'
 Vue.use(VTooltip)
 
+
 // alert plugin on vue
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";

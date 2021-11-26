@@ -28,8 +28,10 @@ import TestQuestion from "./views/test/Question.vue";
 import PerformanceAdd from "./views/performance/Add.vue";
 import PerformanceShow from "./views/performance/Show.vue";
 
+import AssignList from "./views/assign/List.vue";
 import AssignAdd from "./views/assign/Add.vue";
-
+import AssignSend from "./views/assign/Send.vue";
+import AssignSendOne from "./views/assign/SendOne.vue";
 
 import PageNotFound from "./views/PageNotFound.vue";
 
@@ -229,6 +231,18 @@ const routes = [
     ],
   },
   {
+    path: '/assign',
+    component: DashboardLayout,
+    children: [
+      {
+        path: '',
+        component: AssignList,
+        name: 'AssignList',
+        meta: { title: 'Assign Candidate to Test | RPM', authOnly: true }
+      }
+    ],
+  },
+  {
     path: '/assign/add',
     component: DashboardLayout,
     children: [
@@ -236,11 +250,34 @@ const routes = [
         path: '',
         component: AssignAdd,
         name: 'AssignAdd',
-        meta: { title: 'Assign Candidate to Test | RPM', authOnly: true }
+        meta: { title: 'Set Assign Candidate to Test | RPM', authOnly: true }
       }
     ],
   },
-
+  {
+    path: '/assign/:id/send',
+    component: DashboardLayout,
+    children: [
+      {
+        path: '',
+        component: AssignSend,
+        name: 'AssignSend',
+        meta: { title: 'Mail Send to Candidates | RPM', authOnly: true }
+      }
+    ],
+  },
+  {
+    path: '/assign/:id/share',
+    component: DashboardLayout,
+    children: [
+      {
+        path: '',
+        component: AssignSendOne,
+        name: 'AssignSendOne',
+        meta: { title: 'Mail Send to Candidates | RPM', authOnly: true }
+      }
+    ],
+  },
   { path: "*", component: PageNotFound }
 ];
 

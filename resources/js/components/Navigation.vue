@@ -95,7 +95,7 @@
           </div>
 
           <div class="menu-item">
-            <router-link v-if="isLoggedIn" :to="{ name: 'AssignAdd' }" class="menu-link">
+            <router-link v-if="isLoggedIn" :to="{ name: 'AssignList' }" class="menu-link">
               <span class="menu-icon">
                 <span class="svg-icon svg-icon-2">
                   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -107,7 +107,7 @@
                   </svg>
                 </span>
               </span>
-              <span class="menu-title text-capitalize">Assign Candidate to Test</span>
+              <span class="menu-title text-capitalize">Assigned Candidates to Test</span>
             </router-link>
           </div>
         </div>

@@ -3,7 +3,7 @@
         <div class="toolbar" id="kt_toolbar">
             <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
                 <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title me-3 mb-5 mb-lg-0 lh-1">
-                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Question #</h1>                               
+                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Question #{{ this.$route.params.id }}</h1>                               
                     <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 mt-1">
                         <li class="breadcrumb-item text-muted">
                             <router-link :to='{name:"Dashboard"}' class="text-link small">Dashboard</router-link>
@@ -12,7 +12,7 @@
                             <router-link :to='{name:"Question"}' class="text-link small">Question Bank</router-link>
                         </li>
                         <li class="breadcrumb-item text-muted">
-                            <p class="text-muted m-0 small">Question #{{ question_id }}</p>
+                            <p class="text-muted m-0 small">Question #{{ this.$route.params.id }}</p>
                         </li>
                     </ul>
                 </div>

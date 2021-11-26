@@ -45,9 +45,9 @@
                               </div>
                               <div class="row" v-for="(rows, index) in performance.data" :key="index" v-if="type.id == index">
                                  <div class="col-md-12 col-12" v-for="(row, indx) in rows"> 
-                                    <div class="alert alert-dismissible fade show position-relative p-0" role="alert">
+                                    <div class="'alert'.indx alert-dismissible fade show position-relative p-0" role="'alert'.indx">
                                        <div class="row">
-                                          <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-light-dark bg-image-none btn-close bottom-0 end-0 top-unset opacity-100" data-bs-dismiss="alert" aria-label="Close" v-if="indx > 0" v-on:click="removeRow(type.id, indx)">
+                                          <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-light-dark bg-image-none btn-close bottom-0 end-0 top-unset opacity-100" data-bs-dismiss="'alert'.indx" aria-label="Close" v-if="indx > 0" v-on:click="removeRow(type.id, indx)">
                                              <i class="fa fa-minus"></i>
                                           </a>
                                           <p class="h5 text-center my-4" v-if="indx > 0">Or</p>

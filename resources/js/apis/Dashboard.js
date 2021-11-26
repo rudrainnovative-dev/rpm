@@ -2,9 +2,9 @@ import Api from "./Api";
 import Csrf from "./Csrf";
 
 export default {
-  async recentTest() {
+  async index() {
     let token = localStorage.access_token;
-    return Api.get("/dashboard/recent/test", { headers: { "Authorization" : `Bearer ${token}`} });
+    return Api.get("/dashboard", { headers: { "Authorization" : `Bearer ${token}`} });
   },
 
 

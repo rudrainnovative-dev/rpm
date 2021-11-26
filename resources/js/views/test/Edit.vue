@@ -3,7 +3,7 @@
         <div class="toolbar" id="kt_toolbar">
             <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
                 <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title me-3 mb-5 mb-lg-0 lh-1">
-                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Test Settings</h1>    
+                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Edit Test</h1>    
                     <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 mt-1">
                         <li class="breadcrumb-item text-muted">
                             <router-link :to='{name:"Dashboard"}' class="text-link small">Dashboard</router-link>
@@ -12,7 +12,7 @@
                             <router-link :to='{name:"Test"}' class="text-link small">All Tests</router-link>
                         </li>
                         <li class="breadcrumb-item text-muted">
-                            <p class="text-muted m-0 small">Test Settings</p>
+                            <p class="text-muted m-0 small">Edit Test</p>
                         </li>
                     </ul>
                 </div>
@@ -181,7 +181,7 @@
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-group d-flex align-items-center" v-if="test.assessment_type == 2">
                                                         <label class="control-label p-0 me-2 mb-0 fw-bold">From</label>
-                                                        <VueCtkDateTimePicker :no-value-to-custom-elem="false" v-model="test.assessment_time_from"  format="YYYY-MM-DD hh:mm a" formatted = "DD-MM-YYYY hh:mm a">
+                                                        <VueCtkDateTimePicker :no-value-to-custom-elem="false" v-model="test.assessment_time_from"  format="YYYY-MM-DD hh:mm a" formatted = "DD-MM-YYYY hh:mm a" :min-date="min_datetime">
                                                             <input type="text" class="form-control form-control-solid form-control-sm mw-lg-200px" placeholder="dd-mm-yyyy h:mm" required/>
                                                         </VueCtkDateTimePicker>
                                                     </div>
@@ -190,7 +190,7 @@
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-group d-flex align-items-center"  v-if="test.assessment_type == 2">
                                                         <label class="control-label p-0 me-2 mb-0 fw-bold">To</label>
-                                                        <VueCtkDateTimePicker :no-value-to-custom-elem="false" v-model="test.assessment_time_to"  format="YYYY-MM-DD hh:mm a" formatted = "DD-MM-YYYY hh:mm a">
+                                                        <VueCtkDateTimePicker :no-value-to-custom-elem="false" v-model="test.assessment_time_to"  format="YYYY-MM-DD hh:mm a" formatted = "DD-MM-YYYY hh:mm a" :min-date="min_datetime">
                                                             <input type="text" class="form-control form-control-solid form-control-sm mw-lg-200px" placeholder="dd-mm-yyyy hh:mm a" required/>
                                                         </VueCtkDateTimePicker>
                                                     </div>
@@ -357,7 +357,7 @@
     import Testpurpose from "../../apis/Testpurpose";
     import Question from "../../apis/Question";
     import Category from "../../apis/Category";
-
+    import moment from 'moment'
     import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
     import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
 
@@ -401,14 +401,17 @@
                     show: 'Show',
                     edit: 'Edit',
                     delete: 'Delete'
-                }
+                },
+                min_datetime: '',
             }
         },
         mounted() {
+            this.getCurrentDate()
             this.getPurposes()
             this.getCriteria()
             this.getCategory()
             this.getTest()
+
         },
         methods:{
             async getTest() {
@@ -549,8 +552,10 @@
             },
             async deleteQuestionFromTest() {
 
+            },
+            async getCurrentDate() {
+                this.min_datetime = moment(new Date()).format('YYYY-MM-DD hh:mm a')
             }
-
         }
     }
 </script>

@@ -43,7 +43,7 @@
                 <span class="d-block text-danger" v-if="error">{{ error }}</span>
               </div>
               <div class="form-group fv-plugins-icon-container mb-7">
-                <input type="submit" class="btn btn-primary font-weight-bold" value="Send Password Reset Link">
+                <input type="submit" class="btn btn-primary font-weight-bold" value="Submit">
               </div>
             </form>
             <form @submit.prevent="otpVerification" v-if="form.success == 2">
@@ -59,19 +59,19 @@
             <form @submit.prevent="resetPassword" v-if="form.success == 3">
               <div class="form-group fv-plugins-icon-container mb-7">
                 <input v-model="form.user_id" class="form-control" type="hidden" name="user_id" required>
-                <input v-model="form.password" class="form-control form-control-solid h-auto py-5 px-6 fw-normal" type="password" name="password" required>
+                <input v-model="form.password" class="form-control form-control-solid h-auto py-5 px-6 fw-normal" type="password" name="password" placeholder="New Password" required>
                 <span class="d-block text-danger" v-if="errors" v-for="err in errors">{{ err }}</span>
                 <span class="d-block text-danger" v-if="error">{{ error }}</span>
               </div>
               <div class="form-group fv-plugins-icon-container mb-7">
-                <input v-model="form.password_confirmation" class="form-control form-control-solid h-auto py-5 px-6 fw-normal" type="password" name="password_confirmation" required>
+                <input v-model="form.password_confirmation" class="form-control form-control-solid h-auto py-5 px-6 fw-normal" type="password" name="password_confirmation" placeholder="Confirm Password" required>
               </div>
               <div class="form-group fv-plugins-icon-container mb-7">
                 <input type="submit" class="btn btn-primary font-weight-bold" value="Update">
               </div>
             </form>
 
-            <div class="text-center mt-5 mb-15 mb-lg-0 flex-column-auto justify-content-center py-5 px-10">
+            <div class="mt-5 mb-15 mb-lg-0 flex-column-auto justify-content-center py-5">
               <span class="font-weight-bold text-dark-50">Rember Password</span>
                <router-link :to="{ name: 'Login' }" class="text-dark-50 text-hover-primary my-3 mr-2">Sign In</router-link>
             </div>

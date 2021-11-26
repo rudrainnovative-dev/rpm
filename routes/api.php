@@ -47,12 +47,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('testpurpose', TestpurposeController::class);
     Route::resource('performance', PerformanceController::class);
     Route::resource('assign', AssignController::class);
-    Route::get('/dashboard/recent/test', [DashboardController::class, 'recentTest']);
+    Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/question/test/{test_id}', [QuestionController::class, 'getTestQuestion']);
     Route::post('/question/upload', [QuestionController::class, 'uploadQuestions']);
     Route::post('test/duplicate', [TestController::class, 'duplicate']);
     Route::get('test/{id}/questions', [TestController::class, 'questions']);
-
+    Route::get('candidate/{id}/show', [AssignController::class, 'showCandidate']);
     Route::get('/criterias', function() {
         return response()->json([
             'message' => 'All criterias.',

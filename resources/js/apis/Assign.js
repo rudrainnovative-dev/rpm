@@ -12,6 +12,11 @@ export default {
     return Api.get(`/assign/${id}`, { headers: { "Authorization" : `Bearer ${token}`} });
   },
 
+  async showCandidate(id) {
+    let token = localStorage.access_token;
+    return Api.get(`/candidate/${id}/show`, { headers: { "Authorization" : `Bearer ${token}`} });
+  },
+
   async delete(id) {
     await Csrf.getCookie();
     let token = localStorage.access_token;
@@ -32,6 +37,9 @@ export default {
     let token = localStorage.access_token;
     return Api.get("/all_tests", { headers: { "Authorization" : `Bearer ${token}`} });
   },
+
+  
+  
 
 
 };

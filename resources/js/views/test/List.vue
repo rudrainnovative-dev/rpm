@@ -40,7 +40,7 @@
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="" role="menu">
                                             <li>
-                                                <router-link :to='{name:"TestEdit", params:{id: test.id}}' class="dropdown-item">Settings</router-link>
+                                                <router-link :to='{name:"TestEdit", params:{id: test.id}}' class="dropdown-item">Edit</router-link>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item" href="javascript:void(0)" v-on:click="duplicateTest(test.id)">Duplicate</a>
@@ -69,7 +69,7 @@
                                 </div>
                                 <ul class="list-unstyled mb-0 mt-7 d-flex list-inline"> 
                                     <li class="list-inline-item w-50">
-                                        <router-link :to='{name:"TestShow", params:{id:test.id}}' class="btn btn-light-dark btn-sm w-100">View Test</router-link>
+                                        <router-link :to='{name:"TestShow", params:{id:test.id}}' class="btn btn-light-dark btn-sm w-100">Preview Test</router-link>
                                     </li>
                                     <li class="list-inline-item w-50">
                                         <button class="btn btn-light-dark btn-sm w-100">0 Candidate(s)</button>

@@ -21,4 +21,7 @@ class Assigncandidate extends Model
         'share'
     ];
 
+    public function test() {
+        return $this->hasOne(Test::class, 'id', 'test_id');
+    }
 }

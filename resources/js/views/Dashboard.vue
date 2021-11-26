@@ -21,12 +21,22 @@
                 <table class="table table-rounded table-striped border gy-7 gs-7 m-0">
                   <thead>
                     <tr class="fw-bold fs-6 text-gray-800 border-bottom border-gray-200">
-                      <th class="fw-bolder align-middle">Candidate Name</th>
+                      <th class="fw-bolder align-middle">Candidate</th>
                       <th class="fw-bolder align-middle">Test Date</th>
                       <th class="fw-bolder align-middle">Test Name</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody v-if="upcomming_test.length > 0">
+                      <tr v-for="test in upcomming_test">
+                        <td class="align-middle">{{ test.email }}</td>
+                        <td class="align-middle">
+                          <span class="badge badge-light my-1">{{ test.start.split(' ')[0] }}</span>
+                          <span class="badge badge-light my-1">{{ test.end.split(' ')[0] }}</span>
+                        </td>
+                        <td class="align-middle">{{ test.test.name }}</td>
+                      </tr>
+                  </tbody>
+                  <tbody v-else>
                       <tr>
                         <td colspan="3" class="align-middle">No any Upcoming Tests.</td>
                       </tr>
@@ -60,6 +70,11 @@
                     </td>
                   </tr>
                 </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td colspan="3" class="align-middle">No any record(s).</td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </div>
@@ -82,18 +97,7 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td class="align-middle"></td>
-                      <td class="align-middle"></td>
-                      <td class="align-middle"></td>
-                      <td class="align-middle">
-                        <!-- <ul class="list-unstyled list-inline m-0">
-                          <li class="list-inline-item">
-                            <button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button"><i class="p-0 fa fa-eye"></i></button>
-                          </li>
-                          <li class="list-inline-item">
-                            <button class="btn btn-sm btn-light-primary p-0 text-center h-30px w-30px" type="button"><i class="p-0 fa fa-download"></i></button>
-                          </li>
-                        </ul> -->
+                      <td class="align-middle" colspan="4">No any record found(s).</td>
                       </td>
                     </tr>
                   </tbody>
@@ -116,6 +120,7 @@ export default {
   data() {
     return {
         recent_test: {},
+        upcomming_test: {},
         loader_spin: true,
         tooltip: {
             show: 'Show',
@@ -125,10 +130,17 @@ export default {
     };
   },
   mounted() {
-    Dashboard.recentTest().then(response => {
-      this.recent_test = response.data.tests;
-      this.loader_spin = false
-    });
+    this.getData()
+  },
+  methods: {
+    async getData() {
+      Dashboard.index().then(response => {
+        this.recent_test = response.data.tests
+        this.upcomming_test = response.data.upcomming_test
+        this.loader_spin = false
+      });
+    }
   }
+
 };
 </script>
