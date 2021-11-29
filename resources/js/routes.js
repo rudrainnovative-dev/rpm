@@ -24,6 +24,7 @@ import TestAdd from "./views/test/Add.vue";
 import TestEdit from "./views/test/Edit.vue";
 import TestShow from "./views/test/Show.vue";
 import TestQuestion from "./views/test/Question.vue";
+import TestUserField from "./views/test/InputFields.vue";
 
 import PerformanceAdd from "./views/performance/Add.vue";
 import PerformanceShow from "./views/performance/Show.vue";
@@ -183,14 +184,14 @@ const routes = [
     ],
   },
   {
-    path: '/test/:id/show',
+    path: '/test/:id/preview',
     component: DashboardLayout,
     children: [
       {
         path: '',
         component: TestShow,
         name: 'TestShow',
-        meta: { title: 'Test - RPM', authOnly: true }
+        meta: { title: 'Preview Test - RPM' }
       }
     ],
   },
@@ -203,6 +204,18 @@ const routes = [
         component: TestQuestion,
         name: 'TestQuestion',
         meta: { title: 'Test Questions | RPM', authOnly: true }
+      }
+    ],
+  },
+  {
+    path: '/test/:id/fields',
+    component: DashboardLayout,
+    children: [
+      {
+        path: '',
+        component: TestUserField,
+        name: 'TestUserField',
+        meta: { title: 'Registration Fields for Candidate - RPM', authOnly: true }
       }
     ],
   },

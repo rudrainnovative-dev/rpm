@@ -46,6 +46,9 @@
                                                 <a class="dropdown-item" href="javascript:void(0)" v-on:click="duplicateTest(test.id)">Duplicate</a>
                                             </li>
                                             <li>
+                                                <router-link :to='{name:"TestUserField", params:{id: test.id}}' class="dropdown-item">Registration Fields for Candidate</router-link>
+                                            </li>
+                                            <li>
                                                 <a class="dropdown-item" href="javascript:void(0)" v-on:click="deleteTest(test.id)">Delete</a>
                                             </li>
                                         </ul>
@@ -56,7 +59,7 @@
                             <div class="test-custom card-body">
                                 <div class="test-content mt-5">
                                     <p class="sections">
-                                        4 Sections
+                                       4 Sections
                                     </p>
                                     <p class="d-flex justify-content-between align-items-center border-bottom py-4 border-top">
                                         <span>{{ test.test_questions.length }} Questions</span>
@@ -69,7 +72,7 @@
                                 </div>
                                 <ul class="list-unstyled mb-0 mt-7 d-flex list-inline"> 
                                     <li class="list-inline-item w-50">
-                                        <router-link :to='{name:"TestShow", params:{id:test.id}}' class="btn btn-light-dark btn-sm w-100">Preview Test</router-link>
+                                        <router-link :to='{name:"TestShow", params:{id:test.public_id}}' class="btn btn-light-dark btn-sm w-100">Preview Test</router-link>
                                     </li>
                                     <li class="list-inline-item w-50">
                                         <button class="btn btn-light-dark btn-sm w-100">0 Candidate(s)</button>
@@ -138,7 +141,6 @@
 
 import Test from "../../apis/Test";
 
-
 export default {
     name:"tests",
     data(){
@@ -166,7 +168,7 @@ export default {
     methods:{
         async getTests(page=1) {
           Test.index(page).then(response => {
-            this.tests = response.data.tests;
+            this.tests = response.data.tests
             this.testsData = response.data.tests.data
             this.loader_spin = false
           })
@@ -195,13 +197,9 @@ export default {
             this.model_show = false
 
             Test.duplicateTest(this.duplicate).then(response => {
-                
-                console.log(response)
-
                 this.getTests()
                 this.loader_spin = false
                 this.$toast.success(response.data.message);
-
             }).catch(error=>{
                 this.loader_spin = true
             })

@@ -7,12 +7,20 @@ use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Assigncandidate;
 use Carbon\Carbon;
+use Auth;
+
 class DashboardController extends Controller
 {
-    public function index() {
-        $tests = Test::with(['purpose','test_questions'])->orderBy('id', 'desc')->limit(5)->get();
+    public function index(request $request) {
+        $user_id = Auth::id();
+        $tests = Test::with(['purpose','test_questions'])
+                ->where('user_id', $user_id)
+                ->orderBy('id', 'desc')
+                ->limit(5)
+                ->get();
 
         $upcomming_test = Assigncandidate::with(['test'])
+                    ->where('user_id', $user_id)
                     ->whereDate('end', '>', Carbon::now())
                     ->orderBy('id', 'desc')
                     ->limit(5)
@@ -22,7 +30,8 @@ class DashboardController extends Controller
             'success' => true,
             'message' => 'All Question.',
             'tests' => $tests,
-            'upcomming_test' => $upcomming_test
+            'upcomming_test' => $upcomming_test,
+            'user' => $request->user()
         ], 200);
     }
 

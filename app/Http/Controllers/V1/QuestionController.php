@@ -11,7 +11,7 @@ use App\Models\Category;
 use App\Imports\QuestionImport;
 use Excel;
 use File;
-
+use Auth;
 class QuestionController extends Controller
 {
     function __construct() {
@@ -24,7 +24,11 @@ class QuestionController extends Controller
     public function index(Request $request) {
 
         if($request->category_id) {
-            $questions = Questionbank::where('category_id', $request->category_id)->with(['category', 'options'])->orderBy('id','desc')->get();
+            $questions = Questionbank::where('category_id', $request->category_id)
+                ->where('user_id', Auth::id())
+                ->with(['category', 'options'])
+                ->orderBy('id','desc')
+                ->get();
             
             return response()->json([
                 'success' => true,
@@ -33,7 +37,10 @@ class QuestionController extends Controller
             ], 200);
         }
         else {
-            $questions = Questionbank::with(['category', 'options'])->orderBy('id','desc')->paginate(5);
+            $questions = Questionbank::with(['category', 'options'])
+                        ->where('user_id', Auth::id())
+                        ->orderBy('id','desc')
+                        ->paginate(5);
             
             return response()->json([
                 'success' => true,
@@ -60,6 +67,7 @@ class QuestionController extends Controller
         $question->marks = $request->marks;
         $question->correct = $request->correct;
         $question->answers_justification = $request->answers_justification;
+        $question->user_id = Auth::id();
         $question->save();
 
         if($question->id) {
@@ -68,6 +76,7 @@ class QuestionController extends Controller
                     $options = new Questionoption;
                     $options->question_id = $question->id;
                     $options->option = $value;
+                    $options->user_id = Auth::id();
                     $options->save();
                 }
             } 
@@ -81,7 +90,9 @@ class QuestionController extends Controller
 
     public function show(Questionbank $question) {
         
-        $options = Questionoption::where('question_id', $question->id)->get();
+        $options = Questionoption::where('question_id', $question->id)
+                    ->where('user_id', Auth::id())
+                    ->get();
 
         return response()->json([
             'success' => true,
@@ -130,8 +141,8 @@ class QuestionController extends Controller
     }
     
     public function destroy(Questionbank $question) {
-        $question->delete();
-        Questionoption::where('question_id', $question->id)->delete();
+        $question->where('user_id', Auth::id())->delete();
+        Questionoption::where('question_id', $question->id)->where('user_id', Auth::id())->delete();
         
         return response()->json([
             'success' => true,
@@ -141,7 +152,7 @@ class QuestionController extends Controller
 
     public function getTestQuestion($test_id) {
         if($test_id) {
-            $question_ids = Testquestion::where('test_id', $test_id)->pluck('question_id');
+            $question_ids = Testquestion::where('test_id', $test_id)->where('user_id', Auth::id())->pluck('question_id');
             $questions = Questionbank::whereIn('id', $question_ids)->with(['category', 'options'])->get();
             return response()->json([
                 'success' => true,

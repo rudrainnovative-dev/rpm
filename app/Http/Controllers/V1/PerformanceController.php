@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Performancetype;
 use App\Models\Performancecriteria;
 use App\Models\Performancecriteriaoption;
+use Auth;
 
 class PerformanceController extends Controller
 {
@@ -19,8 +20,8 @@ class PerformanceController extends Controller
 
     public function index(Request $request) {
         
-        $current_performance = Performancecriteria::with(['options'])->orderBy('id', 'desc')->first();
-        $performance_criterias = Performancecriteria::orderBy('id', 'desc')->get();
+        $current_performance = Performancecriteria::with(['options'])->where('user_id', Auth::id())->orderBy('id', 'desc')->first();
+        $performance_criterias = Performancecriteria::where('user_id', Auth::id())->orderBy('id', 'desc')->get();
         $performance_type = Performancetype::orderBy('id', 'asc')->get();
 
         return response()->json([
@@ -39,8 +40,8 @@ class PerformanceController extends Controller
 
     public function store(Request $request) {
         
-        
         $performanceCriteria = new Performancecriteria;
+        $performanceCriteria->user_id = Auth::id();
         $performanceCriteria->save();
 
         $options = [];
@@ -56,6 +57,7 @@ class PerformanceController extends Controller
                         $options[$i]['formula'] = isset($val['formula'])?$val['formula']:'';
                         $options[$i]['score'] = isset($val['score'])?$val['score']:'';
                         $options[$i]['remarks'] = isset($request->remarks[$id])?$request->remarks[$id]:'';
+                        $options[$i]['user_id'] = Auth::id();
                         $options[$i]['created_at'] = Date('Y-m-d H:i:s');
                         $options[$i]['updated_at'] = Date('Y-m-d H:i:s');
                         $i++;
@@ -76,7 +78,7 @@ class PerformanceController extends Controller
 
     public function show(Performancecriteria $performance) {
     
-        $current_performance = Performancecriteria::with(['options'])->where('id', $performance->id)->first();
+        $current_performance = Performancecriteria::with(['options'])->where('user_id', Auth::id())->where('id', $performance->id)->first();
         $performance_type = Performancetype::orderBy('id', 'asc')->get();
         return response()->json([
             'success' => true,
@@ -113,6 +115,7 @@ class PerformanceController extends Controller
                 $options[$i]['formula'] = isset($request->formula[$type_id])?$request->formula[$type_id]:'';
                 $options[$i]['score'] = isset($request->score[$type_id])?$request->score[$type_id]:'';
                 $options[$i]['remarks'] = isset($request->remarks[$type_id])?$request->remarks[$type_id]:'';
+                $options[$i]['user_id'] = Auth::id();
                 $options[$i]['created_at'] = Date('Y-m-d H:i:s');
                 $options[$i]['updated_at'] = Date('Y-m-d H:i:s');
                 $i++;
@@ -120,7 +123,7 @@ class PerformanceController extends Controller
         }
 
         if(!empty($options)) {
-            Performancecriteriaoption::where('performance_criteria_id', $performance->id)->delete();
+            Performancecriteriaoption::where('performance_criteria_id', $performance->id)->where('user_id', Auth::id())->delete();
             Performancecriteriaoption::insert($options);
         }
 
@@ -133,7 +136,7 @@ class PerformanceController extends Controller
     public function destroy(Performancecriteria $performance) {
         
         $performance->delete();
-        Performancecriteriaoption::where('performance_criteria_id', $performance->id)->delete();
+        Performancecriteriaoption::where('performance_criteria_id', $performance->id)->where('user_id', Auth::id())->delete();
         
         return response()->json([
             'success' => true,

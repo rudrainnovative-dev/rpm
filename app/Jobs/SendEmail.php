@@ -9,7 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Mail;
-
+use App\Models\Assigncandidate;
 class SendEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -60,6 +60,8 @@ class SendEmail implements ShouldQueue
                 $message->to($inputs['email'], $inputs['name'])
                     ->subject($inputs['subject']);
             });
+
+            Assigncandidate::where('id', $list['id'])->update(['share' => 1, 'updated_at' => Date('Y-m-d H:i:s')]);
         }
     }
 }

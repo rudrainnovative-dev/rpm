@@ -42,4 +42,8 @@ class Test extends Model
     public function section_settings() {
         return $this->hasMany(Sectionsetting::class, 'test_id', 'id');
     }
+
+    public function test_sections() {
+        return $this->hasMany(Testquestion::class, 'test_id', 'id')->groupBy('category_id');
+    }
 }

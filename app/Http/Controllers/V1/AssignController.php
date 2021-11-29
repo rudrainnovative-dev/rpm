@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Assign;
 use App\Models\Assigncandidate;
+use Auth;
 
 class AssignController extends Controller
 {
@@ -18,7 +19,7 @@ class AssignController extends Controller
     }
 
     public function index(Request $request) {
-        $assigned = Assigncandidate::with(['test'])->orderBy('id', 'desc')->paginate(10);
+        $assigned = Assigncandidate::with(['test'])->orderBy('id', 'desc')->where('user_id', Auth::id())->paginate(10);
         
         return response()->json([
                 'success' => true,
@@ -36,6 +37,7 @@ class AssignController extends Controller
         if(isset($request->lists)) {
             
             $assign = new Assign;
+            $assign->user_id = Auth::id();
             $assign->created_at = Date('Y-m-d H:i:s');
             $assign->updated_at = Date('Y-m-d H:i:s');
             $assign->save();
@@ -73,6 +75,7 @@ class AssignController extends Controller
 
                 $assign_candidate->resume = $resume;
                 $assign_candidate->share = 0;
+                $assign_candidate->user_id = Auth::id();
                 $assign_candidate->save();
             }
 
@@ -88,7 +91,7 @@ class AssignController extends Controller
 
     public function show($id) {
 
-        $assign = Assign::where('id', $id)->with(['candidates', 'candidates.test'])->first();
+        $assign = Assign::where('id', $id)->where('user_id', Auth::id())->with(['candidates', 'candidates.test'])->first();
 
         return response()->json([
             'success' => true,
@@ -122,7 +125,7 @@ class AssignController extends Controller
     }
     
     public function destroy($id) { 
-        Assigncandidate::where('id', $id)->delete();
+        Assigncandidate::where('id', $id)->where('user_id', Auth::id())->delete();
         return response()->json([
             'success' => true,
             'message' => 'Candidates deleted successfully.',
@@ -130,7 +133,7 @@ class AssignController extends Controller
     }
 
     public function showCandidate($id) {
-        $assign = Assigncandidate::where('id', $id)->with(['test'])->first();
+        $assign = Assigncandidate::where('id', $id)->where('user_id', Auth::id())->with(['test'])->first();
         return response()->json([
             'success' => true,
             'message' => 'Candidates list.',

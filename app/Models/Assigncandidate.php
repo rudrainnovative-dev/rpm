@@ -18,7 +18,8 @@ class Assigncandidate extends Model
         'start',
         'end', 
         'resume',
-        'share'
+        'share',
+        'user_id'
     ];
 
     public function test() {

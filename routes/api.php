@@ -11,10 +11,13 @@ use App\Http\Controllers\V1\TestController;
 use App\Http\Controllers\V1\TestpurposeController;
 use App\Http\Controllers\V1\PerformanceController;
 use App\Http\Controllers\V1\AssignController;
+use App\Http\Controllers\V1\RegisterfieldController;
+use App\Http\Controllers\V1\OnlinetestController;
 
 use App\Models\Criteria;
 use App\Models\Performancetype;
 use App\Models\Test;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -47,6 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('testpurpose', TestpurposeController::class);
     Route::resource('performance', PerformanceController::class);
     Route::resource('assign', AssignController::class);
+    Route::resource('registation-field', RegisterfieldController::class);
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/question/test/{test_id}', [QuestionController::class, 'getTestQuestion']);
     Route::post('/question/upload', [QuestionController::class, 'uploadQuestions']);
@@ -69,9 +73,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/all_tests', function() {
         return response()->json([
-            'message' => 'All Performance.',
+            'message' => 'All Test.',
             'tests' => Test::orderBy('id','desc')->select('id', 'name')->get()
         ], 200);
     });
-
 });
+
+
+Route::get('/online-test/{id}', [OnlinetestController::class, 'index']);

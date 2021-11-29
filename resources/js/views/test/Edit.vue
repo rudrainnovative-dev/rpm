@@ -32,7 +32,7 @@
                                                 <router-link :to='{name:"TestAdd"}' class="btn btn-success btn-sm">Create Test</router-link>
                                             </li>
                                             <li class="list-inline-item">
-                                                <button type="button" class="btn btn-primary btn-sm">Preview Test</button>
+                                                <router-link :to='{name:"TestShow", params:{id:public_id}}' class="btn btn-primary btn-sm w-100">Preview Test</router-link>
                                             </li>
                                         </ul>
                                     </div>
@@ -403,6 +403,7 @@
                     delete: 'Delete'
                 },
                 min_datetime: '',
+                public_id: '',
             }
         },
         mounted() {
@@ -417,8 +418,9 @@
             async getTest() {
                 Test.show(this.$route.params.id).then(response => {
                     
-                    const { name, purpose_id,  assessment_type, duration, assessment_time_from, assessment_time_to } = response.data.test
+                    const { name, purpose_id,  assessment_type, duration, assessment_time_from, assessment_time_to, public_id } = response.data.test
 
+                    this.public_id = public_id
                     this.test.name = name
                     this.test.purpose_id = purpose_id
                     
