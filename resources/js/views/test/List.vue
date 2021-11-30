@@ -67,7 +67,7 @@
                                     </p>
                                     <p class="d-flex justify-content-between align-items-center">
                                         <span>{{ test.duration }} Min</span>
-                                        <button class="btn btn-sm btn-light-dark px-3 text-center h-35px w-35px" type="button" v-tooltip="tooltip.link"><i class="p-0 fa fa-link"></i></button>
+                                        <router-link :to='{name:"OnlineTest", params:{id:test.public_id}}'><button class="btn btn-sm btn-light-dark px-3 text-center h-35px w-35px" type="button" v-tooltip="tooltip.link"><i class="p-0 fa fa-link"></i></button></router-link>
                                     </p>
                                 </div>
                                 <ul class="list-unstyled mb-0 mt-7 d-flex list-inline"> 

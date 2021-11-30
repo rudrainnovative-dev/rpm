@@ -34,6 +34,8 @@ import AssignAdd from "./views/assign/Add.vue";
 import AssignSend from "./views/assign/Send.vue";
 import AssignSendOne from "./views/assign/SendOne.vue";
 
+import OnlineTest from "./views/front/Test.vue";
+
 import PageNotFound from "./views/PageNotFound.vue";
 
 Vue.use(VueRouter);
@@ -288,6 +290,18 @@ const routes = [
         component: AssignSendOne,
         name: 'AssignSendOne',
         meta: { title: 'Mail Send to Candidates | RPM', authOnly: true }
+      }
+    ],
+  },
+  {
+    path: '/online-test/:id/',
+    component: PublicLayout,
+    children: [
+      {
+        path: '',
+        component: OnlineTest,
+        name: 'OnlineTest',
+        meta: { title: 'Online Test | RPM' }
       }
     ],
   },

@@ -43,7 +43,8 @@ class Test extends Model
         return $this->hasMany(Sectionsetting::class, 'test_id', 'id');
     }
 
-    public function test_sections() {
-        return $this->hasMany(Testquestion::class, 'test_id', 'id')->groupBy('category_id');
+    public function registation_fields() {
+        return $this->hasMany(Registationfield::class, 'test_id', 'id')->where('allow',1);   
     }
+
 }

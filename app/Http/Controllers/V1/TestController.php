@@ -387,9 +387,9 @@ class TestController extends Controller
     public function default_fields() {
         return [
                     [ 'field' => 'Name', 'required' => 1, 'type' => 'text', 'allow' => 1 ],
-                    [ 'field' => 'Email', 'required' => 1, 'type' => 'text', 'allow' => 1 ],
-                    [ 'field' => 'Phone Number', 'required' => 0, 'type' => 'text', 'allow' => 0 ],
-                    [ 'field' => 'Date of Birth', 'required' => 0, 'type' => 'text', 'allow' => 0 ],
+                    [ 'field' => 'Email', 'required' => 1, 'type' => 'email', 'allow' => 1 ],
+                    [ 'field' => 'Phone Number', 'required' => 0, 'type' => 'number', 'allow' => 0 ],
+                    [ 'field' => 'Date of Birth', 'required' => 0, 'type' => 'date', 'allow' => 0 ],
                     [ 'field' => 'Gender', 'required' => 0, 'type' => 'dropdown', 'allow' => 0 ],
                     [ 'field' => 'Profile Picture', 'required' => 0, 'type' => 'file', 'allow' => 0 ],
                     [ 'field' => 'Identity card', 'required' => 0, 'type' => 'file', 'allow' => 0 ]

@@ -24,7 +24,7 @@ class SendEmail implements ShouldQueue
     public function __construct($data)
     {
         $this->data = $data;
-        $this->test_url = env('APP_URL').'/online_test/';
+        $this->test_url = env('APP_URL').'/online-test/';
     }
 
     /**
