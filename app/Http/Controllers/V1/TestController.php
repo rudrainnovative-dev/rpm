@@ -250,7 +250,8 @@ class TestController extends Controller
         Sectionsetting::where('test_id', $test->id)->where('user_id', Auth::id())->delete();
         Ordersetting::where('test_id', $test->id)->where('user_id', Auth::id())->delete();
         Registationfield::where('test_id', $test->id)->where('user_id', Auth::id())->delete();
-
+        Assigncandidate::where('test_id', $test->id)->where('user_id', Auth::id())->delete();
+        
         return response()->json([
             'success' => true,
             'message' => 'Test deleted successfully.'

@@ -72,7 +72,7 @@
                                 </div>
                                 <ul class="list-unstyled mb-0 mt-7 d-flex list-inline"> 
                                     <li class="list-inline-item w-50">
-                                        <router-link :to='{name:"TestShow", params:{id:test.public_id}}' class="btn btn-light-dark btn-sm w-100">Preview Test</router-link>
+                                        <router-link :to='{name:"OnlineTest", params:{id:test.public_id}}' class="btn btn-light-dark btn-sm w-100">Preview Test</router-link>
                                     </li>
                                     <li class="list-inline-item w-50">
                                         <button class="btn btn-light-dark btn-sm w-100">0 Candidate(s)</button>

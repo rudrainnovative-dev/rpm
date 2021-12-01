@@ -11,4 +11,15 @@ export default {
     return Api.post(`/online-test/${id}`, form);
   },
 
+  async question(id, page) {
+    return Api.get(`/online-test/${id}/question?page=`+page);
+  },
+
+  async questions(id) {
+    return Api.get(`/online-test/${id}/questions`);
+  },
+
+  async answerSave(form) {
+    return Api.post(`/online-test-answered`, form);
+  }
 };

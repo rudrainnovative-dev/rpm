@@ -20,6 +20,7 @@ class Testtaker extends Model
         'avatar',
         'id_card',
         'test_id',
+        'test_name'
 
     ];
 }

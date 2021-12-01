@@ -12,10 +12,31 @@ use App\Models\Testsetting;
 use App\Models\Category;
 use App\Models\Assigncandidate;
 use App\Models\Testtaker;
+use App\Models\Testtakeranswer;
 
 class OnlinetestController extends Controller
 {
-    
+    public function index(Request $request, $public_id) {
+        
+        if($public_id) {
+
+            $test = Test::with(['purpose', 'registation_fields'])->where('public_id', $public_id)->first();
+            if(!empty($test)) {
+
+                $test_settings = Testsetting::where('test_id', $test->id)->pluck('criteria_id');
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Online Test',
+                    'test' => $test,
+                    'test_settings' => $test_settings
+                ], 200);
+            }
+
+        }
+
+    }
+
 
     public function registation(Request $request, $test_id) {
 
@@ -26,23 +47,25 @@ class OnlinetestController extends Controller
                 'name' => 'required|max:255'
             ]);
 
+            $test = Test::where('id', $test_id)->first();
 
             $validate = Assigncandidate::where('test_id', $test_id)
                         ->where('email', $request->email)
                         ->where('status', 0)
                         ->first();
 
-            if(!empty($validate)) {
+            if(!empty($validate) && !empty($test)) {
 
                 $taker = new Testtaker;
                 $taker->name = $request->name;
-                $taker->dob = $request->dob;
                 $taker->email = $request->email;
-                $taker->gender = $request->gender;
-                $taker->id_card = $request->id_card;
-                $taker->mobile = $request->mobile;
-                $taker->avatar = $request->avatar;
+                // $taker->dob = $request->dob;
+                // $taker->gender = $request->gender;
+                // $taker->id_card = $request->id_card;
+                // $taker->mobile = $request->mobile;
+                // $taker->avatar = $request->avatar;
                 $taker->test_id = $test_id;
+                $taker->test_name = $test->name;
                 $taker->save();
 
                 Assigncandidate::where('test_id', $test_id)
@@ -59,7 +82,7 @@ class OnlinetestController extends Controller
 
             return response()->json([
                     'success' => false,
-                    'message' => 'You are not valid for the test.',
+                    'message' => 'You are not valid for this test.',
                     'request' => $request->all(),
                     'test' => $test_id
                 ], 401);
@@ -68,22 +91,77 @@ class OnlinetestController extends Controller
     }
 
 
-    public function index(Request $request, $public_id) {
+    public function question(Request $request, $test_id) {
         
-        if($public_id) {
-            $test = Test::with(['purpose', 'registation_fields'])->where('public_id', $public_id)->first();
-            if(!empty($test)) {
+        if($test_id) {
+            $question = Testquestion::with('question', 'question.options')->where('test_id', $test_id)->paginate(1);
 
-
-                return response()->json([
+            return response()->json([
                     'success' => true,
-                    'message' => 'Test',
-                    'test' => $test,
+                    'message' => 'Question',
+                    'question' => $question,
                 ], 200);
+        }
+    }
+
+    public function questions(Request $request, $test_id) {
+        if($test_id) {
+            $questions = Testquestion::where('test_id', $test_id)->orderBy('category_id', 'ASC')->get();
+
+            return response()->json([
+                    'success' => true,
+                    'message' => 'Questions',
+                    'questions' => $questions,
+                ], 200);
+        }
+    }
+    
+    public function answered(Request $request) {
+        
+        if(isset($request->selected) && isset($request->question_id)) {
+
+            $taker_id = 0;
+            if(isset($request->taker_id)) {
+                $taker_id = $request->taker_id; 
             }
+
+            $options = $request->options;
+
+
+            $answered = $request->selected + 1;
+
+
+            Testtakeranswer::updateOrCreate(
+                                    [
+                                    'taker_id' => $taker_id,
+                                    'question_id' => $request->question_id,
+                                    'question' => $request->question,
+                                    'category' => 'wqew',
+                                    'option_one' => $options[0]['option'],
+                                    'option_two' => $options[1]['option'],
+                                    'option_three' => $options[2]['option'],
+                                    'option_four' => $options[3]['option'],
+                                    'correct' => $request->correct,
+                                    'marks' => $request->marks,
+                                ],
+                                [
+                                    'selected_option' => $answered
+                                ]
+                            );
+
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Questions',
+                'request' => $answered,
+            ], 200);
         }
 
+
+
+        
         
     }
+
 
 }

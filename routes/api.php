@@ -82,3 +82,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/online-test/{id}', [OnlinetestController::class, 'index']);
 Route::post('/online-test/{id}', [OnlinetestController::class, 'registation']);
+Route::get('/online-test/{id}/question', [OnlinetestController::class, 'question']);
+Route::get('/online-test/{id}/questions', [OnlinetestController::class, 'questions']);
+Route::post('/online-test-answered', [OnlinetestController::class, 'answered']);

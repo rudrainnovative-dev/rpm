@@ -193,7 +193,6 @@
         },
         mounted() {
             this.getTest()
-            this.getQuestion()
         },
         methods:{
             async getTest() {
