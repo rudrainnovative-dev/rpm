@@ -11,12 +11,12 @@ export default {
     return Api.post(`/online-test/${id}`, form);
   },
 
-  async question(id, page) {
-    return Api.get(`/online-test/${id}/question?page=`+page);
+  async question(id, category_id, page) {
+    return Api.get(`/online-test/${id}/question?category_id=`+category_id+`&page=`+page);
   },
 
-  async questions(id) {
-    return Api.get(`/online-test/${id}/questions`);
+  async questions(id, category_id) {
+    return Api.get(`/online-test/${id}/questions?category_id=`+category_id);
   },
 
   async answerSave(form) {

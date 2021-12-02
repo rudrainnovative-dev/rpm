@@ -16,7 +16,8 @@ class Questionbank extends Model
         'title',
         'marks',
         'correct',
-        'answers_justification'
+        'answers_justification',
+        'user_id'
     ];
 
 

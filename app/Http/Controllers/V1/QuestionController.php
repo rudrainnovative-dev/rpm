@@ -163,58 +163,86 @@ class QuestionController extends Controller
     }
 
     public function uploadQuestions(Request $request) {
-        // $request->validate([
-        //     'excel_file.*' => 'required|file|mimes:xls,xlsx'
-        // ]);
+        if(!$request->file('excel_file')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Required excel file.',
+            ], 400);
+        }
 
-        // $path = $request->file('excel_file');
-        // $excelData = Excel::toArray(new QuestionImport, $path);
+        $path = $request->file('excel_file');
+        $extension = $request->file('excel_file')->getClientOriginalExtension();
 
-        // if(!empty($excelData[0])) {
-        //     foreach($excelData[0] as $data) {
-        //         if(isset($data['category']) && $data['category'] != '' && isset($data['question']) && $data['question'] != '') {
-        //             $category = Category::where('name', $data['category'])->select('id')->first();
-        //             if(!empty($category)) {
+        if($extension != 'xlsx' && $extension != '.xls') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Accept only excel file.',
+            ], 400);
+        }
 
-        //                 $question = new Questionbank;
-        //                 $question->category_id = $category->id;
-        //                 $question->title = $data['question'];
-        //                 $question->answers_justification = isset($data['justification'])?$data['justification']:'';
-        //                 $question->save();
+        $excelData = Excel::toArray(new QuestionImport, $path);
+        
+        if(!empty($excelData[0])) {
+            $header = array_keys($excelData[0][0]);
+            $keys = ['category', 'question', 'option1', 'option2', 'option3', 'option4', 'correct', 'marks'];
+            $matchHeader = array_intersect($header, $keys);
+            if(count($matchHeader) == 8) {
+                foreach($excelData[0] as $data) {
+                    $category = Category::where('name', $data['category'])->select('id')->first();
+                    if(!empty($category)) {
+                        $question = Questionbank::firstOrCreate(
+                            [
+                                'category_id' => $category->id,
+                                'title' => $data['question']
+                            ],
+                            [
+                                'correct' => $data['correct'],
+                                'marks' => $data['marks'],
+                                'answers_justification' => isset($data['justification'])?$data['justification']:'',
+                                'user_id' => Auth::id(),
+                                'created_at' => Date('Y-m-d H:i:s'),
+                                'updated_at' => Date('Y-m-d H:i:s')
+                            ]
+                        );
 
-        //                 if($question->id) {
-        //                     $k = 0, $options = [];
-        //                     for($i = 1; $i <= 4; $i++) {
-        //                         if($data['option'.$i]) {
-        //                             $options[$k]['question_id'] = $question->id;
-        //                             $options[$k]['option'] = $data['option'.$i];
+                        if($question->id && $question->wasRecentlyCreated) {
+                            $options = [];
+                            $k = 0;
+                            for($i = 1; $i <= 4; $i++) {
+                                $options[$k]['question_id'] = $question->id;
+                                $options[$k]['option'] = $data['option'.$i];
+                                $options[$k]['user_id'] = Auth::id();
+                                $options[$k]['created_at'] = Date('Y-m-d H:i:s');
+                                $options[$k]['updated_at'] = Date('Y-m-d H:i:s');
+                                $k++;
+                            }
 
-        //                             $options[$k]['correct'] = 0;
-        //                             if(isset($data['correct'.$i]) && strtolower($data['correct'.$i]) == 'yes') {
-        //                                 $options[$k]['correct'] = 1;
-        //                             }
+                            Questionoption::insert($options);
+                        }
+                    }
+                }
 
-        //                             $options[$k]['marks'] = 0;
-        //                             if(isset($data['marks'.$i]) && is_int($data['marks'.$i])) {
-        //                                 $options[$k]['marks'] = $data['marks'.$i];
-        //                             }
-                                    
-        //                             $options[$k]['created_at'] = Date('Y-m-d H:i:s');
-        //                             $options[$k]['updated_at'] = Date('Y-m-d H:i:s');
-        //                         }
-        //                     }
-
-        //                     Questionoption::insert($options);
-        //                 }
-        //             }
-        //         }
-        //     }
-        //}
-
-        // return response()->json([
-        //         'success' => true,
-        //         'message' => 'get',
-        //         'excelData' => $f
-        //     ], 200);
+                return response()
+                        ->json([
+                            'success' => true,
+                            'message' => 'Question Uploaded Successfully.'
+                        ], 200);
+            }
+            else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Uploaded excel have not valid header columns.',
+                ], 400);
+            }
+        }
+        else {
+            return response()
+                ->json([
+                    'success' => false,
+                    'message' => 'Uploaded excel empty row value.',
+                ], 400);
+        }
     }
+    
+
 }

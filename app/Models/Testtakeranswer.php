@@ -14,6 +14,7 @@ class Testtakeranswer extends Model
     protected $fillable = [
         'taker_id',
         'category',
+        'category_id',
         'question',
         'question_id',
         'option_one',
@@ -22,7 +23,8 @@ class Testtakeranswer extends Model
         'option_four',    
         'correct', 
         'marks', 
-        'selected_option'
+        'selected_option',
+        'test_id'
     ];
 
 }

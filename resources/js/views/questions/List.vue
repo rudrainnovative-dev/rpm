@@ -99,11 +99,11 @@
                                     <div class="row">
                                         <div class="form-group">
                                             <label class="mb-2 fw-bold">Upload Excel<span class="text-danger">*</span></label>
-                                            <input type="file" ref="excel_file" class="form-control form-control-solid form-control-sm" v-on:change="onFileChange($event)" required/>
+                                            <input type="file" ref="excel_file" class="form-control form-control-solid form-control-sm" v-on:change="onFileChange($event)" accept=".xls,.xlsx" required/>
                                         </div>
                                         <div class="form-group">
-                                            <input type="submit" class="btn btn-sm btn-primary" value="Upload"/>
-                                            <a href="/assets/excel/question_excel.xlsx" class="text-success float-right">Download sample excel</a>
+                                            <button type="submit" class="btn btn-sm btn-primary" :disabled="disabled"><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" v-if="disabled"></span> Upload</button>
+                                            <a href="/assets/excel/questions.xlsx" class="text-info float-right">Download sample file</a>
                                         </div>
                                     </div>
                                 </form>
@@ -127,13 +127,15 @@ export default {
             questions:{},
             questionsData: [],
             loader_spin: false,
+            disabled: false,
             model_show: false,
             excel_file: '',
             tooltip: {
                 show: 'Show',
                 edit: 'Edit',
                 delete: 'Delete'
-            }
+            },
+            error: ''
         }
     },
     mounted(){
@@ -172,13 +174,20 @@ export default {
             this.excel_file = event.target.files[0]
         },
         async updateExcel() {
-            
+            this.disabled = true
             let fileData = new FormData();
             fileData.append('excel_file', this.excel_file);
             Question.uploadExcel(fileData).then(response => {
-                console.log(response)
+                this.$toast.success(response.data.message)
+                this.model_show = false
+                this.excel_file = ''
+                this.getQuestions()
+                this.disabled = false
             }).catch(error=>{
-                 
+                if (error.response && error.response.status === 400) {
+                  this.$toast.error(error.response.data.message)
+                }
+                this.disabled = false
             });
         }
     }
