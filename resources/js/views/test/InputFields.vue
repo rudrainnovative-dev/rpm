@@ -44,14 +44,22 @@
                                                     <tr v-for="(field,key) in this.registation_fields" :key="key">
                                                         <td class="align-middle">{{ field.field }}</td>
                                                         <td class="align-middle">
-                                                            <label class="checkbox mb-4">
+                                                            <label class="checkbox mb-4" v-if="field.field != 'Name' && field.field != 'Email'">
                                                                 <input type="checkbox" v-model="field.required" :value="{id: field.id, required: field.required, allow: field.allow}" v-on:change="update($event, key)" :disabled="disabled">
+                                                                <span></span>
+                                                            </label>
+                                                            <label class="checkbox mb-4" v-else>
+                                                                <input type="checkbox" v-model="field.required" :value="{id: field.id, required: field.required, allow: field.allow}" disabled="disabled">
                                                                 <span></span>
                                                             </label>
                                                         </td>
                                                         <td class="align-middle">
-                                                            <label class="checkbox mb-4">
+                                                            <label class="checkbox mb-4" v-if="field.field != 'Name' && field.field != 'Email'">
                                                                 <input type="checkbox" v-model="field.allow" :value="{id: field.id, required: field.required, allow: field.allow}" v-on:change="update($event, key)" :disabled="disabled">
+                                                                <span></span>
+                                                            </label>
+                                                            <label class="checkbox mb-4" v-else>
+                                                                <input type="checkbox" v-model="field.allow" :value="{id: field.id, required: field.required, allow: field.allow}" disabled="disabled">
                                                                 <span></span>
                                                             </label>
                                                         </td>

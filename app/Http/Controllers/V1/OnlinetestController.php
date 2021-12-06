@@ -56,7 +56,18 @@ class OnlinetestController extends Controller
                     'category' => $categories
                 ], 200);
             }
-
+            else {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'This test has been deactivated. Please contact your administrator.',
+                ], 400);
+            }
+        }
+        else {
+            return response()->json([
+                'success' => false,
+                'error' => 'This test has been deactivated. Please contact your administrator.',
+            ], 400);
         }
 
     }
@@ -83,11 +94,11 @@ class OnlinetestController extends Controller
                 $taker = new Testtaker;
                 $taker->name = $request->name;
                 $taker->email = $request->email;
-                // $taker->dob = $request->dob;
-                // $taker->gender = $request->gender;
-                // $taker->id_card = $request->id_card;
-                // $taker->mobile = $request->mobile;
-                // $taker->avatar = $request->avatar;
+                $taker->dob = $request->dob;
+                $taker->gender = $request->gender;
+                $taker->mobile = $request->mobile;
+                $taker->avatar = $request->avatar;
+                $taker->id_card = $request->id_card;
                 $taker->test_id = $test_id;
                 $taker->test_name = $test->name;
                 $taker->save();
@@ -99,14 +110,14 @@ class OnlinetestController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Test Start',
+                    'message' => 'Registation successfully.',
                     'taker' => $taker
                 ], 200);
             }
 
             return response()->json([
                     'success' => false,
-                    'message' => 'You are not valid for this test.',
+                    'error' => 'This email is not authorized to take test using this test link.',
                     'request' => $request->all(),
                     'test' => $test_id
                 ], 401);
