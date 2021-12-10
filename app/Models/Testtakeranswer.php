@@ -24,7 +24,8 @@ class Testtakeranswer extends Model
         'correct', 
         'marks', 
         'selected_option',
-        'test_id'
+        'test_id',
+        'total_question',
     ];
 
 }

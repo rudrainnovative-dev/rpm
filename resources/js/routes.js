@@ -36,6 +36,9 @@ import AssignSendOne from "./views/assign/SendOne.vue";
 
 import OnlineTest from "./views/front/Test.vue";
 
+import ReportList from "./views/report/Index.vue";
+import ReportShow from "./views/report/Show.vue";
+
 import PageNotFound from "./views/PageNotFound.vue";
 
 Vue.use(VueRouter);
@@ -302,6 +305,30 @@ const routes = [
         component: OnlineTest,
         name: 'OnlineTest',
         meta: { title: 'Online Test | RPM' }
+      }
+    ],
+  },
+  {
+    path: '/report/:id/test',
+    component: DashboardLayout,
+    children: [
+      {
+        path: '',
+        component: ReportList,
+        name: 'ReportList',
+        meta: { title: 'Test Reports | RPM' }
+      }
+    ],
+  },
+  {
+    path: '/report/:id/show',
+    component: DashboardLayout,
+    children: [
+      {
+        path: '',
+        component: ReportShow,
+        name: 'ReportShow',
+        meta: { title: 'Report Show | RPM' }
       }
     ],
   },

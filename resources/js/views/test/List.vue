@@ -75,7 +75,7 @@
                                         <router-link :to='{name:"OnlineTest", params:{id:test.public_id}}' class="btn btn-light-dark btn-sm w-100">Preview Test</router-link>
                                     </li>
                                     <li class="list-inline-item w-50">
-                                        <button class="btn btn-light-dark btn-sm w-100">0 Candidate(s)</button>
+                                        <router-link :to='{name:"ReportList", params:{id:test.id}}' class="btn btn-light-dark btn-sm w-100">{{ test.taker_count }} Candidate(s)</router-link>
                                     </li>
                                 </ul>
                             </div>

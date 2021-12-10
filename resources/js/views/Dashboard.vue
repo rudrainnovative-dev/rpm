@@ -95,10 +95,19 @@
                       <th class="fw-bolder align-middle">View Report</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td class="align-middle" colspan="4">No any record found(s).</td>
+                  <tbody v-if="completed_test.length > 0">
+                    <tr v-for="test in completed_test">
+                      <td class="align-middle">{{ test.name }}</td>
+                      <td class="align-middle">{{ test.created_at.split('T')[0] }}</td>
+                      <td class="align-middle">{{ test.test_name }}</td>
+                      <td class="align-middle">
+                        <router-link :to='{name:"ReportShow",params:{id:test.id}}'><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button" v-tooltip="'Show Report'"><i class="p-0 fa fa-eye"></i></button></router-link>
                       </td>
+                    </tr>
+                  </tbody>
+                  <tbody v-else>
+                    <tr>
+                      <td colspan="4" class="align-middle">No any record(s).</td>
                     </tr>
                   </tbody>
                 </table>
@@ -121,6 +130,7 @@ export default {
     return {
         recent_test: {},
         upcomming_test: {},
+        completed_test: {},
         loader_spin: true,
         tooltip: {
             show: 'Show',
@@ -137,6 +147,7 @@ export default {
       Dashboard.index().then(response => {
         this.recent_test = response.data.tests
         this.upcomming_test = response.data.upcomming_test
+        this.completed_test = response.data.completed_test
         this.loader_spin = false
       });
     }

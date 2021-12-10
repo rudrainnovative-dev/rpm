@@ -52,31 +52,34 @@ class AssignController extends Controller
             }
 
             foreach($request->lists as $list) {
-                $assign_candidate = new Assigncandidate;
-                $assign_candidate->assign_id = $assign->id;
-                $assign_candidate->email = $list['email'];
-                $assign_candidate->test_id = $list['test_id'];
+                $checkCandidate = Assigncandidate::where('email', $list['email'])->where('test_id', $list['test_id'])->where('status', '0')->first();
+                if(empty($checkCandidate)) {
+                    $assign_candidate = new Assigncandidate;
+                    $assign_candidate->assign_id = $assign->id;
+                    $assign_candidate->email = $list['email'];
+                    $assign_candidate->test_id = $list['test_id'];
 
-                if(!$start && $list['start']) {
-                   $start = Date('Y-m-d H:i:s', strtotime($list['start']));
+                    if(!$start && $list['start']) {
+                       $start = Date('Y-m-d H:i:s', strtotime($list['start']));
+                    }
+
+                    $assign_candidate->start = $start;
+
+                    if(!$end && $list['end']) {
+                       $end = Date('Y-m-d H:i:s', strtotime($list['end']));
+                    }
+
+                    $assign_candidate->end = $end;
+
+                    if(!$resume) {
+                        $resume = $list['resume'];
+                    }
+
+                    $assign_candidate->resume = $resume;
+                    $assign_candidate->share = 0;
+                    $assign_candidate->user_id = Auth::id();
+                    $assign_candidate->save(); 
                 }
-
-                $assign_candidate->start = $start;
-
-                if(!$end && $list['end']) {
-                   $end = Date('Y-m-d H:i:s', strtotime($list['end']));
-                }
-
-                $assign_candidate->end = $end;
-
-                if(!$resume) {
-                    $resume = $list['resume'];
-                }
-
-                $assign_candidate->resume = $resume;
-                $assign_candidate->share = 0;
-                $assign_candidate->user_id = Auth::id();
-                $assign_candidate->save();
             }
 
             return response()->json([

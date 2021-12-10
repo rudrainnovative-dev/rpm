@@ -47,4 +47,7 @@ class Test extends Model
         return $this->hasMany(Registationfield::class, 'test_id', 'id')->where('allow',1);   
     }
 
+    public function taker() {
+        return $this->hasMany(Testtaker::class, 'test_id', 'id');   
+    }
 }

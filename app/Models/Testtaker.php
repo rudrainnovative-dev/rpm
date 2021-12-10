@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Testtaker extends Model
 {
@@ -23,4 +24,9 @@ class Testtaker extends Model
         'test_name'
 
     ];
+
+    public function answers() {
+        return $this->hasMany(Testtakeranswer::class, 'taker_id', 'id');
+    }
+
 }

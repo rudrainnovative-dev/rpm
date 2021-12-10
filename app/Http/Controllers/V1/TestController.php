@@ -38,6 +38,7 @@ class TestController extends Controller
         }
         else {
             $tests = Test::with(['purpose','test_questions'])
+                        ->withCount(['taker'])
                         ->where('user_id', Auth::id())
                         ->orderBy('id', 'desc')
                         ->paginate(10);

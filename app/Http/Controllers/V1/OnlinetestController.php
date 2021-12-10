@@ -13,7 +13,9 @@ use App\Models\Category;
 use App\Models\Assigncandidate;
 use App\Models\Testtaker;
 use App\Models\Testtakeranswer;
+use App\Models\Testtakersnap;
 use DB;
+use File;
 
 class OnlinetestController extends Controller
 {
@@ -82,7 +84,7 @@ class OnlinetestController extends Controller
                 'name' => 'required|max:255'
             ]);
 
-            $test = Test::where('id', $test_id)->first();
+            $test = Test::where('id', $test_id)->with('test_questions')->first();
 
             $validate = Assigncandidate::where('test_id', $test_id)
                         ->where('email', $request->email)
@@ -101,6 +103,8 @@ class OnlinetestController extends Controller
                 $taker->id_card = $request->id_card;
                 $taker->test_id = $test_id;
                 $taker->test_name = $test->name;
+                $taker->total_questions = count($test->test_questions);
+                $taker->user_id = $validate->user_id;
                 $taker->save();
 
                 Assigncandidate::where('test_id', $test_id)
@@ -158,37 +162,30 @@ class OnlinetestController extends Controller
     }
     
     public function answered(Request $request) {
-        
         if(isset($request->selected) && isset($request->question_id)) {
-
             $taker_id = 0;
             if(isset($request->taker_id)) {
                 $taker_id = $request->taker_id; 
             }
-
             $options = $request->options;
-
             $answered = $request->selected + 1;
-
-            $create_update = Testtakeranswer::updateOrCreate(
-                                [
-                                    'taker_id' => $taker_id,
-                                    'question_id' => $request->question_id,
-                                    'question' => $request->question,
-                                    'category' => $request->category_name,
-                                    'category_id' => $request->category_id,
-                                    'option_one' => $options[0]['option'],
-                                    'option_two' => $options[1]['option'],
-                                    'option_three' => $options[2]['option'],
-                                    'option_four' => $options[3]['option'],
-                                    'correct' => $request->correct,
-                                    'marks' => $request->marks,
-                                    'test_id' => $request->test_id,
-                                ],
-                                [
-                                    'selected_option' => $answered
-                                ]
-                            );
+            $create_update = Testtakeranswer::updateOrCreate([
+                                'taker_id' => $taker_id,
+                                'question_id' => $request->question_id,
+                                'question' => $request->question,
+                                'category' => $request->category,
+                                'category_id' => $request->category_id,
+                                'option_one' => $options[0]['option'],
+                                'option_two' => $options[1]['option'],
+                                'option_three' => $options[2]['option'],
+                                'option_four' => $options[3]['option'],
+                                'correct' => $request->correct,
+                                'marks' => $request->marks,
+                                'test_id' => $request->test_id,
+                            ], [
+                                'selected_option' => $answered
+                            ]
+                        );
 
             $action = 'update';
             if(strtotime($create_update->created_at) == strtotime($create_update->updated_at)) {
@@ -199,11 +196,39 @@ class OnlinetestController extends Controller
                 'success' => true,
                 'message' => 'Questions',
                 'action' => $action,
-                'created' => strtotime($create_update->created_at),
-                'uu' => strtotime($create_update->updated_at)
             ], 200);
         }
+    }
+
+    public function taker_update(request $request) {
         
+        if($request->taker_email && $request->id) {
+            Assigncandidate::where('test_id', $request->id)
+                ->where('email', $request->taker_email)
+                ->where('status', 1)
+                ->update(['status' => 0]);
+
+            Testtaker::where('id, $request->taker_id')->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'success',
+            ], 200);
+        }
+    }
+
+    public function taker_snap(request $request) {
+
+        if($request->taker_id && $request->id && $request->snap) {
+
+            Testtakersnap::insert([
+                'taker_id' => $request->taker_id,
+                'test_id' => $request->id,
+                'snap' => $request->snap,
+                'created_at' => Date('Y-md-d H:i:s'),
+                'updated_at' => Date('Y-md-d H:i:s')
+            ]);
+        }
     }
 
 }
