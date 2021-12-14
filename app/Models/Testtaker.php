@@ -29,4 +29,7 @@ class Testtaker extends Model
         return $this->hasMany(Testtakeranswer::class, 'taker_id', 'id');
     }
 
+    public function answers_by_section() {
+        return $this->hasMany(Testtakeranswer::class, 'taker_id', 'id');
+    }
 }

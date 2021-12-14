@@ -13,6 +13,7 @@ use App\Http\Controllers\V1\PerformanceController;
 use App\Http\Controllers\V1\AssignController;
 use App\Http\Controllers\V1\RegisterfieldController;
 use App\Http\Controllers\V1\OnlinetestController;
+use App\Http\Controllers\V1\ReportController;
 
 use App\Models\Criteria;
 use App\Models\Performancetype;
@@ -57,6 +58,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('test/duplicate', [TestController::class, 'duplicate']);
     Route::get('test/{id}/questions', [TestController::class, 'questions']);
     Route::get('candidate/{id}/show', [AssignController::class, 'showCandidate']);
+
+    Route::get('/report/{id}/test', [ReportController::class, 'index']);
+    Route::get('/report/{id}/show', [ReportController::class, 'show']);
+
     Route::get('/criterias', function() {
         return response()->json([
             'message' => 'All criterias.',
@@ -85,3 +90,5 @@ Route::post('/online-test/{id}', [OnlinetestController::class, 'registation']);
 Route::get('/online-test/{id}/question', [OnlinetestController::class, 'question']);
 Route::get('/online-test/{id}/questions', [OnlinetestController::class, 'questions']);
 Route::post('/online-test-answered', [OnlinetestController::class, 'answered']);
+Route::post('/online-test-taker', [OnlinetestController::class, 'taker_update']);
+Route::post('/online-test-snap', [OnlinetestController::class, 'taker_snap']);

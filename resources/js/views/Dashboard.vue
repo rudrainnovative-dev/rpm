@@ -66,7 +66,7 @@
                     <td class="align-middle">{{ test.name }}</td>
                     <td class="align-middle">{{ test.test_questions.length }}</td>
                     <td class="align-middle">
-                      <router-link :to='{name:"TestShow",params:{id:test.id}}'><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button" v-tooltip="tooltip.show"><i class="p-0 fa fa-eye"></i></button></router-link>
+                      <router-link :to='{name:"OnlineTest",params:{id:test.public_id}}'><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button" v-tooltip="tooltip.show"><i class="p-0 fa fa-eye"></i></button></router-link>
                     </td>
                   </tr>
                 </tbody>

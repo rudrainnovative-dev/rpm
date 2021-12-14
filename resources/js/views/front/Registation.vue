@@ -29,13 +29,13 @@
                                 <div class="form-group" v-if="field.field == 'Gender'" v-for="field in registation_fields">
                                     <label class="mb-2 fw-bold">{{ field.field }}<small class="text-danger" v-if="field.required">*</small></label>
                                     <select class="form-control form-control-solid h-auto py-2 px-2 fw-normal" :required="(field.required)?true:false" v-model="candidate.gender">
-                                        <option value="Mail">Male</option>
+                                        <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                         <option value="Other">Other</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="ml-4 col-md-4 col-12">
+                            <div class="ml-md-4 mt-4 col-md-4 col-12" v-if="allow_webcam">
                                 <div class="row">
                                     <div class="col-md-6 col-6">
                                         <div class="form-group" v-if="field.field == 'Profile Picture'" v-for="field in registation_fields">
@@ -45,6 +45,7 @@
                                                 <label for="avatarImage"> 
                                                     <img :src="avatar" class="p-1" :class="(radio_image == 'avatar')?'border border-info':'border border-secondary'" style="width:100%">
                                                 </label>
+                                                <span class="text-danger" v-if="errors.avatar">{{ errors.avatar }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -56,15 +57,15 @@
                                                 <label for="aadhaarImage"> 
                                                     <img :src="id_card" class="p-1" :class="(radio_image == 'id_card')?'border border-info':'border border-secondary'" style="width:100%">
                                                 </label>
+                                                <span class="text-danger" v-if="errors.id_card">{{ errors.id_card }}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
                                         <div style="height: 140px" class="border p-2 text-center">
-                                            <span class="text-info d-block" v-if="!radio_image">Please select Profile picture or Identity Card.</span>
+                                            <span class="text-danger d-block" v-if="webcame_message">{{ webcame_message }}</span>
                                             <video ref="camera" :width="canvasWidth" :height="canvasHeight" autoplay></video>
                                             <canvas v-show="false" ref="canvas" :width="canvasWidth" :height="canvasHeight"></canvas>
-                                            <span class="text-danger d-block" v-if="webcame_message">{{ webcame_message }}</span>
                                         </div>
                                         <div class="text-center my-4" v-if="!webcame_message">
                                             <button type="button" class="btn btn-sm btn-secondary mb-8" v-on:click="captureImage">Capture</button>
@@ -91,7 +92,7 @@
 </template>
 
 <script>
-
+    import Online from "../../apis/Online"
     export default {
         name:"register-online-test",
         props: ['registation_fields', 'test_id'],
@@ -102,6 +103,7 @@
                 id_card: '../../img/aadhaar-card.png',
                 radio_image: false,
                 disabled: false,
+                allow_webcam: false,
                 candidate: {
                     name: '',
                     email: '',
@@ -114,16 +116,55 @@
                 },
                 canvasWidth:200,
                 canvasHeight:114,
-                webcame_message:''
+                webcame_message:'',
+                errors: {
+                    'name': '',
+                    'email': '',
+                    'dob': '',
+                    'gender': '',
+                    'mobile': '',
+                    'avatar': '',
+                    'id_card': '',
+                }
             }
         },
         created: function () {
+            this.registation_fields.forEach(element => {
+                if(element.field == "Profile Picture" || element.field == "Identity card") {
+                    this.allow_webcam = true
+                }
+            })
+            
+            if(this.allow_webcam) {
+                this.startCameraStream()
+            }
             this.loader_spin = false
         },
-        mounted() {
-            this.startCameraStream()
-        },
         methods: {
+            async startCameraStream() {
+                const constraints = (window.constraints = {
+                    audio: false,
+                    video: { sharpness: true, pan: true, focusMode: true }
+                });
+                navigator.mediaDevices
+                .getUserMedia(constraints)
+                .then(stream => {
+                    this.$refs.camera.srcObject = stream;
+                    this.disabled = false
+                }).catch(error => {
+                    if(error) {
+                        this.webcame_message = 'Unable to access Camera and Microphone. Please allow and refresh the page.'
+                        alert(this.webcame_message)
+                    }
+                    this.disabled = true
+                });
+            },
+            async stopCameraStream() {
+                let tracks = this.$refs.camera.srcObject.getTracks();
+                tracks.forEach(track => {
+                    track.stop();
+                });
+            },
             async captureImage() {
                 if(this.radio_image) {
                     const FLASH_TIMEOUT = 50;
@@ -137,39 +178,43 @@
                         if(this.radio_image == 'avatar') {
                             this.candidate.avatar = dataUrl
                             this.avatar = dataUrl
+                            this.errors.avatar = ''
                         }
                         else {
                             this.candidate.id_card = dataUrl
                             this.id_card = dataUrl
+                            this.errors.id_card = ''
                         }
                     }, FLASH_TIMEOUT);
                 }
             },
-            async startCameraStream() {
-                const constraints = (window.constraints = {
-                    audio: false,
-                    video: { facingMode: { exact: "user" }, sharpness: true, pan: true, focusMode: true }
-                });
-                navigator.mediaDevices
-                .getUserMedia(constraints)
-                .then(stream => {
-                    this.$refs.camera.srcObject = stream;
-                    this.disabled = true
-                }).catch(error => {
-                    this.webcame_message = error
-                    this.disabled = true
-                });
-            },
-            async stopCameraStream() {
-                let tracks = this.$refs.camera.srcObject.getTracks();
-                tracks.forEach(track => {
-                    track.stop();
-                });
-            },
             async registationSubmit() {
+                
+                var flags = 0
+                this.registation_fields.forEach(element => {
+                    if(element.field == "Profile Picture" && element.required == 1 && this.candidate.id_card == '') {
+                        this.errors.avatar = 'Profile Picture is required field.'
+                        flags = 1
+                    }
+                    if(element.field == "Identity card" && element.required == 1 && this.candidate.id_card == '') {
+                        this.errors.id_card = 'Identity card is required field.'
+                        flags = 1
+                    }
+                })
+
+                if(flags == 1) {
+                    return false
+                }
+                else {
+                    this.errors.avatar = ''
+                    this.errors.id_card = ''
+                }
                 this.disabled=true
+                
                 Online.register(this.candidate, this.test_id).then(response => {
-                    
+                    this.stopCameraStream()
+                    this.$emit('childToParent', response.data.taker);
+                    this.disabled=false
                 }).catch(error=> {
                     this.disabled=false
                     if (error.response.status === 422) {

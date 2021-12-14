@@ -19,4 +19,8 @@ class Performancecriteriaoption extends Model
         'score',
         'remarks'
     ];
+
+    public function op_criteria() {
+        return $this->hasOne(Performancetype::class, 'id', 'performance_type_id');
+    }
 }

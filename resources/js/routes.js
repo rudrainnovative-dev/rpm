@@ -316,7 +316,7 @@ const routes = [
         path: '',
         component: ReportList,
         name: 'ReportList',
-        meta: { title: 'Test Reports | RPM' }
+        meta: { title: 'Test Reports | RPM', authOnly: true }
       }
     ],
   },
@@ -328,7 +328,7 @@ const routes = [
         path: '',
         component: ReportShow,
         name: 'ReportShow',
-        meta: { title: 'Report Show | RPM' }
+        meta: { title: 'Report Show | RPM', authOnly: true }
       }
     ],
   },

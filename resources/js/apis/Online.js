@@ -21,5 +21,14 @@ export default {
 
   async answerSave(form) {
     return Api.post(`/online-test-answered`, form);
-  }
+  },
+
+  async takerUpdate(form) {
+    return Api.post(`/online-test-taker`, form);
+  },
+
+  async takerSnap(form) {
+    return Api.post(`/online-test-snap`, form);
+  },
+
 };
