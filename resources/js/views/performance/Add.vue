@@ -27,7 +27,7 @@
                         <div class="dropdown">
                            <button type="button" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-sm btn-primary" :class="(this.performance_history.length == 0)?'disabled':''">See Older Versions<i class="fa fa-angle-down ms-2 p-0"></i></button>
                            <ul aria-labelledby="" role="menu" class="dropdown-menu" style="">
-                              <li v-for="history in this.performance_history">
+                              <li class="border-bottom" v-for="history in this.performance_history">
                                  <router-link :to='{name:"PerformanceShow", params: { id: history.id }}' class="d-block text-dark fw-normal px-4 py-2 fw-normal">v{{history.id}}.0</router-link>
                               </li>
                            </ul>

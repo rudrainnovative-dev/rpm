@@ -61,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/report/{id}/test', [ReportController::class, 'index']);
     Route::get('/report/{id}/show', [ReportController::class, 'show']);
+    Route::get('/report/{id}/pdf', [ReportController::class, 'pdf']);
 
     Route::get('/criterias', function() {
         return response()->json([
@@ -92,3 +93,4 @@ Route::get('/online-test/{id}/questions', [OnlinetestController::class, 'questio
 Route::post('/online-test-answered', [OnlinetestController::class, 'answered']);
 Route::post('/online-test-taker', [OnlinetestController::class, 'taker_update']);
 Route::post('/online-test-snap', [OnlinetestController::class, 'taker_snap']);
+Route::post('/online-test-screenshot', [OnlinetestController::class, 'taker_screenshot']);

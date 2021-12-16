@@ -18,5 +18,6 @@
     <script src="{{ mix('js/app.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
+    <script src="{{ asset('assets/js/html2canvas.min.js') }}"></script>
 </body>
 </html>

@@ -212,7 +212,9 @@
                 this.disabled=true
                 
                 Online.register(this.candidate, this.test_id).then(response => {
-                    this.stopCameraStream()
+                    if(this.allow_webcam) {
+                        this.stopCameraStream()
+                    }
                     this.$emit('childToParent', response.data.taker);
                     this.disabled=false
                 }).catch(error=> {

@@ -37,7 +37,7 @@
                                                 <span class="d-block text-muted">{{ report.email }}</span>
                                             </td>
                                             <td>{{ report.created_at.split('T')[0] }}</td>
-                                            <td>{{ report.correct_marks * 100 / report.total_marks }}</td>
+                                            <td>{{ Math.ceil(report.correct_marks * 100 / report.total_marks) }}</td>
                                             <td>
                                                 <ul class="list-unstyled list-inline m-0">
                                                     <li class="list-inline-item mb-2" v-tooltip="'Download Report'">
@@ -77,6 +77,7 @@
 
 <script>
 import Report from "../../apis/Report";
+import axios from 'axios'
 
 export default {
     name:"questions",
@@ -94,7 +95,6 @@ export default {
             this.loader_spin = true
             Report.index(this.$route.params.id, page).then(response => {
                 this.reports = response.data.takers
-                console.log(this.reports)
                 this.loader_spin = false
             })
             .catch(error=> {
@@ -103,7 +103,20 @@ export default {
             });
         },
         async downloadReport(id) {
-
+            this.loader_spin = true
+            Report.pdf(this.$route.params.id).then(response => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'report_'+id+'.pdf');
+                document.body.appendChild(link);
+                link.click();
+                this.loader_spin = false
+                this.$toast.success('Pdf download successfully.');
+            })
+            .catch(error=> {
+                this.loader_spin = false
+            });
         }
     }
 }

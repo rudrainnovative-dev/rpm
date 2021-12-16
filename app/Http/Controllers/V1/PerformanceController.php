@@ -40,6 +40,11 @@ class PerformanceController extends Controller
 
     public function store(Request $request) {
         
+        $select = Performancecriteria::orderBy('id', 'desc')->where('user_id', Auth::id())->first();
+        if(!empty($select)) {
+            Performancecriteria::where('id', $select->id)->update(['updated_at' => Date('Y-m-d H:i:s', strtotime('-60 seconds'))]);
+        }
+
         $performanceCriteria = new Performancecriteria;
         $performanceCriteria->user_id = Auth::id();
         $performanceCriteria->save();

@@ -9,6 +9,9 @@
                             <router-link :to='{name:"Dashboard"}' class="text-link small">Dashboard</router-link>
                         </li>
                         <li class="breadcrumb-item text-muted">
+                            <router-link :to='{name:"Test"}' class="text-link small">Test</router-link>
+                        </li>
+                        <li class="breadcrumb-item text-muted">
                             <p class="text-muted m-0 small">Test Performance</p>
                         </li>
                     </ul>
@@ -52,7 +55,7 @@
                                     <div class="col-md-6 col-12">
                                         <div class="form-group row align-items-center">
                                             <label for="section" class="opacity-75 py-0"><small class="fw-bold text-uppercase fw-normal ls-1">test taken</small></label>
-                                            <p class="m-0 fs-5"></p>
+                                            <p class="m-0 fs-5">{{ report.created_at | formatDate }}</p>
                                         </div>
                                         <div class="my-6 w-100"></div>
                                         <div class="form-group row align-items-center">
@@ -93,179 +96,131 @@
                                                 </div>
                                             </div>
                                             <div class="w-100 my-5"></div>
-                                                <div class="col-md-4 col-12">
-                                                    <div class="form-group row align-items-center">
-                                                        <label for="section" class="opacity-75 py-0"><small class="fw-bold text-uppercase">Date of Birth</small></label>
-                                                        <p class="m-0 fw-bolder fs-5" v-if="report.dob">{{ report.dob }}</p>
-                                                        <p class="m-0 fw-bolder fs-5" v-else>Not Filled</p>
-                                                    </div>
+                                            <div class="col-md-4 col-12">
+                                                <div class="form-group row align-items-center">
+                                                    <label for="section" class="opacity-75 py-0"><small class="fw-bold text-uppercase">Date of Birth</small></label>
+                                                    <p class="m-0 fw-bolder fs-5" v-if="report.dob">{{ report.dob }}</p>
+                                                    <p class="m-0 fw-bolder fs-5" v-else>Not Filled</p>
                                                 </div>
-                                                <div class="col-md-4 col-12">
-                                                    <div class="form-group row align-items-center">
-                                                        <label for="section" class="opacity-75 py-0"><small class="fw-bold text-uppercase">Gender</small></label>
-                                                        <p class="m-0 fw-bolder fs-5" v-if="report.gender">{{ report.gender }}</p>
-                                                        <p class="m-0 fw-bolder fs-5" v-else>Not Filled</p>
-                                                    </div>
+                                            </div>
+                                            <div class="col-md-4 col-12">
+                                                <div class="form-group row align-items-center">
+                                                    <label for="section" class="opacity-75 py-0"><small class="fw-bold text-uppercase">Gender</small></label>
+                                                    <p class="m-0 fw-bolder fs-5" v-if="report.gender">{{ report.gender }}</p>
+                                                    <p class="m-0 fw-bolder fs-5" v-else>Not Filled</p>
                                                 </div>
-                                                <div class="w-100 my-5"></div>
-                                                    <div class="col-md-4 col-12">
-                                                        <div class="form-group row align-items-center">
-                                                            <label for="section" class="opacity-75 py-0 mb-2"><small class="fw-bold text-uppercase">profile picture snapshot</small></label>
-                                                            <img :src="report.avatar" alt="profile" class="img-fluid mw-75" v-if="report.avatar">
-                                                            <img :src="dummy_image" alt="profile" class="img-fluid mw-75" v-else>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4 col-12">
-                                                        <div class="form-group row align-items-center">
-                                                            <label for="section" class="opacity-75 py-0 mb-2"><small class="fw-bold text-uppercase">identity card snapshot</small></label>
-                                                            <img :src="report.id_card" alt="profile" class="img-fluid mw-75" v-if="report.id_card">
-                                                            <img :src="dummy_image" alt="profile" class="img-fluid mw-75" v-else>
-                                                        </div>
-                                                    </div>
-                                                </div>    
+                                            </div>
+                                            <div class="w-100 my-5"></div>
+                                            <div class="col-md-4 col-12">
+                                                <div class="form-group row align-items-center">
+                                                    <label for="section" class="opacity-75 py-0 mb-2"><small class="fw-bold text-uppercase">profile picture snapshot</small></label>
+                                                    <img :src="report.avatar" alt="profile" class="img-fluid mw-75" v-if="report.avatar">
+                                                    <img :src="dummy_image" alt="profile" class="img-fluid mw-75" v-else>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-12">
+                                                <div class="form-group row align-items-center">
+                                                    <label for="section" class="opacity-75 py-0 mb-2"><small class="fw-bold text-uppercase">identity card snapshot</small></label>
+                                                    <img :src="report.id_card" alt="profile" class="img-fluid mw-75" v-if="report.id_card">
+                                                    <img :src="dummy_image" alt="profile" class="img-fluid mw-75" v-else>
+                                                </div>
+                                            </div>
+                                        </div>    
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item mb-lg-6 mb-5 rounded border-0 shadow-sm overflow-hidden">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button fw-bolder fs-6 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Performance Summary</button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample" style="">
+                                    <div class="accordion-body">
+                                        <p class="m-0">General Aptitude is defined as   potential   of the candidate and    the ability to grasp new concepts   which   are crucial to his/ her role as an employee in the organization. It is the innate, learned or   acquired ability of an  individual to   perform certain tasks. It   helps   assess Individual's capacity for    learning in general regardless of   any specific skill.</p>
+                                        <highcharts :options="chartOptions" class="my-5"></highcharts>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item mb-lg-6 mb-5 rounded border-0 shadow-sm overflow-hidden">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button class="accordion-button fw-bolder fs-6 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Reasoning Ability</button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample" style="">
+                                    <div class="accordion-body">
+                                        <p class="m-0">The ability of an individual to analyse and perceive the given   information from different perspectives.</p>
+                                        <highcharts :options="reasoningChartOptions" class="my-5"></highcharts>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item mb-lg-6 mb-5 rounded border-0 shadow-sm overflow-hidden">
+                                <h2 class="accordion-header" id="headingFour">
+                                    <button class="accordion-button fw-bolder fs-6 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">Numerical Ability</button>
+                                </h2>
+                                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample" style="">
+                                    <div class="accordion-body">
+                                        <p class="m-0">The ability to perceive and process numbers and related symbols to perform basic arithmetic operations.</p>
+                                        <highcharts :options="numberChartOptions" class="my-5"></highcharts>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item mb-lg-6 mb-5 rounded border-0 shadow-sm overflow-hidden">
+                                <h2 class="accordion-header" id="headingFive">
+                                    <button class="accordion-button fw-bolder fs-6 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">Attention analysis</button>
+                                </h2>
+                                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample" style="">
+                                    <div class="accordion-body">
+                                        <p class="m-0">The ability to structure observations that are obtained by  different data sources.</p>
+                                        <highcharts :options="attentionChartOptions" class="my-5"></highcharts>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item mb-lg-6 mb-5 rounded border-0 shadow-sm overflow-hidden">
+                                <h2 class="accordion-header" id="headingSix">
+                                    <button class="accordion-button fw-bolder fs-6 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                        Verbal Ability
+                                    </button>
+                                </h2>
+                                <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample" style="">
+                                    <div class="accordion-body">
+                                        <p class="m-0">The ability to understand word meanings, word relationships and  also interpret detailed information.</p>
+                                        <highcharts :options="verbalChartOptions" class="my-5"></highcharts>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item rounded border-0 shadow-sm overflow-hidden">
+                                <h2 class="accordion-header" id="headingSeven">
+                                    <button class="accordion-button fw-bolder fs-6 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">Test Log</button>
+                                </h2>
+                                <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample" style="">
+                                    <div class="accordion-body">
+                                        <div class="row m-0" v-if="avatars.length > 0">
+                                            <div class="col-md-12">
+                                                <h6 class="mb-3">Screenshots of Test Taker</h6>
+                                            </div>                                                   
+                                            <div class="col-md-6 col-12" v-for="avatar in avatars">
+                                                <div class="form-group align-items-center border border-info rounded">
+                                                    <img :src="avatar.snap" alt="image" class="img-fluid">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-4" v-if="screenshots.length > 0">
+                                            <div class="col-md-12">
+                                                <h6 class="mb-3">Screenshots</h6>
+                                            </div>                                                   
+                                            <div class="col-md-6 col-12" v-for="screenshot in screenshots">
+                                                <div class="form-group align-items-center border border-info rounded">
+                                                    <img :src="screenshot.snap" alt="image" class="img-fluid">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="accordion-item mb-lg-6 mb-5 rounded border-0 shadow-sm overflow-hidden">
-                                        <h2 class="accordion-header" id="headingTwo">
-                                            <button class="accordion-button fw-bolder fs-6 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                Performance Summary
-                                            </button>
-                                        </h2>
-                                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample" style="">
-                                            <div class="accordion-body">
-                                                <p class="m-0">General Aptitude is defined as   potential   of the candidate and    the ability to grasp new concepts   which   are crucial to his/ her role as an employee in the organization. It is the innate, learned or   acquired ability of an  individual to   perform certain tasks. It   helps   assess Individual's capacity for    learning in general regardless of   any specific skill.</p>
-
-                                                <highcharts :options="chartOptions" class="my-5"></highcharts>
-                                                
-                                                <div class="my-5 text-center">
-                                                    <span :style="{width:18px;height:18px;}" class="border"></span><span >{{ label }} : {{ total }}</span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                        <!-- performance summary ends -->
-
-                                        <!-- reasoning ability -->
-                                        <div class="accordion-item mb-lg-6 mb-5 rounded border-0 shadow-sm overflow-hidden">
-                                            <h2 class="accordion-header" id="headingThree">
-                                                <button class="accordion-button fw-bolder fs-6 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                                    Reasoning Ability
-                                                </button>
-                                            </h2>
-                                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample" style="">
-                                                <div class="accordion-body">
-
-                                                    <p class="m-0">The ability of   an individual   to analyse and perceive the given   information from different perspectives.</p>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- reasoning ability ends -->
-
-                                        <!-- numerical ability -->
-                                        <div class="accordion-item mb-lg-6 mb-5 rounded border-0 shadow-sm overflow-hidden">
-                                            <h2 class="accordion-header" id="headingFour">
-                                                <button class="accordion-button fw-bolder fs-6 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                                    Numerical Ability
-                                                </button>
-                                            </h2>
-                                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample" style="">
-                                                <div class="accordion-body">
-
-                                                    <p class="m-0">The ability to   perceive and process numbers and related symbols    to perform basic arithmetic operations.</p>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- numerical ability ends -->
-
-                                        <!-- data analysis -->
-                                        <div class="accordion-item mb-lg-6 mb-5 rounded border-0 shadow-sm overflow-hidden">
-                                            <h2 class="accordion-header" id="headingFive">
-                                                <button class="accordion-button fw-bolder fs-6 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                                                    Data analysis
-                                                </button>
-                                            </h2>
-                                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample" style="">
-                                                <div class="accordion-body">
-
-                                                    <p class="m-0">The ability to   structure   observations that   are obtained    by  different   data sources.</p>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- data analysis ends -->
-
-                                        <!-- verbal ability -->
-                                        <div class="accordion-item mb-lg-6 mb-5 rounded border-0 shadow-sm overflow-hidden">
-                                            <h2 class="accordion-header" id="headingSix">
-                                                <button class="accordion-button fw-bolder fs-6 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-                                                    Verbal Ability
-                                                </button>
-                                            </h2>
-                                            <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample" style="">
-                                                <div class="accordion-body">
-
-                                                    <p class="m-0">The ability to   understand word meanings,   word relationships and  also interpret detailed information.</p>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- verbal ability ends -->
-
-                                        <!-- test log -->
-                                        <div class="accordion-item rounded border-0 shadow-sm overflow-hidden">
-                                            <h2 class="accordion-header" id="headingSeven">
-                                                <button class="accordion-button fw-bolder fs-6 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
-                                                    Test Log
-                                                </button>
-                                            </h2>
-                                            <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample" style="">
-                                                <div class="accordion-body">                                                
-
-                                                    <div class="row m-0">
-
-                                                        <div class="col-md-12">
-                                                            <h6 class="mb-3">Images of the Test Taker</h6>
-                                                        </div>
-
-                                                        <!-- first -->                                                      
-                                                        <div class="col-md-4 col-12">
-                                                            <div class="form-group row align-items-center">
-                                                                <img src="img/dummy-img.png" alt="image" class="img-fluid mw-75">
-                                                            </div>
-                                                        </div>
-                                                        <!-- first ends -->
-
-                                                        <!-- second -->                                                     
-                                                        <div class="col-md-4 col-12">
-                                                            <div class="form-group row align-items-center">
-                                                                <img src="img/dummy-img.png" alt="image" class="img-fluid mw-75">
-                                                            </div>
-                                                        </div>
-                                                        <!-- second ends -->
-
-                                                        <!-- 3rd -->                                                        
-                                                        <div class="col-md-4 col-12">
-                                                            <div class="form-group row align-items-center">
-                                                                <img src="img/dummy-img.png" alt="image" class="img-fluid mw-75">
-                                                            </div>
-                                                        </div>
-                                                        <!-- 3rd ends -->
-
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- test log ends -->
-
-                                    </div>
-
-
-
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <router-link :to='{name:"Test"}' class="btn btn-sm btn-primary ml-4">Back</router-link>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -279,7 +234,6 @@
 <script>
 import Report from "../../apis/Report"
 import {Chart} from 'highcharts-vue'
-
 
 export default {
     name:"questions",
@@ -310,7 +264,7 @@ export default {
                     }
                 },
                 legend: {
-                    enabled: false,
+                    enabled: true,
                     reversed: true
                 },
                 plotOptions: {
@@ -323,10 +277,137 @@ export default {
                 },
                 series: []
             },
-            label: '',
-            color: '',
-            total: '',
-            performance: {}
+            reasoningChartOptions: {
+                chart: {
+                    height: 140,
+                    type: 'bar'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: ['Reasoning Abilities']
+                },
+                yAxis: {
+                    min: 0,
+                    max:100,
+                    title: {
+                      text: 'Values shown in above chart are percentages'
+                    }
+                },
+                legend: {
+                    enabled: true,
+                    reversed: true
+                },
+                plotOptions: {
+                    series: {
+                        stacking: 'normal'
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                series: []
+            },
+            numberChartOptions: {
+                chart: {
+                    height: 140,
+                    type: 'bar'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: ['Numerical Abilities']
+                },
+                yAxis: {
+                    min: 0,
+                    max:100,
+                    title: {
+                      text: 'Values shown in above chart are percentages'
+                    }
+                },
+                legend: {
+                    enabled: true,
+                    reversed: true
+                },
+                plotOptions: {
+                    series: {
+                        stacking: 'normal'
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                series: []
+            },
+            attentionChartOptions: {
+                chart: {
+                    height: 140,
+                    type: 'bar'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: ['Attention Abilities']
+                },
+                yAxis: {
+                    min: 0,
+                    max:100,
+                    title: {
+                      text: 'Values shown in above chart are percentages'
+                    }
+                },
+                legend: {
+                    enabled: true,
+                    reversed: true
+                },
+                plotOptions: {
+                    series: {
+                        stacking: 'normal'
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                series: []
+            },
+            verbalChartOptions: {
+                chart: {
+                    height: 140,
+                    type: 'bar'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: ['Verbal Abilities']
+                },
+                yAxis: {
+                    min: 0,
+                    max:100,
+                    title: {
+                      text: 'Values shown in above chart are percentages'
+                    }
+                },
+                legend: {
+                    enabled: true,
+                    reversed: true
+                },
+                plotOptions: {
+                    series: {
+                        stacking: 'normal'
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                series: []
+            },
+            performance: {},
+            avatars: [],
+            screenshots: [],
         }
     },
     mounted(){
@@ -337,24 +418,65 @@ export default {
             this.loader_spin = true
             Report.show(this.$route.params.id).then(response => {
                 
-                const { taker, performance, categories } = response.data
+                const { taker, performance, categories, sections, correct_sections, avatars, screenshots } = response.data
 
                 this.report = taker
-
-                this.total = this.report.correct_marks*100/this.report.total_marks
-                this.color = this.colors(this.total)
-
+                var total = this.report.correct_marks*100/this.report.total_marks
+                total = Math.ceil(total)
+                var color = this.colors(total)
+                var label = ''
                 this.performance = performance
                 this.performance.forEach(element => {
-                    if(this.total > element.min && this.total < element.max) {
-                        this.label = element.name;
+                    if(total >= element.min && total <= element.max) {
+                        label = element.name;
                     }
                 })
                 
-                var Obj = { name: this.label, data: [this.total], color: this.color }
-                console.log(Obj)
+                var Obj = { name: label, data: [total], color: color }
                 this.chartOptions.series.push(Obj)
                 
+                for(var i = 1; i <= Object.keys(categories).length; i++) {
+                    
+                    let marks_total = 0
+                    let section_label = 'Very Low'
+
+                    if(correct_sections[i]) {
+                       marks_total = correct_sections[i] * 100 / sections[i]
+                       marks_total = Math.ceil(marks_total)
+                    }
+
+                    let section_color = this.colors(marks_total)
+
+                    this.performance.forEach(element => {
+                        if(marks_total >= element.min && marks_total <= element.max) {
+                            section_label = element.name;
+                        }
+                    })
+
+                    if(i == 1) {
+                        var AttObj = { name: section_label, data: [marks_total], color: section_color }
+                        this.attentionChartOptions.series.push(AttObj)
+                    }
+
+                    if(i == 2) {
+                        var NumObj = { name: section_label, data: [marks_total], color: section_color }
+                        this.numberChartOptions.series.push(NumObj)
+                    }
+
+                    if(i == 3) {
+                        var ResObj = { name: section_label, data: [marks_total], color: section_color }
+                        this.reasoningChartOptions.series.push(ResObj)
+                    }
+
+                    if(i == 4) {
+                        var VerObj = { name: section_label, data: [marks_total], color: section_color }
+                        this.verbalChartOptions.series.push(VerObj)
+                    }
+                }
+
+                this.avatars = avatars
+                this.screenshots = screenshots
+
                 this.loader_spin = false
             })
             .catch(error=> {

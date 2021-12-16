@@ -25,7 +25,8 @@
                   <div class="d-flex align-items-center justify-content-md-end mb-4">
                      <div class="badge-custom me-3">
                         <span class="badge badge-light-primary fw-normal p-3">Currently v{{ this.$route.params.id }}.0</span>
-                        <!--<span class="small m-0 text-muted">(from 17 Feb, 2020 to 21 Jan, 2021)</span>-->
+                        <span class="small m-0 text-muted" v-if="fromdate !== todate">(from {{ fromdate | formatDate }} to {{ todate | formatDate }})</span>
+                        <span class="small m-0 text-muted" v-else>(from {{ fromdate | formatDate }} to Till Now)</span>
                      </div>
                   </div>
                </div>
@@ -107,6 +108,8 @@ export default {
          },
          performance_type:[],
          current_performance: [],
+         fromdate: '',
+         todate: '',
          disabled: false,
          loader_spin: true
       }
@@ -120,6 +123,8 @@ export default {
             this.performance_type = response.data.performance_type
             this.current_performance = response.data.current_performance
 
+            this.fromdate = this.current_performance.created_at
+            this.todate = this.current_performance.updated_at
             var ObjPerformance = {}
             var ObjRemarks = {}
             

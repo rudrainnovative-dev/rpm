@@ -14,6 +14,7 @@ use App\Models\Assigncandidate;
 use App\Models\Testtaker;
 use App\Models\Testtakeranswer;
 use App\Models\Testtakersnap;
+use App\Models\Testtakerscreenshot;
 use DB;
 use File;
 
@@ -225,9 +226,34 @@ class OnlinetestController extends Controller
                 'taker_id' => $request->taker_id,
                 'test_id' => $request->id,
                 'snap' => $request->snap,
-                'created_at' => Date('Y-md-d H:i:s'),
-                'updated_at' => Date('Y-md-d H:i:s')
+                'created_at' => Date('Y-m-d H:i:s'),
+                'updated_at' => Date('Y-m-d H:i:s')
             ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'save face',
+            ], 200);
+        }
+    }
+
+    public function taker_screenshot(request $request) {
+
+        if($request->taker_id && $request->id && $request->screensnap) {
+
+            Testtakerscreenshot::insert([
+                'taker_id' => $request->taker_id,
+                'test_id' => $request->id,
+                'snap' => $request->screensnap,
+                'created_at' => Date('Y-m-d H:i:s'),
+                'updated_at' => Date('Y-m-d H:i:s')
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'save screen',
+            ], 200);
+
         }
     }
 

@@ -18,3 +18,6 @@ Route::get('{any}', function () {
 })->where('any', '^(?!email).*');
 
 Route::get('/email/verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
+
+use App\Http\Controllers\V1\ReportController;
+Route::get('/email/report/{id}/pdf', [ReportController::class, 'pdf']);

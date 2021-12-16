@@ -9,6 +9,13 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 import VTooltip from 'v-tooltip'
 Vue.use(VTooltip)
 
+// date format
+import moment from 'moment'
+Vue.filter('formatDate', function(value) {
+  if (value) {
+    return moment(String(value)).format('DD MMM, YYYY')
+  }
+})
 
 // alert plugin on vue
 import Toast from "vue-toastification";

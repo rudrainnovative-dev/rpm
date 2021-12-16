@@ -1,6 +1,6 @@
 <template>
     <div class="post d-flex flex-column-fluid" id="kt_post">
-        <div id="kt_content_container" class="container-fluid">
+        <div id="kt_content_container" class="container-fluid" ref="screenPrint">
             <div class="row align-items-center position-relative py-2">
                 <div class="col-md-3 col-12">
                     <div class="logo w-100">
@@ -180,20 +180,19 @@
                     settings: [],
                     question: {},
                     questions: [],
+                    screensnap: '',
                     errors: {
                         validate: ''
-                    }
+                    },
                },
-               temp_media: ''
+               temp_media: '',
             }
         },
         methods:{
             async getTest() {
                 this.loader_spin = true
                 Online.index(this.$route.params.id).then(response => {
-                    this.validateTest = true
-                    this.proceed = true
-
+                    
                     const { id, name, registation_fields, duration } = response.data.test
                     this.registation_fields = registation_fields
                     this.test.id = id
@@ -208,6 +207,13 @@
                     else {
                         this.getQuestions()
                     }
+
+                    if(this.test.settings.includes(3) && !this.validateTest) {
+                        this.screenShot()
+                    }
+
+                    this.validateTest = true
+                    this.proceed = true
 
                     this.loader_spin = false
                 }).catch(error=> {
@@ -287,16 +293,35 @@
                 }
             },
             async finishTest() {
-                
                 if(confirm("Are you sure you want to finish this test?")){
                     this.registation = false
                     this.test_screen = false
                     this.thankyou_screen = true
                 }
-
-
+            },
+            async screenShot() {
+                var i = 1
+                setInterval(function(){
+                    if(this.test.taker_id && i < 5) {
+                        const captureElement = document.querySelector('#kt_post')
+                        let screen = html2canvas(document.body)
+                        .then((canvas, test) => {
+                            canvas.style.display = 'none'
+                            document.body.appendChild(canvas)
+                            return canvas
+                        })
+                        .then(canvas => {
+                            this.test.screensnap = canvas.toDataURL('image/wepb', 0.5)
+                            Online.takerScreenshot(this.test).then(response => {
+                                canvas.remove()
+                            }).catch(error=> {
+                                canvas.remove()
+                            })
+                        })
+                        i++
+                    }
+                }.bind(this), 30000)
             }
-
         }
     }
 </script>

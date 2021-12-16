@@ -31,4 +31,7 @@ export default {
     return Api.post(`/online-test-snap`, form);
   },
 
+  async takerScreenshot(form) {
+    return Api.post(`/online-test-screenshot`, form);
+  },
 };
