@@ -34,4 +34,13 @@ export default {
   async takerScreenshot(form) {
     return Api.post(`/online-test-screenshot`, form);
   },
+
+  async updateStatus(id, form) {
+    return Api.post(`/online-test/${id}/update`, form);
+  },
+
+  async report(id) {
+    return Api.get(`/online-test/${id}/report`);
+  },
+
 };

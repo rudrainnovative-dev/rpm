@@ -94,3 +94,5 @@ Route::post('/online-test-answered', [OnlinetestController::class, 'answered']);
 Route::post('/online-test-taker', [OnlinetestController::class, 'taker_update']);
 Route::post('/online-test-snap', [OnlinetestController::class, 'taker_snap']);
 Route::post('/online-test-screenshot', [OnlinetestController::class, 'taker_screenshot']);
+Route::post('/online-test/{id}/update', [OnlinetestController::class, 'updateStatus']);
+Route::get('/online-test/{id}/report', [OnlinetestController::class, 'report']);

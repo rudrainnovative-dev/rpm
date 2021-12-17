@@ -1,92 +1,87 @@
 <template>
-    <div class="row">
-        <div class="col-md-12 col-12">
-            <div class="alert alert-info mb-8"><span>Just few more steps to begin you test...</span></div>
-            <div class="card">
-                <div class="card-header">
-                    <div class="text-muted"><span class="text-danger">*</span> Indicates required field</div>
-                </div>
-                <div class="card-body">
-                    <form @submit.prevent="registationSubmit">
-                        <div class="row">
-                            <div class="col-md-4 col-12">
-                                <div class="form-group">
-                                    <label class="mb-2 fw-bold">Name<span class="text-danger">*</span></label>
-                                    <input class="form-control form-control-solid h-auto py-2 px-2 fw-normal" type="text" v-model="candidate.name" required/>
-                                </div>
-                                <div class="form-group">
-                                    <label class="mb-2 fw-bold">Email<span class="text-danger">*</span></label>
-                                    <input class="form-control form-control-solid" type="email" v-model="candidate.email" required/>
-                                </div>
-                                <div class="form-group" v-if="field.field == 'Phone Number'" v-for="field in registation_fields">
-                                    <label class="mb-2 fw-bold">{{ field.field }}<small class="text-danger" v-if="field.required">*</small></label>
-                                    <input :type="field.type" class="form-control form-control-solid h-auto py-2 px-2 fw-normal" :placeholder="field.field" autocomplete="off" :required="(field.required)?true:false" v-model="candidate.mobile"/>
-                                </div>
-                                <div class="form-group" v-if="field.field == 'Date of Birth'" v-for="field in registation_fields">
-                                    <label class="mb-2 fw-bold">{{ field.field }}<small class="text-danger" v-if="field.required">*</small></label>
-                                    <input :type="field.type" class="form-control form-control-solid h-auto py-2 px-2 fw-normal" :placeholder="field.field" autocomplete="off" :required="(field.required)?true:false" v-model="candidate.dob"/>
-                                </div>
-                                <div class="form-group" v-if="field.field == 'Gender'" v-for="field in registation_fields">
-                                    <label class="mb-2 fw-bold">{{ field.field }}<small class="text-danger" v-if="field.required">*</small></label>
-                                    <select class="form-control form-control-solid h-auto py-2 px-2 fw-normal" :required="(field.required)?true:false" v-model="candidate.gender">
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="ml-md-4 mt-4 col-md-4 col-12" v-if="allow_webcam">
-                                <div class="row">
-                                    <div class="col-md-6 col-6">
-                                        <div class="form-group" v-if="field.field == 'Profile Picture'" v-for="field in registation_fields">
-                                            <label class="mb-2 fw-bold">{{ field.field }}<small class="text-danger" v-if="field.required">*</small></label>
-                                            <div class="form-group">
-                                                <input type="radio" name="radio_image" id="avatarImage" v-model="radio_image" value="avatar" style="position: absolute;z-index: -1;"/>
-                                                <label for="avatarImage"> 
-                                                    <img :src="avatar" class="p-1" :class="(radio_image == 'avatar')?'border border-info':'border border-secondary'" style="width:100%">
-                                                </label>
-                                                <span class="text-danger" v-if="errors.avatar">{{ errors.avatar }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 col-6">
-                                        <div class="form-group" v-if="field.field == 'Identity card'" v-for="field in registation_fields">
-                                            <label class="mb-2 fw-bold">{{ field.field }}<small class="text-danger" v-if="field.required">*</small></label>
-                                            <div class="form-group">
-                                                <input type="radio" name="radio_image" id="aadhaarImage" v-model="radio_image" value="id_card" style="position: absolute;z-index: -1;"/>
-                                                <label for="aadhaarImage"> 
-                                                    <img :src="id_card" class="p-1" :class="(radio_image == 'id_card')?'border border-info':'border border-secondary'" style="width:100%">
-                                                </label>
-                                                <span class="text-danger" v-if="errors.id_card">{{ errors.id_card }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div style="height: 140px" class="border p-2 text-center">
-                                            <span class="text-danger d-block" v-if="webcame_message">{{ webcame_message }}</span>
-                                            <video ref="camera" :width="canvasWidth" :height="canvasHeight" autoplay></video>
-                                            <canvas v-show="false" ref="canvas" :width="canvasWidth" :height="canvasHeight"></canvas>
-                                        </div>
-                                        <div class="text-center my-4" v-if="!webcame_message">
-                                            <button type="button" class="btn btn-sm btn-secondary mb-8" v-on:click="captureImage">Capture</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 col-12 text-right">
-                                <div class="form-group mt-5">
-                                    <button type="submit" class="btn btn-primary btn-sm" :disabled="disabled">Next</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+    <div class="col-md-12 col-12 p-4">
+        <div class="alert alert-info mb-8"><span>Just few more steps to begin you test...</span></div>
+        <div class="card">
+            <div class="card-header">
+                <div class="text-muted"><span class="text-danger">*</span> Indicates required field</div>
             </div>
-        </div>
-        <div class="loading_front" v-if="loader_spin">
-            <div class="loader"></div>
+            <div class="card-body">
+                <form @submit.prevent="registationSubmit">
+                    <div class="row">
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label class="mb-2 fw-bold">Name<span class="text-danger">*</span></label>
+                                <input class="form-control form-control-solid h-auto py-2 px-2 fw-normal" type="text" v-model="candidate.name" required/>
+                            </div>
+                            <div class="form-group">
+                                <label class="mb-2 fw-bold">Email<span class="text-danger">*</span></label>
+                                <input class="form-control form-control-solid" type="email" v-model="candidate.email" required/>
+                            </div>
+                            <div class="form-group" v-if="field.field == 'Phone Number'" v-for="field in registation_fields">
+                                <label class="mb-2 fw-bold">{{ field.field }}<small class="text-danger" v-if="field.required">*</small></label>
+                                <input :type="field.type" class="form-control form-control-solid h-auto py-2 px-2 fw-normal" :placeholder="field.field" autocomplete="off" :required="(field.required)?true:false" v-model="candidate.mobile"/>
+                            </div>
+                            <div class="form-group" v-if="field.field == 'Date of Birth'" v-for="field in registation_fields">
+                                <label class="mb-2 fw-bold">{{ field.field }}<small class="text-danger" v-if="field.required">*</small></label>
+                                <input :type="field.type" class="form-control form-control-solid h-auto py-2 px-2 fw-normal" :placeholder="field.field" autocomplete="off" :required="(field.required)?true:false" v-model="candidate.dob"/>
+                            </div>
+                            <div class="form-group" v-if="field.field == 'Gender'" v-for="field in registation_fields">
+                                <label class="mb-2 fw-bold">{{ field.field }}<small class="text-danger" v-if="field.required">*</small></label>
+                                <select class="form-control form-control-solid h-auto py-2 px-2 fw-normal" :required="(field.required)?true:false" v-model="candidate.gender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="ml-md-4 mt-4 col-md-4 col-12" v-if="allow_webcam">
+                            <div class="row">
+                                <div class="col-md-6 col-6">
+                                    <div class="form-group" v-if="field.field == 'Profile Picture'" v-for="field in registation_fields">
+                                        <label class="mb-2 fw-bold">{{ field.field }}<small class="text-danger" v-if="field.required">*</small></label>
+                                        <div class="form-group">
+                                            <input type="radio" name="radio_image" id="avatarImage" v-model="radio_image" value="avatar" style="position: absolute;z-index: -1;"/>
+                                            <label for="avatarImage"> 
+                                                <img :src="avatar" class="p-1" :class="(radio_image == 'avatar')?'border border-info':'border border-secondary'" style="width:100%">
+                                            </label>
+                                            <span class="text-danger" v-if="errors.avatar">{{ errors.avatar }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-6">
+                                    <div class="form-group" v-if="field.field == 'Identity card'" v-for="field in registation_fields">
+                                        <label class="mb-2 fw-bold">{{ field.field }}<small class="text-danger" v-if="field.required">*</small></label>
+                                        <div class="form-group">
+                                            <input type="radio" name="radio_image" id="aadhaarImage" v-model="radio_image" value="id_card" style="position: absolute;z-index: -1;"/>
+                                            <label for="aadhaarImage"> 
+                                                <img :src="id_card" class="p-1" :class="(radio_image == 'id_card')?'border border-info':'border border-secondary'" style="width:100%">
+                                            </label>
+                                            <span class="text-danger" v-if="errors.id_card">{{ errors.id_card }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div style="height: 140px" class="border p-2 text-center">
+                                        <span class="text-danger d-block" v-if="webcame_message">{{ webcame_message }}</span>
+                                        <video ref="camera" :width="canvasWidth" :height="canvasHeight" autoplay></video>
+                                        <canvas v-show="false" ref="canvas" :width="canvasWidth" :height="canvasHeight"></canvas>
+                                    </div>
+                                    <div class="text-center my-4" v-if="!webcame_message">
+                                        <button type="button" class="btn btn-sm btn-secondary mb-8" v-on:click="captureImage">Capture</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-12 text-right">
+                            <div class="form-group mt-5">
+                                <button type="submit" class="btn btn-primary btn-sm" :disabled="disabled"><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" v-if="disabled"></span> Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </template>
@@ -189,7 +184,6 @@
                 }
             },
             async registationSubmit() {
-                
                 var flags = 0
                 this.registation_fields.forEach(element => {
                     if(element.field == "Profile Picture" && element.required == 1 && this.candidate.id_card == '') {
@@ -210,7 +204,6 @@
                     this.errors.id_card = ''
                 }
                 this.disabled=true
-                
                 Online.register(this.candidate, this.test_id).then(response => {
                     if(this.allow_webcam) {
                         this.stopCameraStream()

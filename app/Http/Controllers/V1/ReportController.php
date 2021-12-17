@@ -38,7 +38,6 @@ class ReportController extends Controller
     public function show(request $request, $taker_id) {
 
         $categories = Category::orderBy('id', 'asc')->pluck('name', 'id');
-
         $taker = Testtaker::where('id', $taker_id)
                     ->withCount(['answers AS total_marks' => function($query) {
                         $query->select(DB::raw('sum(marks)'));
@@ -169,7 +168,7 @@ class ReportController extends Controller
 
             $file = 'report_'.$taker->id.'.pdf';
             $pdf = PDF::loadView('report', $data_array);
-            return $pdf->stream();
+            return $pdf->download();
 
         }
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="post d-flex flex-column-fluid" id="kt_post">
+    <div class="post d-flex flex-column-fluid" id="kt_post" @click.right.prevent @copy.prevent @paste.prevent>
         <div id="kt_content_container" class="container-fluid" ref="screenPrint">
             <div class="row align-items-center position-relative py-2">
                 <div class="col-md-3 col-12">
@@ -13,18 +13,13 @@
                 <div class="col-md-4 col-12 position-md-absolute end-0 top-md-50 text-center mx-auto translate-md-middle-y">
                     <div class="d-flex align-items-center justify-content-md-end">
                         <p class="m-0 pe-2" v-if="test_screen">Test Duration: </p>
-                        <p id="timer-custom" class="m-0 text-primary fw-bolder min-w-80px" v-if="test_screen">{{ test.time_counter }}</p>
+                        <p id="timer-custom" class="m-0 fw-bolder min-w-100px" :class="(this.test.duration > 300)?'text-primary':'text-danger'" v-if="test_screen">{{ time_counter }}</p>
                     </div>
                 </div>
             </div>
             <div class="row" v-if="validateTest">
-                <Remember v-if="proceed" />
-                <div class="col-md-12 col-12 py-4 text-right" v-if="proceed">
-                    <button type="button" class="btn btn-sm btn-primary" v-on:click="proceedClick">Proceed</button>
-                </div>
-                <div class="col-md-12 col-12 py-4" v-if="registation">
-                    <Registation :registation_fields="registation_fields" :test_id="test.id" v-on:childToParent="onRegistationClick"/>
-                </div>
+                <Remember :camera_enable="camera_enable" :camera_error="camera_error" v-on:childToParent="onProceedClick" v-if="proceed" />
+                <Registation :registation_fields="registation_fields" :test_id="test.id" v-on:childToParent="onRegistationClick" v-if="registation"/>
                 <div class="col-md-12 col-12 py-4" v-if="test_screen">
                     <div class="w-100">
                         <div class="separator mb-5"></div>
@@ -33,7 +28,7 @@
                                 <div class="form-group row align-items-center">
                                     <label for="section" class="py-0 fw-bold col-md-4 col-form-label col-12">Section <span><strong>{{ selected_category.key }}</strong></span> of {{ categories.length }}</label>
                                     <div class="col-md-4 col-12">
-                                        <select class="form-control form-control-solid form-control-sm" v-model="selected_category" v-if="categories.length > 0" v-on:change="categoryChanged">
+                                        <select class="form-control form-control-solid form-control-sm" v-model="selected_category" v-if="categories.length > 0" v-on:change="sectionChanged">
                                             <option v-bind:value="{ key: key+1, id: category.id, info: category.info, name: category.name }" v-for="(category,key) in categories">{{ category.name }}</option>
                                         </select>
                                     </div>
@@ -41,7 +36,12 @@
                             </div>
                             <div class="col-md-4 col-12"></div>
                             <div class="col-md-3 col-12">
-
+                                <div class="d-flex align-items-center">
+                                    <p class="mb-0 me-3">Test Status:</p>
+                                    <div class="progress flex-grow-1">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" :style="`width: ${progress_bar}%;`" :aria-valuenow="progress_bar" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="separator mb-5"></div>
@@ -122,13 +122,21 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="row" v-if="thankyou_screen">
-                    <div class="col-md-12 my-8">
+                <div class="row" v-if="thankuscreen">
+                    <div class="col-md-12 my-8" v-if="!report_display">
                         <div class="alert alert-info">
                             <h4>Thank you</h4>
                             <span class="d-block">Your test have been successfully submited.</span>
                             <span class="d-block">You can closed this window.</span>
+                        </div>
+                    </div>
+                    <Reportdisplay :taker="test.taker_id" v-else/>
+                </div>
+                <div class="row" v-if="timeoutscreen">
+                    <div class="col-md-12 my-8" v-if="!report_display">
+                        <div class="alert alert-info">
+                            <h4>Your time is finish.</h4>
+                            <button type="btn btn-secondary" v-on:click="finishTestTimeout">Finish Test</button>
                         </div>
                     </div>
                 </div>
@@ -148,31 +156,34 @@
 </template>
 
 <script>
-    
     import Online from "../../apis/Online"
     import Remember from './Remember'
     import Registation from './Registation'
+    import Reportdisplay from './Report'
 
     export default {
         name:"online-test",
-        components: { Remember, Registation },
+        components: { Remember, Registation, Reportdisplay },
         mounted() {
             this.getTest()
+            document.addEventListener('keydown', function(e) {
+                if(e.ctrlKey && e.keyCode == 73) {
+                    e.preventDefault()
+                }
+                if(e.ctrlKey && e.keyCode == 67) {
+                    e.preventDefault()
+                }
+                if(e.keyCode == 123) {
+                    e.preventDefault()
+                }
+            }, false)
         },
         data() {
             return {
-               proceed: false,
-               validateTest: false,
-               registation: false,
-               test_screen: false,
-               thankyou_screen: false,
-               loader_spin: false,
-               registation_fields: '',
-               selected_answers: [],
-               test: {
+                test: {
                     id: '',
                     name:'',
-                    time_counter:'',
+                    duration: '',
                     taker_id: '',
                     taker_email: '',
                     categories: '',
@@ -183,23 +194,38 @@
                     screensnap: '',
                     errors: {
                         validate: ''
-                    },
+                    }
                },
-               temp_media: '',
+               time_counter:'',
+               camera_enable: false,
+               camera_error: '',
+               proceed: false,
+               validateTest: false,
+               registation: false,
+               total_questions: '',
+               test_screen: false,
+               thankuscreen: false,
+               timeoutscreen: false,
+               report_display: false,
+               loader_spin: false,
+               registation_fields: '',
+               selected_answers: [],
+               progress_bar: '',
             }
         },
         methods:{
             async getTest() {
                 this.loader_spin = true
                 Online.index(this.$route.params.id).then(response => {
-                    
                     const { id, name, registation_fields, duration } = response.data.test
                     this.registation_fields = registation_fields
                     this.test.id = id
                     this.test.name = name
                     this.categories = response.data.category
                     this.selected_category = { key: 1, id: this.categories[0].id, info: this.categories[0].info, name: this.categories[0].name }
+                    this.total_questions = response.data.total_questions
                     this.test.settings = response.data.test_settings
+                    this.test.duration = duration*60
 
                     if(this.test.settings.includes(12)) {
                         this.getQuestion()
@@ -210,6 +236,15 @@
 
                     if(this.test.settings.includes(3) && !this.validateTest) {
                         this.screenShot()
+                    }
+
+                    if(this.test.settings.includes(4) && !this.validateTest) {
+                        this.camera_enable = true
+                        this.startWebCam()
+                    }
+
+                    if(this.test.settings.includes(5) && !this.validateTest) {
+                        this.report_display = true
                     }
 
                     this.validateTest = true
@@ -223,80 +258,64 @@
                     this.loader_spin = false
                 })
             },
-            async proceedClick() {
+            async onProceedClick() {
                 this.proceed = false
                 this.registation = true
             },
             async onRegistationClick(response) {
                 this.test.taker_id = response.id
                 this.test.taker_email = response.email
-                if(this.test.settings.includes(4)) {
-                    this.registation = false,
-                    this.test_screen = true
-                }
-                else {
-                    this.registation = false,
-                    this.test_screen = true
-                }
+                this.registation = false
+                this.test_screen = true
+                this.timeCounterStart()
             },
-            async categoryChanged() {
-                if(this.test.settings.includes(12)) {
-                    this.getQuestion()
-                }
-                else {
-                    this.getQuestions()
+            async sectionChanged() {
+                if(confirm('Are you sure want to change the section?')) {
+                    if(this.test.settings.includes(12)) {
+                        this.getQuestion()
+                    }
+                    else {
+                        this.getQuestions()
+                    }
                 }
             },
             async getQuestion(page = 1) {
                 this.loader_spin = true
                 Online.question(this.test.id, this.selected_category.id, page).then(response => {
                     this.test.question = response.data.question
-                    //this.test.total_question = this.question.total
                     this.loader_spin = false
                 }).catch(error=> {
                     this.loader_spin = false
                 })
-                console.log(this.selected_answers)
             },
             async getQuestions() {
                 this.loader_spin = true
                 Online.questions(this.test.id, this.selected_category.id).then(response => {
                     this.test.questions = response.data.questions
-                    //this.test.total_question = this.question.total
                     this.loader_spin = false
-                    console.log(this.selected_answers)
                 }).catch(error=> {
                     this.loader_spin = false
                 })
             },
             async answerSelected(question_id, question_title, question_options, correct, marks, selected, test_id, category_id, category_name) {
+                console.log(this.selected_answers)
                 var answered = [];
                 answered = {'question_id': question_id, 'question': question_title, 'taker_id': this.test.taker_id, 'options': question_options, 'correct': correct, 'marks': marks, 'selected': selected, 'test_id': test_id, 'category_id': category_id, 'category': category_name}
                 Online.answerSave(answered).then(response => {
-                    if(response.data.action == 'create') {
-                        this.solved = this.solved + 1
-                    }
-                    this.selected_answers[question_id] = selected 
-                }).catch(error=> {
-
-                })
+                   
+                }).catch(error=> { })
             },
             async nextSection() {
-                var key = this.selected_category.key + 1
-                var index = key - 1
-                this.selected_category = { key: key, id: this.categories[index].id, info: this.categories[index].info, name: this.categories[index].name }
-                if(this.test.settings.includes(12)) {
-                    this.getQuestion()
-                }
-                else {
-                    this.getQuestions()
-                }
-            },
-            async finishTest() {
-                if(confirm("Are you sure you want to finish this test?")){
-                    this.registation = false
-                    this.test_screen = false
-                    this.thankyou_screen = true
+                if(confirm('Are you sure want to change the section?')) {
+                    var key = this.selected_category.key + 1
+                    var index = key - 1
+                    this.selected_category = { key: key, id: this.categories[index].id, info: this.categories[index].info, name: this.categories[index].name }
+                    if(this.test.settings.includes(12)) {
+                        this.getQuestion()
+                    }
+                    else {
+                        this.getQuestions()
+                    }
                 }
             },
             async screenShot() {
@@ -321,6 +340,70 @@
                         i++
                     }
                 }.bind(this), 30000)
+            },
+            async startWebCam() {
+                const constraints = (window.constraints = {
+                    audio: true,
+                    video: { sharpness: true, pan: true, focusMode: true }
+                });
+                navigator.mediaDevices
+                .getUserMedia(constraints)
+                .then(stream => {
+                   this.camera_error = ''
+
+                }).catch(error => {
+                    if(error) {
+                        this.camera_error = error
+                    }
+                });
+            },
+            async stopWebCam() {
+                
+            },
+            async timeCounterStart() {
+                if(this.test.duration > 0) {
+                    setTimeout(() => {
+                        this.test.duration -= 1
+
+                        var d = Number(this.test.duration)
+                        var h = Math.floor(d / 3600);
+                        var m = Math.floor(d % 3600 / 60);
+                        var s = Math.floor(d % 3600 % 60);
+
+                        var hDisplay = h > 0 ? h + (h == 1 ? "h " : "h ") : ""
+                        var mDisplay = m > 0 ? m + (m == 1 ? "m " : "m ") : ""
+                        var sDisplay = s > 0 ? s + (s == 1 ? "s" : "s") : ""
+                        
+                        this.time_counter  = hDisplay + mDisplay + sDisplay
+
+                        this.timeCounterStart()
+                    }, 1000)
+                }
+                else {
+                    this.test_screen = false
+                    this.timeoutscreen = true
+                }                  
+            },
+            async finishTestTimeout() {
+                this.updateTestStatus()
+                this.timeoutscreen = false
+                this.thankuscreen = true
+            },
+            async finishTest() {
+                if(confirm("Are you sure you want to finish this test?")){
+                    this.updateTestStatus()
+                    this.test_screen = false
+                    this.thankuscreen = true
+                }
+            },
+            async updateTestStatus() {
+                this.loader_spin = false
+                Online.updateStatus(this.test.taker_id, this.test).then(response => {
+                    
+                }).catch(error=> {
+                    this.loader_spin = false
+                })
+
             }
         }
     }
