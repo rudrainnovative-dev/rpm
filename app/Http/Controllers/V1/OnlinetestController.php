@@ -23,7 +23,16 @@ class OnlinetestController extends Controller
 {
     public function index(Request $request, $public_id) {
         
-        if($public_id) {
+        if($request->cid && $request->cid != 'admin') {
+            if(!Assigncandidate::where('id', $request->cid)->whereRaw('(now() between start and end)')->where('status', '0')->exists()) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'This test has been deactivated. Please contact your administrator.',
+                ], 400);
+            }
+        }
+
+        if($public_id ) {
 
             $test = Test::with(['purpose', 'registation_fields'])->where('public_id', $public_id)->first();
 

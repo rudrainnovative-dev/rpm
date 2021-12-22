@@ -59,7 +59,7 @@
                             <div class="test-custom card-body">
                                 <div class="test-content mt-5">
                                     <p class="sections">
-                                       4 Sections
+                                       {{ test.test_sections.length }} Sections
                                     </p>
                                     <p class="d-flex justify-content-between align-items-center border-bottom py-4 border-top">
                                         <span>{{ test.test_questions.length }} Questions</span>
@@ -67,12 +67,12 @@
                                     </p>
                                     <p class="d-flex justify-content-between align-items-center">
                                         <span>{{ test.duration }} Min</span>
-                                        <router-link :to='{name:"OnlineTest", params:{id:test.public_id}}'><button class="btn btn-sm btn-light-dark px-3 text-center h-35px w-35px" type="button" v-tooltip="tooltip.link"><i class="p-0 fa fa-link"></i></button></router-link>
+                                        <router-link :to='{name:"OnlineTest", params:{id:test.public_id, user:"admin"}}' target="_blank"><button class="btn btn-sm btn-light-dark px-3 text-center h-35px w-35px" type="button" v-tooltip="tooltip.link"><i class="p-0 fa fa-link"></i></button></router-link>
                                     </p>
                                 </div>
                                 <ul class="list-unstyled mb-0 mt-7 d-flex list-inline"> 
                                     <li class="list-inline-item w-50">
-                                        <router-link :to='{name:"OnlineTest", params:{id:test.public_id}}' class="btn btn-light-dark btn-sm w-100">Preview Test</router-link>
+                                        <router-link :to='{name:"OnlineTestPreview", params:{id:test.public_id, user:"admin"}}' class="btn btn-light-dark btn-sm w-100" target="_blank">Preview Test</router-link>
                                     </li>
                                     <li class="list-inline-item w-50">
                                         <router-link :to='{name:"ReportList", params:{id:test.id}}' class="btn btn-light-dark btn-sm w-100">{{ test.taker_count }} Candidate(s)</router-link>

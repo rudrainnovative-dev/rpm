@@ -56,6 +56,7 @@ class AssignController extends Controller
                 if(empty($checkCandidate)) {
                     $assign_candidate = new Assigncandidate;
                     $assign_candidate->assign_id = $assign->id;
+                    $assign_candidate->name = $list['email'];
                     $assign_candidate->email = $list['email'];
                     $assign_candidate->test_id = $list['test_id'];
 
@@ -114,6 +115,7 @@ class AssignController extends Controller
             $data['subject'] = 'Online Test';
             $data['lists'] = $request->lists;
             $data['message'] = $request->message;
+
             $job = (new \App\Jobs\SendEmail($data))
                 ->delay(now()->addSeconds(2)); 
 

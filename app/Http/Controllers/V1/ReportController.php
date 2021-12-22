@@ -26,12 +26,25 @@ class ReportController extends Controller
                         $query->whereColumn('correct','selected_option');
                         $query->select(DB::raw('sum(marks)'));
                     }])
+                    ->where('status', 2)
+                    ->paginate(10);
+
+        $takersProcess = Testtaker::where('test_id', $test_id)
+                    ->withCount(['answers AS total_marks' => function($query) {
+                        $query->select(DB::raw('sum(marks)'));
+                    }])
+                    ->withCount(['answers AS correct_marks' => function($query) {
+                        $query->whereColumn('correct','selected_option');
+                        $query->select(DB::raw('sum(marks)'));
+                    }])
+                    ->where('status', 1)
                     ->paginate(10);
 
         return response()->json([
                 'success' => true,
                 'message' => 'taker.',
-                'takers' => $takers
+                'takers' => $takers,
+                'processing' => $takersProcess
             ], 200);
     }
 
@@ -57,6 +70,12 @@ class ReportController extends Controller
                             ->select('category_id', DB::Raw('sum(marks) as total_marks'))
                             ->groupBy('category_id')
                             ->pluck('total_marks', 'category_id');
+
+        $logs = Testtakeranswer::where('taker_id', $taker->id)
+                            ->select('category_id', 'created_at')
+                            ->groupBy('category_id')
+                            ->orderBy('created_at', 'asc')
+                            ->pluck('created_at', 'category_id');
 
         $correct_sections = Testtakeranswer::where('taker_id', $taker->id)
                             ->whereColumn('correct','selected_option')
@@ -103,7 +122,8 @@ class ReportController extends Controller
                 'sections' => $sections,
                 'correct_sections' => $correct_sections,
                 'avatars' => $avatars,
-                'screenshots' => $screenshots
+                'screenshots' => $screenshots,
+                'logs' => $logs
             ], 200);
     }
 

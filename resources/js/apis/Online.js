@@ -2,8 +2,8 @@ import Api from "./Api";
 import Csrf from "./Csrf";
 
 export default {
-  async index(id) {
-    return Api.get(`/online-test/${id}`);
+  async index(id, cid) {
+    return Api.get(`/online-test/${id}/?cid=`+cid);
   },
 
   async register(form, id) {

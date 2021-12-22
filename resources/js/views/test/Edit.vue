@@ -32,7 +32,7 @@
                                                 <router-link :to='{name:"TestAdd"}' class="btn btn-success btn-sm">Create Test</router-link>
                                             </li>
                                             <li class="list-inline-item">
-                                                <router-link :to='{name:"TestShow", params:{id:public_id}}' class="btn btn-primary btn-sm w-100">Preview Test</router-link>
+                                                <router-link :to='{name:"OnlineTestPreview", params:{id:public_id, user:"admin"}}' class="btn btn-primary btn-sm w-100" target="_blank">Preview Test</router-link>
                                             </li>
                                         </ul>
                                     </div>
@@ -159,7 +159,7 @@
                                                                         <router-link :to='{name:"QuestionShow", params: {id: item.question_id}}' class="text-link small"><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button" v-tooltip="tooltip.show"><i class="p-0 fa fa-eye"></i></button></router-link>
                                                                     </li>
                                                                     <li class="list-inline-item mb-2">
-                                                                        <button class="btn btn-sm btn-light-danger p-0 text-center h-30px w-30px" type="button" v-on:click="deleteQuestionFromTest" v-tooltip="tooltip.delete"><i class="p-0 fa fa-trash"></i></button>
+                                                                        <button class="btn btn-sm btn-light-danger p-0 text-center h-30px w-30px" type="button" v-on:click="deleteQuestionFromTest(key)" v-tooltip="tooltip.delete"><i class="p-0 fa fa-trash"></i></button>
                                                                     </li>
                                                                 </ul>
                                                             </td>
@@ -180,16 +180,16 @@
                                             <div class="row mt-5">
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-group d-flex align-items-center" v-if="test.assessment_type == 2">
-                                                        <label class="control-label p-0 me-2 mb-0 fw-bold">From</label>
-                                                        <VueCtkDateTimePicker :no-value-to-custom-elem="false" v-model="test.assessment_time_from"  format="YYYY-MM-DD hh:mm a" formatted = "DD-MM-YYYY hh:mm a" :min-date="min_datetime">
-                                                            <input type="text" class="form-control form-control-solid form-control-sm mw-lg-200px" placeholder="dd-mm-yyyy h:mm" required/>
+                                                        <label class="control-label p-0 me-2 mb-0 fw-bold">From<span class="text-danger">*</span></label>
+                                                        <VueCtkDateTimePicker :no-value-to-custom-elem="false" v-model="test.assessment_time_from" format="YYYY-MM-DD hh:mm a" formatted = "DD-MM-YYYY hh:mm a" :min-date="min_datetime">
+                                                            <input type="text" class="form-control form-control-solid form-control-sm mw-lg-200px" placeholder="dd-mm-yyyy h:mm a" required/>
                                                         </VueCtkDateTimePicker>
                                                     </div>
                                                 </div>
 
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-group d-flex align-items-center"  v-if="test.assessment_type == 2">
-                                                        <label class="control-label p-0 me-2 mb-0 fw-bold">To</label>
+                                                        <label class="control-label p-0 me-2 mb-0 fw-bold">To<span class="text-danger">*</span></label>
                                                         <VueCtkDateTimePicker :no-value-to-custom-elem="false" v-model="test.assessment_time_to"  format="YYYY-MM-DD hh:mm a" formatted = "DD-MM-YYYY hh:mm a" :min-date="min_datetime">
                                                             <input type="text" class="form-control form-control-solid form-control-sm mw-lg-200px" placeholder="dd-mm-yyyy hh:mm a" required/>
                                                         </VueCtkDateTimePicker>
@@ -552,8 +552,8 @@
                 this.total_questions = this.test.selected_question.length
                 this.total_sections = Object.keys(ObjSections).length
             },
-            async deleteQuestionFromTest() {
-
+            async deleteQuestionFromTest(index) {
+                this.$delete(this.test.selected_question, index)
             },
             async getCurrentDate() {
                 this.min_datetime = moment(new Date()).format('YYYY-MM-DD hh:mm a')

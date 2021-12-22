@@ -35,6 +35,7 @@ import AssignSend from "./views/assign/Send.vue";
 import AssignSendOne from "./views/assign/SendOne.vue";
 
 import OnlineTest from "./views/front/Test.vue";
+import OnlineTestPreview from "./views/preview/TestPerview.vue";
 
 import ReportList from "./views/report/Index.vue";
 import ReportShow from "./views/report/Show.vue";
@@ -44,15 +45,27 @@ import PageNotFound from "./views/PageNotFound.vue";
 Vue.use(VueRouter);
 
 const routes = [
+  // {
+  //   path: '/',
+  //   component: DashboardLayout,
+  //   children: [
+  //     {
+  //       path: '',
+  //       component: Welcome,
+  //       name: 'Welcome',
+  //       meta: { title: 'RPM' }
+  //     }
+  //   ],
+  // },
   {
     path: '/',
     component: DashboardLayout,
     children: [
       {
         path: '',
-        component: Welcome,
+        component: Dashboard,
         name: 'Welcome',
-        meta: { title: 'RPM' }
+        meta: { title: 'Dashboard | RPM', authOnly: true }
       }
     ],
   },
@@ -297,7 +310,7 @@ const routes = [
     ],
   },
   {
-    path: '/online-test/:id/',
+    path: '/online-test/:id/:user',
     component: PublicLayout,
     children: [
       {
@@ -305,6 +318,18 @@ const routes = [
         component: OnlineTest,
         name: 'OnlineTest',
         meta: { title: 'Online Test | RPM' }
+      }
+    ],
+  },
+  {
+    path: '/online-test/:id/:user/preview',
+    component: PublicLayout,
+    children: [
+      {
+        path: '',
+        component: OnlineTestPreview,
+        name: 'OnlineTestPreview',
+        meta: { title: 'Online Test Preview | RPM', authOnly: true }
       }
     ],
   },

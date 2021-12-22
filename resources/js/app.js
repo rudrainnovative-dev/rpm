@@ -17,6 +17,18 @@ Vue.filter('formatDate', function(value) {
   }
 })
 
+//time format
+Vue.filter('formatTime', function(value) {
+  if (value) {
+    return moment(String(value)).format('hh:mm a')
+  }
+})
+
+import wysiwyg from "vue-wysiwyg";
+Vue.use(wysiwyg, {});
+
+import "vue-wysiwyg/dist/vueWysiwyg.css";
+
 // alert plugin on vue
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";

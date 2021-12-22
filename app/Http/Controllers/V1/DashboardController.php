@@ -22,6 +22,7 @@ class DashboardController extends Controller
 
         $upcomming_test = Assigncandidate::with(['test'])
                     ->where('user_id', $user_id)
+                    ->where('status', 0)
                     ->whereDate('end', '>', Carbon::now())
                     ->orderBy('id', 'desc')
                     ->limit(5)

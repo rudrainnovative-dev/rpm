@@ -12,6 +12,7 @@ use App\Models\Ordersetting;
 use App\Models\Testquestion;
 use App\Models\Registationfield;
 use Auth;
+use DB;
 
 class TestController extends Controller
 {
@@ -38,6 +39,9 @@ class TestController extends Controller
         }
         else {
             $tests = Test::with(['purpose','test_questions'])
+                        ->with(['test_sections' => function($query) {
+                            $query->groupBy('category_id');
+                        }])
                         ->withCount(['taker'])
                         ->where('user_id', Auth::id())
                         ->orderBy('id', 'desc')
@@ -143,9 +147,13 @@ class TestController extends Controller
             'assessment_type' => 'required',
             'duration' => 'required'
         ]);
-    
-        $fromDate = Date('Y-m-d H:i:s', strtotime($request->assessment_time_from));
-        $toDate = Date('Y-m-d H:i:s', strtotime($request->assessment_time_to));
+        
+        $fromDate = NULL;
+        $toDate = NULL;
+        if($request->assessment_type == 'Deadline Based Assessment' && $request->assessment_time_from && $request->assessment_time_to) {
+            $fromDate = Date('Y-m-d H:i:s', strtotime($request->assessment_time_from));
+            $toDate = Date('Y-m-d H:i:s', strtotime($request->assessment_time_to));
+        }
 
         $test->update([
                         'name' => $request->name,

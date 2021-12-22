@@ -10,6 +10,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Mail;
 use App\Models\Assigncandidate;
+use App\Models\Test;
+
 class SendEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -45,9 +47,17 @@ class SendEmail implements ShouldQueue
                 'subject' => $subject
             ];
             
-            $link = $this->test_url.$list['test']['public_id'];
+            $job_role = '';
+            if($list['test_id']) {
+                $test = Test::where('id', $list['test_id'])->first();
+                if(!empty($test)) {
+                    $job_role = $test->name;
+                }
+            }
+
+            $link = $this->test_url.$list['test']['public_id'].'/'.$list['id'];
             
-            $text_message = str_replace(['{test_link}', '{candidate}'], [$link, $list['email']], $this->data['message']);
+            $text_message = str_replace(['{test_link}', '{candidate}', '{job_role}'], [$link, $list['email'], $job_role], $this->data['message']);
            
             $data = [
                         'start' => $list['start'],
@@ -61,7 +71,7 @@ class SendEmail implements ShouldQueue
                     ->subject($inputs['subject']);
             });
 
-            Assigncandidate::where('id', $list['id'])->update(['share' => 1, 'updated_at' => Date('Y-m-d H:i:s')]);
+            Assigncandidate::where('id', $list['id'])->update(['status' => '0', 'share' => 1, 'updated_at' => Date('Y-m-d H:i:s')]);
         }
     }
 }

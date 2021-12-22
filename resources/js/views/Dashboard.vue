@@ -30,8 +30,8 @@
                       <tr v-for="test in upcomming_test">
                         <td class="align-middle">{{ test.email }}</td>
                         <td class="align-middle">
-                          <span class="badge badge-light my-1">{{ test.start.split(' ')[0] }}</span>
-                          <span class="badge badge-light my-1">{{ test.end.split(' ')[0] }}</span>
+                          <span class="badge badge-light my-1">{{ test.start | formatDate }}</span>
+                          <span class="badge badge-light my-1">{{ test.end | formatDate }}</span>
                         </td>
                         <td class="align-middle">{{ test.test.name }}</td>
                       </tr>
@@ -66,7 +66,7 @@
                     <td class="align-middle">{{ test.name }}</td>
                     <td class="align-middle">{{ test.test_questions.length }}</td>
                     <td class="align-middle">
-                      <router-link :to='{name:"OnlineTest",params:{id:test.public_id}}'><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button" v-tooltip="tooltip.show"><i class="p-0 fa fa-eye"></i></button></router-link>
+                      <router-link :to='{name:"OnlineTestPreview",params:{id:test.public_id, user:"admin"}}' target="_blank"><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button" v-tooltip="tooltip.show"><i class="p-0 fa fa-eye"></i></button></router-link>
                     </td>
                   </tr>
                 </tbody>
@@ -98,7 +98,7 @@
                   <tbody v-if="completed_test.length > 0">
                     <tr v-for="test in completed_test">
                       <td class="align-middle">{{ test.name }}</td>
-                      <td class="align-middle">{{ test.created_at.split('T')[0] }}</td>
+                      <td class="align-middle">{{ test.created_at | formatDate }}</td>
                       <td class="align-middle">{{ test.test_name }}</td>
                       <td class="align-middle">
                         <router-link :to='{name:"ReportShow",params:{id:test.id}}'><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button" v-tooltip="'Show Report'"><i class="p-0 fa fa-eye"></i></button></router-link>

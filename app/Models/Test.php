@@ -25,9 +25,13 @@ class Test extends Model
 
     public function purpose() {
         return $this->hasOne(Testpurpose::class, 'id', 'purpose_id');
-    } 
+    }
 
     public function test_questions() {
+        return $this->hasMany(Testquestion::class, 'test_id', 'id');
+    }
+
+    public function test_sections() {
         return $this->hasMany(Testquestion::class, 'test_id', 'id');
     }
 

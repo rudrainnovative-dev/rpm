@@ -19,7 +19,6 @@
             </div>
             <div class="row" v-if="validateTest">
                 <Remember :camera_enable="camera_enable" :camera_error="camera_error" v-on:childToParent="onProceedClick" v-if="proceed" />
-                <Registation :registation_fields="registation_fields" :test_id="test.id" v-on:childToParent="onRegistationClick" v-if="registation"/>
                 <div class="col-md-12 col-12 py-4" v-if="test_screen">
                     <div class="w-100">
                         <div class="separator mb-5"></div>
@@ -158,13 +157,12 @@
 
 <script>
     import Online from "../../apis/Online"
-    import Remember from './Remember'
-    import Registation from './Registation'
-    import Reportdisplay from './Report'
+    import Remember from '../front/Remember'
+    import Reportdisplay from '../front/Report'
 
     export default {
         name:"online-test",
-        components: { Remember, Registation, Reportdisplay },
+        components: { Remember, Reportdisplay },
         mounted() {
             this.getTest()
         },
@@ -192,7 +190,6 @@
                camera_error: '',
                proceed: false,
                validateTest: false,
-               registation: false,
                total_questions: '',
                test_screen: false,
                thankuscreen: false,
@@ -207,7 +204,7 @@
         methods:{
             async getTest() {
                 this.loader_spin = true
-                Online.index(this.$route.params.id, this.$route.params.user).then(response => {
+                Online.index(this.$route.params.id).then(response => {
                     const { id, name, registation_fields, duration } = response.data.test
                     this.registation_fields = registation_fields
                     this.test.id = id
@@ -255,14 +252,7 @@
             },
             async onProceedClick() {
                 this.proceed = false
-                this.registation = true
-            },
-            async onRegistationClick(response) {
-                this.test.taker_id = response.id
-                this.test.taker_email = response.email
-                this.registation = false
                 this.test_screen = true
-                this.timeCounterStart()
             },
             async sectionChanged() {
                 if(confirm('Are you sure want to change the section?')) {
@@ -316,27 +306,25 @@
             async screenShot() {
                 var i = 1
                 setInterval(function() {
-                    if(this.test.taker_id) {
-                        if(i == 1 || i == 12 || i == 48 || i == 96 || i == 192 || i == 360) {
-                            const captureElement = document.querySelector('#kt_post')
-                            let screen = html2canvas(document.body)
-                            .then((canvas, test) => {
-                                canvas.style.display = 'none'
-                                document.body.appendChild(canvas)
-                                return canvas
+                    if(this.test.taker_id && (i == 1 || i == 15 || i == 30 || i == 45)) {
+                        const captureElement = document.querySelector('#kt_post')
+                        let screen = html2canvas(document.body)
+                        .then((canvas, test) => {
+                            canvas.style.display = 'none'
+                            document.body.appendChild(canvas)
+                            return canvas
+                        })
+                        .then(canvas => {
+                            this.test.screensnap = canvas.toDataURL('image/wepb', 0.5)
+                            Online.takerScreenshot(this.test).then(response => {
+                                canvas.remove()
+                            }).catch(error=> {
+                                canvas.remove()
                             })
-                            .then(canvas => {
-                                this.test.screensnap = canvas.toDataURL('image/wepb', 0.5)
-                                Online.takerScreenshot(this.test).then(response => {
-                                    canvas.remove()
-                                }).catch(error=> {
-                                    canvas.remove()
-                                })
-                            })
-                        }
+                        })
                         i++
                     }
-                }.bind(this), 10000)
+                }.bind(this), 30000)
             },
             async startWebCam() {
                 const constraints = (window.constraints = {
@@ -364,21 +352,19 @@
             async captureImage() {
                 var i = 1
                 setInterval(function(){    
-                    if(this.test.taker_id) {
-                        if(i == 1 || i == 12 || i == 48 || i == 96 || i == 192 || i == 360) {
-                            const context = this.$refs.canvas.getContext('2d')
-                            context.drawImage(this.$refs.camera, 0, 0, 300, 300)
-                            this.test.snap = this.$refs.canvas.toDataURL("image/jpeg", 0.8)
+                    if(this.test.taker_id && (i == 1 || i == 10 || i == 30 || i == 40)) {
+                        const context = this.$refs.canvas.getContext('2d')
+                        context.drawImage(this.$refs.camera, 0, 0, 300, 300)
+                        this.test.snap = this.$refs.canvas.toDataURL("image/jpeg", 0.8)
 
-                            Online.takerSnap(this.test).then(response => {
-                                context.remove()
-                            }).catch(error=> {
-                                context.remove()
-                            })
-                        }
+                        Online.takerSnap(this.test).then(response => {
+                            context.remove()
+                        }).catch(error=> {
+                            context.remove()
+                        })
                         i++
                     }
-                }.bind(this), 9000)
+                }.bind(this), 40000)
             },
             async timeCounterStart() {
                 if(this.test.duration > 0) {

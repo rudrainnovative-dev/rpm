@@ -37,8 +37,8 @@
 
                      <div class="row">
                         <div class="col-md-12 col-12 mt-5">
-                           <label class="w-100 mb-2">Message<small class="text-danger">*</small> <small class="text-muted d-block my-4">(Reserve keywords: {candidate}, {test_link}.)</small></label>
-                           <VueEditor v-model="assign.message" :editorToolbar="customToolbar" required/>
+                           <label class="w-100 mb-2">Message<small class="text-danger">*</small> <small class="text-muted d-block my-4">(Reserve keywords: {candidate}, {test_link}, {job_role}.)</small></label>
+                           <wysiwyg v-model="assign.message" required/>
                         </div>
                      </div>
                      <div class="row">
@@ -60,11 +60,9 @@
 
 <script>
    import Assign from "../../apis/Assign";
-   import { VueEditor } from "vue2-editor";
 
    export default {
       name:"send-test",
-      components: { VueEditor },
       data() {
          return {
             assign: {
@@ -74,10 +72,6 @@
             },
             loader_spin: false,
             disabled: false,
-            customToolbar: [
-               ["bold", "italic", "underline"],
-               [{ list: "ordered" }, { list: "bullet" }],
-            ],
          }
       },
       mounted() {
@@ -110,7 +104,7 @@
             this.$delete(this.assign.lists, index)
          },
          async customMessage() {
-            this.assign.message = '<h4 class="my-4">Dear {candidate}</h4><p class="my-4">Please find attached online test link as part of our interview process.</p><p class="my-8 test-center"><a href="{test_link}" target="_blank"><strong>Online Test Link</strong></a></p><p class="my-4">Keep in mind that there are no right answers.</p><p class="my-4">This test is designed is to gauge your skills and give us an idea of how you approach tasks relevant to the PHP role.</p><p class="my-4">Please do not hesitate to get in touch if you have any questions.</p><p class="my-8">Best of luck with the Online Test</p><p>Thank You</p><p>Rudra Innovative.</p>'
+            this.assign.message = '<table border="0" cellpadding="10" cellspacing="0" style="background-color: #f5f8fa; width: 600px; margin: 0 auto; font-family: Arial, Helvetica, sans-serif; border-radius: 7px;"><tr><td><table border="0" cellpadding="10" cellspacing="0" width="100%"><tbody><tr><td><p style="font-size:15px; color:#333; font-family: Arial, Helvetica, sans-serif;">Dear <b style="text-transform: uppercase;">{candidate}</b>,</p><p style="font-size: 15px; margin: 15px 0 0 0; line-height: 24px; color:#333; font-family: Arial, Helvetica, sans-serif;">Please find attached online test link as part of our interview process. You can start reviewing the Online Test by clicking the following button:</p></td></tr><tr><td><a href="{test_link}" style="background-color:#009ef7;border:1px solid #009ef7;border-radius:8px;color:#ffffff;display:inline-block; font-family: Arial, Helvetica, sans-serif; font-size:15px;line-height:44px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;">Start Your Test</a></td></tr><tr><td><p style="line-height: 23px; font-size: 15px; margin: 15px 0 15px 0; color:#333;font-family: Arial, Helvetica, sans-serif;">Keep in mind that there are no right answers. This test is designed is to gauge your skills and give us an idea of how you approach tasks relevant to the <b style="text-transform: uppercase;">{job_role}</b>.</p><p style="line-height: 23px; font-size: 15px; color:#333;font-family: Arial, Helvetica, sans-serif;">Please do not hesitate to get in touch if you have any questions.</p><p style="line-height: 23px; font-size: 15px; color:#333;font-family: Arial, Helvetica, sans-serif;">Best of luck with the Online Test.</p><p style="margin: 30px 0 0; font-size: 15px; color:#333;font-family: Arial, Helvetica, sans-serif;">Regards,</p><p style="margin:4px 0 0 0; font-size: 15px; color:#333;font-family: Arial, Helvetica, sans-serif;">Rudra Innovative</p></td></tr><tr><th><div style="width:100%; height: 1px; margin:0 0 0 0; border-top:1px solid #e9e9e9; font-size: 1px; color:transparent;">1</div></th></tr></tbody></table></td></tr></table>'
          }
       }
    }

@@ -20,6 +20,11 @@
         </div>
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <div id="kt_content_container" class="container">
+                <div class="row">
+                    <div class="col-md-12 col-12 text-right mb-2">
+                        <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary ml-4">Back</router-link>
+                    </div>
+                </div>
                 <div class="row" v-if="report">
                     <div class="col-md-12 col-12 d-flex flex-wrap">
                         <div class="card card-custom bg-primary w-100 mb-lg-8 mb-6">
@@ -194,30 +199,38 @@
                                     <div class="accordion-body">
                                         <div class="row m-0" v-if="avatars.length > 0">
                                             <div class="col-md-12">
-                                                <h6 class="mb-3">Screenshots of Test Taker</h6>
+                                                <h6 class="mb-3">Images of Test Taker</h6>
                                             </div>                                                   
                                             <div class="col-md-6 col-12" v-for="avatar in avatars">
-                                                <div class="form-group align-items-center border border-info rounded">
-                                                    <img :src="avatar.snap" alt="image" class="img-fluid">
+                                                <div class="form-group align-items-center">
+                                                    <img :src="avatar.snap" alt="image" class="border border-secondary rounded img-fluid">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row mt-4" v-if="screenshots.length > 0">
                                             <div class="col-md-12">
-                                                <h6 class="mb-3">Screenshots</h6>
+                                                <h6 class="mb-3">Screenshot of Test Taker</h6>
                                             </div>                                                   
                                             <div class="col-md-6 col-12" v-for="screenshot in screenshots">
-                                                <div class="form-group align-items-center border border-info rounded">
-                                                    <img :src="screenshot.snap" alt="image" class="img-fluid">
+                                                <div class="form-group align-items-center">
+                                                    <img :src="screenshot.snap" alt="image" class="border border-secondary rounded img-fluid">
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row mt-4">
+                                            <div class="col-md-12">
+                                                <h6 class="mb-3">{{ report.created_at | formatDate }}</h6>
+                                            </div>                                                   
+                                            <div class="col-md-12 col-12">
+                                                <p><span class="text-muted">{{ report.created_at | formatTime }}</span> Started the test.</p>
+                                                <p v-if="avatars.length > 0"><span class="text-muted">{{ report.created_at | formatTime }}</span> Candidate gave us right to the following feeds: camera, microphone.</p>
+                                                <p v-for="(time, index) in logs" v-if="Object.keys(logs).length > 0">
+                                                    <span class="text-muted">{{ time | formatTime }}</span> Went to {{ categories[index] }} of the test. 
+                                                </p>
+                                                <p v-if="report.status === 2"><span class="text-muted">{{ report.updated_at | formatTime }}</span> Finished the test.</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <router-link :to='{name:"Test"}' class="btn btn-sm btn-primary ml-4">Back</router-link>
                                 </div>
                             </div>
                         </div>
@@ -408,6 +421,8 @@ export default {
             performance: {},
             avatars: [],
             screenshots: [],
+            categories: [],
+            logs: [],
         }
     },
     mounted(){
@@ -417,9 +432,9 @@ export default {
         async getReports(page = 1) {
             this.loader_spin = true
             Report.show(this.$route.params.id).then(response => {
-                
-                const { taker, performance, categories, sections, correct_sections, avatars, screenshots } = response.data
-
+                console.log(response)
+                const { taker, performance, categories, sections, correct_sections, avatars, screenshots, logs } = response.data
+    
                 this.report = taker
                 var total = this.report.correct_marks*100/this.report.total_marks
                 total = Math.ceil(total)
@@ -476,7 +491,8 @@ export default {
 
                 this.avatars = avatars
                 this.screenshots = screenshots
-
+                this.categories = categories
+                this.logs = logs
                 this.loader_spin = false
             })
             .catch(error=> {

@@ -39,8 +39,10 @@
         "vue-tabs-component": "^1.5.0",
         "vue-toasted": "^1.1.28",
         "vue-toastification": "^1.7.14",
+        "vue-wysiwyg": "^1.7.2",
         "vue2-datepicker": "^3.10.3",
         "vue2-editor": "^2.10.3",
+        "vueditor": "^0.3.1",
         "vuejs-datatable": "^2.0.0-alpha.7",
         "vuejs-datetimepicker": "^1.1.13",
         "vuelidate": "^0.7.6"
