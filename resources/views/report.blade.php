@@ -2,62 +2,167 @@
 <style>
     body {
         font-size: 14px;
-        font-family: Helvetica, sans-serif;
+        font-family: sans-serif;
     }
     .table td, .table th, .table thead th {
         border: none !important;
+        padding: 5px;
+    }
+    .custom-progress {
+        width:100%;
+        background:#cecece;
+        height:20px;
+        margin: 20px 0px 0px;
+    }
+    .progress-div {
+        height:100%;
+        z-index:99;
+    }
+    .progress-info-div {
+        width: 100%;
+    }
+    .progress-extra-div {
+        width:100%;
+        margin-bottom: 20px;
     }
 </style>
+@php
+    
+    $total = $taker['correct_marks']*100/$taker['total_marks'];
+    $total = ceil($total);
+    if(!$total) {
+        $total = 1;
+    }
+    
+    $label = '';
 
-<table class="table table-borderless">
+    foreach($performance as $element) {
+        if($total >= $element['min'] && $total <= $element['max']) {
+            $label = $element['name'];
+        }
+    }
+    $color = colorFunction($label);
+    $chartArray = [];
+    if($categories) {
+        foreach($categories as $id=>$category) {
+            $marks_total = 0;
+            $bar_label = '';
+
+            if(!isset($correct_sections[$id])) {
+                continue;
+            }
+
+            if($correct_sections[$id]) {
+               $marks_total = $correct_sections[$id] * 100 / $sections[$id];
+               $marks_total = ceil($marks_total);
+            }
+
+            foreach($performance as $subelement) {
+                if($marks_total >= $subelement['min'] && $marks_total <= $subelement['max']) {
+                    $bar_label = $subelement['name'];
+                }
+            }
+
+            $bar_color = colorFunction($bar_label);
+
+            $chartArray[$id]['total'] = $marks_total;
+            $chartArray[$id]['color'] = $bar_color;
+            $chartArray[$id]['label'] = $bar_label;
+
+        }
+    }
+
+    function colorFunction($total) {
+        
+        if($total == '') {
+            return '#ff0000';
+        }
+
+        if($total == 'Very Low') {
+            return '#ff0000';
+        }
+        else if($total == 'Low') {
+            return '#cd5757';
+        }
+        else if($total == 'Very High') {
+            return '#5345a1';
+        }
+        else if($total == 'High') {
+            return '#2710a5';
+        }
+        else if($total == 'Moderate') {
+            return '#28af51';
+        }
+        else if($total == 'Excellent') {
+            return '#50cd89';
+        }
+        else {
+            return '#50cd89';
+        }
+    }   
+    
+@endphp
+
+<table class="table">
     <tbody>
         <tr>
-            <td class="col-md-12">
-                <h1>RPM</h1>
+            <td class="col-md-12 text-center">
+                <h1><strong>RPM</strong></h1>
             </td>
         </tr>
     </tbody>
 </table>
-<table class="table table-borderless">
+<table class="table">
     <tbody>
         <tr>
             <td class="col-md-6">
-                <span class="font-weight-bold">{{ $taker->test_name }}</span>
+                <strong>{{ $taker->test_name }}</strong>
             </td>
             <td class="col-md-6">
-                <p><span class="font-weight-bold">Test Taken on:</span> {{ Date('j F Y H:i:s', strtotime($taker->created_at)) }}</p>
+                <strong>Test Taken on:</strong> {{ Date('j F Y H:i:s', strtotime($taker->created_at)) }}
             </td>
         </tr>
     </tbody>
 </table>
-
 <table class="table">
     <thead>
         <tr>
-            <th colspan="2"><h5>Registration Details</h5></th>
+            <th colspan="2">
+                <h5><strong>Registration Details</strong></h5>
+            </th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td class="col-md-6 p-0">
+            <td class="col-md-6">
                 <table class="table">
                     <tbody>
                         <tr>
-                            <td class="font-weight-bold">Name</td>
+                            <td><strong>Name</strong></td>
                             <td>{{ $taker->name }}</td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold">Email</td>
+                            <td><strong>Email</strong></td>
                             <td>{{ $taker->email }}</td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold">Contact</td>
+                            <td><strong>Contact</strong></td>
                             <td>{{ $taker->mobile?$taker->mobile:'Not Filled' }}</td>
                         </tr>
+                        @if($taker->avatar)
+                        <tr>
+                            <td colspan=2><strong>Profile Picture</strong></td>
+                        </tr>
+                        <tr>
+                            <td clospan=2>
+                                <img src="{{ $taker->avatar?$taker->avatar: public_path('img/dummy-img.png') }}" width="100%"/>
+                            </td>
+                        </tr>
+                        @endif
                     </tbody>
                 </table>
             </td>
-            <td class="col-md-6 p-0">
+            <td class="col-md-6">
                 <table class="table">
                     <tbody>
                         <tr>
@@ -68,47 +173,26 @@
                             <td class="font-weight-bold">Gender</td>
                             <td>{{ $taker->gender?$taker->gender:'Not Filled' }}</td>
                         </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="col-md-6 p-0">
-                <table class="table">
-                    <tbody>
+                        @if($taker->avatar)
                         <tr>
-                            <td class="font-weight-bold pb-4">Profile Picture</td>
+                            <td colspan=2><strong>Id Card</strong></td>
                         </tr>
                         <tr>
-                            <td class="col-md-6">
-                                <img src="{{ $taker->avatar?$taker->avatar: public_path('img/dummy-img.png') }}" width="200px"/>
+                            <td clospan=2>
+                                <img src="{{ $taker->id_card?$taker->id_card: public_path('img/dummy-img.png') }}" width="100%"/>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td class="col-md-6 p-0">
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <td class="font-weight-bold pb-4">Id Card</td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-6">
-                                <img src="{{ $taker->id_card?$taker->id_card: public_path('img/dummy-img.png') }}" width="200px"/>
-                            </td>
-                        </tr>
+                        @endif
                     </tbody>
                 </table>
             </td>
         </tr>
     </tbody>
 </table>
-
 <table class="table">
     <thead>
         <tr>
-            <th><h5>Performance Summary</h5></th>
+            <th><h5><strong>Performance Summary</strong></h5></th>
         </tr>
     </thead>
     <tbody>
@@ -117,16 +201,24 @@
         </tr>
         <tr>
             <td>
-                <div id="performance_summary"></div>
+                <div class="custom-progress">
+                    <div class="progress-div" style="width: {{ $total }}%;background: {{ $color }};">&nbsp;</div>
+                </div>
+                <div class="progress-info-div">
+                    <div style="width: {{ $total }}%;text-align: right;">{{ $total }}%</div>
+                </div>
+                <div class="progress-extra-div">
+                    <div style="text-align: center;margin-top:10px;">Cognitive Abilities: <span style="font-weight:600;">{{ $label }}</span></div>
+                </div>                    
             </td>
         </tr>
     </tbody>
 </table>
-
+@if(isset($chartArray[3]))
 <table class="table">
     <thead>
         <tr>
-            <th><h5>Reasoning Ability</h5></th>
+            <th><h5><strong>Reasoning Ability</strong></h5></th>
         </tr>
     </thead>
     <tbody>
@@ -135,16 +227,28 @@
         </tr>
         <tr>
             <td>
-                <div id="res_summary"></div>
+                <div class="custom-progress">
+                    <div class="progress-div" style="width: {{ $chartArray[3]['total'] }}%;background: {{ $chartArray[3]['color'] }};">&nbsp;</div>
+                </div>
+                <div class="progress-info-div">
+                    <div style="width: {{ $chartArray[3]['total'] }}%;text-align: right;">{{ $chartArray[3]['total'] }}%</div>
+                </div>
+                <div class="progress-extra-div">
+                    <div style="text-align: center;margin-top:10px;">
+                        Reasoning Ability: <span style="font-weight:600;">{{ $chartArray[3]['label'] }}</span>
+                    </div>
+                </div>
             </td>
         </tr>
     </tbody>
 </table>
+@endif
 
+@if(isset($chartArray[2]))
 <table class="table">
     <thead>
         <tr>
-            <th><h5>Numerical Ability</h5></th>
+            <th><h5><strong>Numerical Ability</strong></h5></th>
         </tr>
     </thead>
     <tbody>
@@ -153,16 +257,28 @@
         </tr>
         <tr>
             <td>
-                <div id="num_summary"></div>
+                <div class="custom-progress">
+                    <div class="progress-div" style="width: {{ $chartArray[2]['total'] }}%;background: {{ $chartArray[2]['color'] }};">&nbsp;</div>
+                </div>
+                <div class="progress-info-div">
+                    <div style="width: {{ $chartArray[2]['total'] }}%;text-align: right;">{{ $chartArray[2]['total'] }}%</div>
+                </div>
+                <div class="progress-extra-div">
+                    <div style="text-align: center;margin-top:10px;">
+                        Numerical Ability: <span style="font-weight:600;">{{ $chartArray[2]['label'] }}</span>
+                    </div>
+                </div>
             </td>
         </tr>
     </tbody>
 </table>
+@endif
 
+@if(isset($chartArray[1]))
 <table class="table">
     <thead>
         <tr>
-            <th><h5>Attentions Ability</h5></th>
+            <th><h5><strong>Attentions Ability</strong></h5></th>
         </tr>
     </thead>
     <tbody>
@@ -171,16 +287,28 @@
         </tr>
         <tr>
             <td>
-                <div id="att_summary"></div>
+                <div class="custom-progress">
+                    <div class="progress-div" style="width: {{ $chartArray[1]['total'] }}%;background: {{ $chartArray[1]['color'] }};">&nbsp;</div>
+                </div>
+                <div class="progress-info-div">
+                    <div style="width: {{ $chartArray[1]['total'] }}%;text-align: right;">{{ $chartArray[1]['total'] }}%</div>
+                </div>
+                <div class="progress-extra-div">
+                    <div style="text-align: center;margin-top:10px;">
+                        Numerical Ability: <span style="font-weight:600;">{{ $chartArray[1]['label'] }}</span>
+                    </div>
+                </div>
             </td>
         </tr>
     </tbody>
 </table>
+@endif
 
+@if(isset($chartArray[4]))
 <table class="table">
     <thead>
         <tr>
-            <th><h5>Verbal Ability</h5></th>
+            <th><h5><strong>Verbal Ability</strong></h5></th>
         </tr>
     </thead>
     <tbody>
@@ -189,21 +317,47 @@
         </tr>
         <tr>
             <td>
-                <div id="ver_summary"></div>
+                <div class="custom-progress">
+                    <div class="progress-div" style="width:{{ $chartArray[4]['total'] }}%;background: {{ $chartArray[4]['color'] }};">&nbsp;</div>
+                </div>
+                <div class="progress-info-div">
+                    <div style="width:{{ $chartArray[4]['total'] }}%;text-align: right;">{{ $chartArray[4]['total'] }}%</div>
+                </div>
+                <div class="progress-extra-div">
+                    <div style="text-align: center;margin-top:10px;">
+                        Numerical Ability: <span style="font-weight:600;">{{ $chartArray[4]['label'] }}</span>
+                    </div>
+                </div>
             </td>
         </tr>
     </tbody>
 </table>
+@endif
 
 <table class="table">
     <thead>
         <tr>
-            <th><h5>Test Log</h5></th>
+            <th><h5><strong>Test Log</strong></h5></th>
         </tr>
     </thead>
     <tbody>
+        @if(isset($avatars[0]))
         <tr>
-            <td>Screenshots of Test Taker</td>
+            <td><strong>Images of Test Taker</strong></td>
+        </tr>
+        <tr>
+            <td>
+            @forelse($avatars as $avatar)
+                <img src="{{ $avatar->snap }}" width="300" style="border:solid 1px #000; padding: 5px;margin:5px;"/>
+            @empty
+
+            @endforelse
+            </td>
+        </tr>
+        @endif
+        @if(isset($screenshots[0]))
+        <tr>
+            <td><strong>Screenshots of Test Taker</strong></td>
         </tr>
         <tr>
             <td>
@@ -214,125 +368,36 @@
             @endforelse
             </td>
         </tr>
+        @endif
+        <tr>
+            <td>
+                <h6><strong>{{ Date('d F, Y', strtotime($taker->created_at)) }}</strong></h6>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    <li>
+                        <span class="text-muted">{{ Date('h:i a', strtotime($taker->created_at)) }}</span> Started the test.
+                    </li>
+                    @if(!empty($avatars))
+                    <li>
+                        <span class="text-muted">{{ Date('h:i a', strtotime($taker->created_at)) }}</span> Candidate gave us right to the following feeds: camera, microphone.
+                    </li>
+                    @endif
+                    @forelse($logs as $key=>$time)
+                    <li>
+                        <span class="text-muted">{{ Date('h:i a', strtotime($time))  }}</span> Went to {{ $categories[$key] }} of the test. 
+                    </li>
+                    @empty
+                    @endforelse
+                    @if($taker->status == 2)
+                    <li>
+                        <span class="text-muted">{{ Date('h:i a', strtotime($taker->updated_at)) }}</span> Finished the test.
+                    </li>
+                    @endif
+                </ul>
+            </td>
+        </tr>
     </tbody>
 </table>
-
-<script src="{{ asset('assets/js/jquery.min.js') }}"></script>
-<script src="{{ asset('assets/js/highcharts.src.js') }}"></script>
-<script type="text/javascript">
- window.onload = function() {
-
-    var report = {!! json_encode($taker->toArray()) !!}
-    var total = report.correct_marks*100/report.total_marks
-    total = Math.ceil(total)
-    
-    var color = colors(total)
-    var label = ''
-    
-    var performance = {!! json_encode($performance) !!}
-
-    performance.forEach(element => {
-        if(total >= element.min && total <= element.max) {
-            label = element.name;
-        }
-    })
-
-    var Obj = { name: label, data: [total], color: color }
-
-    performanceSummary('performance_summary', 'Cognitive Abilities', Obj);
-
-    var categories = {!! json_encode($categories) !!}
-    var correct_sections = {!! json_encode($correct_sections) !!}
-    var sections = {!! json_encode($sections) !!}
-
-    for(var i = 1; i <= Object.keys(categories).length; i++) {
-                
-        let marks_total = 0
-        let section_label = 'Very Low'
-
-        if(correct_sections[i]) {
-           marks_total = correct_sections[i] * 100 / sections[i]
-           marks_total = Math.ceil(marks_total)
-        }
-
-        let section_color = colors(marks_total)
-
-        performance.forEach(element => {
-            if(marks_total >= element.min && marks_total <= element.max) {
-                section_label = element.name;
-            }
-        })
-
-        if(i == 1) {
-            var AttObj = { name: section_label, data: [marks_total], color: section_color }
-            performanceSummary('att_summary', 'Attentions Abilities', AttObj);
-        }
-
-        if(i == 2) {
-            var NumObj = { name: section_label, data: [marks_total], color: section_color }
-            performanceSummary('num_summary', 'Numerical Abilities', NumObj);
-        }
-
-        if(i == 3) {
-            var ResObj = { name: section_label, data: [marks_total], color: section_color }
-             performanceSummary('res_summary', 'Reasoning Abilities', ResObj);
-        }
-
-        if(i == 4) {
-            var VerObj = { name: section_label, data: [marks_total], color: section_color }
-            performanceSummary('ver_summary', 'Verbal Abilities', VerObj);
-        }
-    }
-};
-
-function colors(val) {
-    if(val <= 40) {
-        return '#ff0000'
-    }
-    else if(val > 41 && val <= 60) {
-        return '#7239ea'
-    }
-    else if(val > 61 && val <= 80) {
-        return '#ffc700'
-    }
-    else {
-        return '#50cd89'
-    }
-}
-
-function performanceSummary(id, title, Obj) {
-    Highcharts.chart(id, {
-        chart: {
-            height: 140,
-            type: 'bar'
-        },
-        title: {
-            text: ''
-        },
-        xAxis: {
-            categories: [title]
-        },
-        yAxis: {
-            min: 0,
-            max:100,
-            title: {
-              text: 'Values shown in above chart are percentages'
-            }
-        },
-        legend: {
-            enabled: true,
-            reversed: true
-        },
-        plotOptions: {
-            series: {
-                stacking: 'normal'
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [Obj]
-    });
-}
-
-</script>

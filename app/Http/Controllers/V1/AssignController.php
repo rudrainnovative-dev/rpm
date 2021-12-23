@@ -42,13 +42,14 @@ class AssignController extends Controller
             $assign->updated_at = Date('Y-m-d H:i:s');
             $assign->save();
 
-            $start = Date('Y-m-d H:i:s', strtotime('+1 day'));
-            $end = Date('Y-m-d H:i:s', strtotime('+10 day'));;
+            $start = Date('Y-m-d H:i:s', strtotime('+0 day'));
+            $end = Date('Y-m-d H:i:s', strtotime('+1 day'));
+
             $resume = isset($request->settings['resume'])?$request->settings['resume']:0;
 
-            if(isset($request->settings['start']) && isset($request->settings['end'])) {
+            if(isset($request->default_check)) {
                 $start = Date('Y-m-d H:i:s', strtotime($request->settings['start']));
-                $end = Date('Y-m-d H:i:s', strtotime($request->settings['end']));
+                $end = Date('Y-m-d H:i:s', strtotime($request->settings['end']));    
             }
 
             foreach($request->lists as $list) {
@@ -60,13 +61,13 @@ class AssignController extends Controller
                     $assign_candidate->email = $list['email'];
                     $assign_candidate->test_id = $list['test_id'];
 
-                    if(!$start && $list['start']) {
+                    if(isset($request->default_check) && $list['start']) {
                        $start = Date('Y-m-d H:i:s', strtotime($list['start']));
                     }
 
                     $assign_candidate->start = $start;
 
-                    if(!$end && $list['end']) {
+                    if(isset($request->default_check) && $list['end']) {
                        $end = Date('Y-m-d H:i:s', strtotime($list['end']));
                     }
 

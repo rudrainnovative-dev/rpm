@@ -97,7 +97,13 @@ class OnlinetestController extends Controller
                 'name' => 'required|max:255'
             ]);
 
-            $test = Test::where('id', $test_id)->with('test_questions')->first();
+            $test = Test::where('id', $test_id)->with('test_questions', 'test_questions.question')->first();
+            $total_marks = 0;
+            if(!empty($test->test_questions)) {
+                foreach($test->test_questions as $item) {
+                    $total_marks = $total_marks + $item->question->marks;
+                }
+            }
 
             $validate = Assigncandidate::where('test_id', $test_id)
                         ->where('email', $request->email)
@@ -117,6 +123,7 @@ class OnlinetestController extends Controller
                 $taker->test_id = $test_id;
                 $taker->test_name = $test->name;
                 $taker->total_questions = count($test->test_questions);
+                $taker->total_marks = $total_marks;
                 $taker->user_id = $validate->user_id;
                 $taker->status = 1;
                 $taker->save();

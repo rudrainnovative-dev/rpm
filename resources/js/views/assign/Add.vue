@@ -178,7 +178,8 @@
                   start: '',
                   end: ''
                },
-               actions: ''
+               actions: '',
+               default_check: false
             },
             min_datetime: '',
             errors: {
@@ -239,6 +240,7 @@
          },
          async create(action) {
             this.candidates.actions = action
+            this.candidates.default_check = this.default_check
             if(this.default_check) {
                this.candidates.settings.resume = this.default_resume
                this.candidates.settings.start = this.default_start

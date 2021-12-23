@@ -432,13 +432,13 @@ export default {
         async getReports(page = 1) {
             this.loader_spin = true
             Report.show(this.$route.params.id).then(response => {
-                console.log(response)
                 const { taker, performance, categories, sections, correct_sections, avatars, screenshots, logs } = response.data
-    
+            
                 this.report = taker
                 var total = this.report.correct_marks*100/this.report.total_marks
+                
                 total = Math.ceil(total)
-                var color = this.colors(total)
+                
                 var label = ''
                 this.performance = performance
                 this.performance.forEach(element => {
@@ -446,7 +446,9 @@ export default {
                         label = element.name;
                     }
                 })
-                
+
+                var color = this.colors(label)
+
                 var Obj = { name: label, data: [total], color: color }
                 this.chartOptions.series.push(Obj)
                 
@@ -460,13 +462,13 @@ export default {
                        marks_total = Math.ceil(marks_total)
                     }
 
-                    let section_color = this.colors(marks_total)
-
                     this.performance.forEach(element => {
                         if(marks_total >= element.min && marks_total <= element.max) {
                             section_label = element.name;
                         }
                     })
+
+                    let section_color = this.colors(section_label)
 
                     if(i == 1) {
                         var AttObj = { name: section_label, data: [marks_total], color: section_color }
@@ -501,14 +503,23 @@ export default {
             });
         },
         colors(val) {
-            if(val <= 40) {
+            if(val == 'Very Low') {
                 return '#ff0000'
             }
-            else if(val > 41 && val <= 60) {
-                return '#7239ea'
+            else if(val == 'Low') {
+                return '#cd5757'
             }
-            else if(val > 61 && val <= 80) {
-                return '#ffc700'
+            else if(val == 'Very High') {
+                return '#5345a1'
+            }
+            else if(val == 'High') {
+                return '#2710a5'
+            }
+            else if(val == 'Moderate') {
+                return '#28af51'
+            }
+            else if(val == 'Excellent') {
+                return '#50cd89'
             }
             else {
                 return '#50cd89'

@@ -59,7 +59,7 @@
                             <div class="test-custom card-body">
                                 <div class="test-content mt-5">
                                     <p class="sections">
-                                       {{ test.test_sections.length }} Sections
+                                       {{ countSection(test.test_questions) }} Sections
                                     </p>
                                     <p class="d-flex justify-content-between align-items-center border-bottom py-4 border-top">
                                         <span>{{ test.test_questions.length }} Questions</span>
@@ -206,8 +206,11 @@ export default {
         },
         async closed() {
             this.model_show = false
+        },
+        countSection(questions) {
+            let arrayUniqueByKey = [...new Map(questions.map(item => [item['category_id'], item])).values()];
+            return arrayUniqueByKey.length
         }
-
     }
 }
 </script>

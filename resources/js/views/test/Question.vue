@@ -21,6 +21,11 @@
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <div id="kt_content_container" class="container">
                 <div class="row">
+                    <div class="col-md-12 col-12 text-right mb-2">
+                        <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary ml-4">Back</router-link>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-12 col-12 d-flex">
                         <div class="card card-xl-stretch mb-xl-8 w-100">
                             <div class="card-body">

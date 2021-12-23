@@ -39,9 +39,6 @@ class TestController extends Controller
         }
         else {
             $tests = Test::with(['purpose','test_questions'])
-                        ->with(['test_sections' => function($query) {
-                            $query->groupBy('category_id');
-                        }])
                         ->withCount(['taker'])
                         ->where('user_id', Auth::id())
                         ->orderBy('id', 'desc')
@@ -50,7 +47,7 @@ class TestController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'All Question.',
-                'tests' => $tests,
+                'tests' => $tests
             ], 200);
         }
     }

@@ -106,9 +106,7 @@ export default {
 
                 var diffMs = (toTime - fromTime)
                 this.timeduration = Math.round(((diffMs % 86400000) % 3600000) / 60000)
-                
 
-                var color = this.colors(total)
                 var label = ''
                 this.performance = performance
                 this.performance.forEach(element => {
@@ -117,6 +115,7 @@ export default {
                     }
                 })
                 
+                var color = this.colors(label)
                 var Obj = { name: label, data: [total], color: color }
                 this.chartOptions.series.push(Obj)
                 
@@ -128,14 +127,23 @@ export default {
             });
         },
         colors(val) {
-            if(val <= 40) {
+            if(val == 'Very Low') {
                 return '#ff0000'
             }
-            else if(val > 41 && val <= 60) {
-                return '#7239ea'
+            else if(val == 'Low') {
+                return '#cd5757'
             }
-            else if(val > 61 && val <= 80) {
-                return '#ffc700'
+            else if(val == 'Very High') {
+                return '#5345a1'
+            }
+            else if(val == 'High') {
+                return '#2710a5'
+            }
+            else if(val == 'Moderate') {
+                return '#28af51'
+            }
+            else if(val == 'Excellent') {
+                return '#50cd89'
             }
             else {
                 return '#50cd89'
