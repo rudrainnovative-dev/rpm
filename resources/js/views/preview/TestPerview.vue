@@ -63,7 +63,7 @@
                                         <ul class="list-unstyled mb-0 mt-md-8 mt-4 ps-lg-7" v-if="q.question.options.length > 0">
                                             <li class="mb-5" v-for="(option,index) in q.question.options">
                                                 <label class="radio">
-                                                    <input type="radio" :name="'option'+q.question_id" v-model="selected_answers[q.question_id]" :value="index" v-on:change="answerSelected(q.question_id, q.question.title, q.question.options, q.question.correct, q.question.marks, index, test.id, q.category.id, q.category.name)">
+                                                    <input type="radio" :name="'option'+q.question_id" v-model="selected_answers['q'+q.question_id]" :value="index" v-on:change="answerSelected(q.question_id, q.question.title, q.question.options, q.question.correct, q.question.marks, index, test.id, q.category.id, q.category.name)">
                                                     <span class="me-2"></span>
                                                     {{ option.option }}
                                                 </label>
@@ -100,7 +100,7 @@
                                         <ul class="list-unstyled mb-0 mt-md-8 mt-4 ps-lg-7" v-if="q.question.options.length > 0">
                                             <li class="mb-5" v-for="(option,index) in q.question.options">
                                                 <label class="radio">
-                                                    <input type="radio" :name="'option'+q.question_id" v-model="selected_answers[q.question_id]" :value="index" v-on:change="answerSelected(q.question_id, q.question.title, q.question.options, q.question.correct, q.question.marks, index, test.id, q.category.id, q.category.name)">
+                                                    <input type="radio" :name="'option'+q.question_id" v-model="selected_answers['q'+q.question_id]" :value="index" v-on:change="answerSelected(q.question_id, q.question.title, q.question.options, q.question.correct, q.question.marks, index, test.id, q.category.id, q.category.name)">
                                                     <span class="me-2"></span>
                                                     {{ option.option }}
                                                 </label>
@@ -183,7 +183,8 @@
                     snap: '',
                     errors: {
                         validate: ''
-                    }
+                    },
+                    preview: true
                },
                time_counter:'',
                camera_enable: false,
@@ -196,17 +197,21 @@
                timeoutscreen: false,
                report_display: false,
                loader_spin: false,
-               registation_fields: '',
                selected_answers: [],
                progress_bar: '',
+               candidate: {
+                email: '',
+                name: '',
+                preview: ''
+               },
+
             }
         },
         methods:{
             async getTest() {
                 this.loader_spin = true
-                Online.index(this.$route.params.id).then(response => {
-                    const { id, name, registation_fields, duration } = response.data.test
-                    this.registation_fields = registation_fields
+                Online.index(this.$route.params.id, 'YWRtaW4=').then(response => {
+                    const { id, name, duration } = response.data.test
                     this.test.id = id
                     this.test.name = name
                     this.categories = response.data.category
@@ -236,7 +241,7 @@
                     }
 
                     if(this.test.settings.includes(5)) {
-                        this.report_display = true
+                        this.report_display = false
                     }
 
                     this.validateTest = true
@@ -251,8 +256,11 @@
                 })
             },
             async onProceedClick() {
+                this.test.taker_id = ''
+                this.test.taker_email = ''
                 this.proceed = false
                 this.test_screen = true
+                this.timeCounterStart()
             },
             async sectionChanged() {
                 if(confirm('Are you sure want to change the section?')) {
@@ -283,12 +291,16 @@
                 })
             },
             async answerSelected(question_id, question_title, question_options, correct, marks, selected, test_id, category_id, category_name) {
-                console.log(this.selected_answers)
                 var answered = [];
                 answered = {'question_id': question_id, 'question': question_title, 'taker_id': this.test.taker_id, 'options': question_options, 'correct': correct, 'marks': marks, 'selected': selected, 'test_id': test_id, 'category_id': category_id, 'category': category_name}
-                Online.answerSave(answered).then(response => {
+
+                if(Object.keys(this.selected_answers).length > 0) {
+                    this.progress_bar = Object.keys(this.selected_answers).length * 100 / this.total_questions
+                }
+                
+                /*Online.answerSave(answered).then(response => {
                    
-                }).catch(error=> { })
+                }).catch(error=> { })*/
             },
             async nextSection() {
                 if(confirm('Are you sure want to change the section?')) {
@@ -406,12 +418,11 @@
             },
             async updateTestStatus() {
                 this.loader_spin = false
-                Online.updateStatus(this.test.taker_id, this.test).then(response => {
-                    
+                this.test.preview = true
+                /*Online.updateStatus(this.test.taker_id, this.test).then(response => {
                 }).catch(error=> {
                     this.loader_spin = false
-                })
-
+                })*/
             },
             async secureBrowser() {
                 document.addEventListener('keydown', function(e) {

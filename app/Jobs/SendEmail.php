@@ -55,7 +55,7 @@ class SendEmail implements ShouldQueue
                 }
             }
 
-            $link = $this->test_url.$list['test']['public_id'].'/'.$list['id'];
+            $link = $this->test_url.$list['test']['public_id'].'/'.base64_encode($list['id']);
             
             $text_message = str_replace(['{test_link}', '{candidate}', '{job_role}'], [$link, $list['email'], $job_role], $this->data['message']);
            

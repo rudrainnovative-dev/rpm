@@ -17,6 +17,12 @@ Vue.filter('formatDate', function(value) {
   }
 })
 
+Vue.filter('formatFullDate', function(value) {
+  if (value) {
+    return moment(String(value)).format('DD MMM, YYYY hh:mm:a')
+  }
+})
+
 //time format
 Vue.filter('formatTime', function(value) {
   if (value) {

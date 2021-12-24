@@ -296,6 +296,11 @@
                 console.log(this.selected_answers)
                 var answered = [];
                 answered = {'question_id': question_id, 'question': question_title, 'taker_id': this.test.taker_id, 'options': question_options, 'correct': correct, 'marks': marks, 'selected': selected, 'test_id': test_id, 'category_id': category_id, 'category': category_name}
+
+                if(Object.keys(this.selected_answers).length > 0) {
+                    this.progress_bar = Object.keys(this.selected_answers).length * 100 / this.total_questions
+                }
+                
                 Online.answerSave(answered).then(response => {
                    
                 }).catch(error=> { })

@@ -11,20 +11,26 @@ use App\Models\Category;
 use App\Models\Testquestion;
 use App\Models\Testtakersnap;
 use App\Models\Testtakerscreenshot;
+use App\Models\Assigncandidate;
 use PDF;
 use DB;
 use App\Models\Test;
-
+use Auth;
+use Carbon\Carbon;
 class ReportController extends Controller
 {
     public function index(request $request, $test_id) {
         
+        $user_id = Auth::id();
+
         $takers = Testtaker::where('test_id', $test_id)
                     ->withCount(['answers AS correct_marks' => function($query) {
                         $query->whereColumn('correct','selected_option');
                         $query->select(DB::raw('sum(marks)'));
                     }])
+                    ->where('user_id', $user_id)
                     ->where('status', 2)
+                    ->orderBy('id', 'desc')
                     ->paginate(10);
 
         $takersProcess = Testtaker::where('test_id', $test_id)
@@ -32,14 +38,24 @@ class ReportController extends Controller
                         $query->whereColumn('correct','selected_option');
                         $query->select(DB::raw('sum(marks)'));
                     }])
+                    ->where('user_id', $user_id)
                     ->where('status', 1)
+                    ->orderBy('id', 'desc')
+                    ->paginate(10);
+
+        $upcomming = Assigncandidate::with(['test'])
+                    ->where('user_id', $user_id)
+                    ->where('status', 0)
+                    ->whereDate('end', '>', Carbon::now())
+                    ->orderBy('id', 'desc')
                     ->paginate(10);
 
         return response()->json([
                 'success' => true,
                 'message' => 'taker.',
                 'takers' => $takers,
-                'processing' => $takersProcess
+                'processing' => $takersProcess,
+                'upcomming' => $upcomming
             ], 200);
     }
 
@@ -146,4 +162,18 @@ class ReportController extends Controller
         }
     }
 
+    public function sendEmailPDF(request $request) {
+        
+        $data['lists'] = $request->all();
+
+        $job = (new \App\Jobs\SendEmailPDF($data))
+            ->delay(now()->addSeconds(2)); 
+
+        $this->dispatch($job);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Performance report send to candidate.',
+        ], 200);
+    }
 }

@@ -17,4 +17,8 @@ export default {
     return Api.get(`/report/${id}/pdf`, { responseType: 'blob', headers: { "Authorization" : `Bearer ${token}`} });
   },
 
+  async bulkEmailPdf(ids) {
+    let token = localStorage.access_token;
+    return Api.post(`/report/send/bulk/email/pdf`, ids, { headers: { "Authorization" : `Bearer ${token}`} });
+  },
 };

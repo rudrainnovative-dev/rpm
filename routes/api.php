@@ -62,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/report/{id}/test', [ReportController::class, 'index']);
     Route::get('/report/{id}/show', [ReportController::class, 'show']);
     Route::get('/report/{id}/pdf', [ReportController::class, 'pdf']);
+    Route::post('/report/send/bulk/email/pdf', [ReportController::class, 'sendEmailPDF']);
 
     Route::get('/criterias', function() {
         return response()->json([

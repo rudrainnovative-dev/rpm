@@ -23,8 +23,9 @@ class OnlinetestController extends Controller
 {
     public function index(Request $request, $public_id) {
         
-        if($request->cid && $request->cid != 'admin') {
-            if(!Assigncandidate::where('id', $request->cid)->whereRaw('(now() between start and end)')->where('status', '0')->exists()) {
+        if($request->cid && $request->cid != 'YWRtaW4=') {
+            $cid = base64_decode($request->cid);
+            if(!Assigncandidate::where('id', $cid)->whereRaw('(now() between start and end)')->where('status', '0')->exists()) {
                 return response()->json([
                     'success' => false,
                     'error' => 'This test has been deactivated. Please contact your administrator.',
@@ -110,6 +111,10 @@ class OnlinetestController extends Controller
                         ->where('status', 0)
                         ->first();
 
+            if($request->preview) {
+                $validate = ['success' => true];
+            }
+
             if(!empty($validate) && !empty($test)) {
 
                 $taker = new Testtaker;
@@ -124,8 +129,18 @@ class OnlinetestController extends Controller
                 $taker->test_name = $test->name;
                 $taker->total_questions = count($test->test_questions);
                 $taker->total_marks = $total_marks;
-                $taker->user_id = $validate->user_id;
-                $taker->status = 1;
+
+                if(!$request->preview) {
+                    $taker->user_id = $validate->user_id;
+                }
+                
+                if(isset($request->preview)) {
+                    $taker->status = 3;    
+                }
+                else {
+                    $taker->status = 1;
+                }
+                
                 $taker->save();
 
                 Assigncandidate::where('test_id', $test_id)
@@ -139,6 +154,7 @@ class OnlinetestController extends Controller
                     'taker' => $taker
                 ], 200);
             }
+
 
             return response()->json([
                     'success' => false,
@@ -272,7 +288,7 @@ class OnlinetestController extends Controller
     }
 
     public function updateStatus(Request $request, $taker_id) {
-        if($taker_id && $request->taker_id == $taker_id) {
+        if($taker_id && $request->taker_id == $taker_id && !$request->preview) {
             Testtaker::where('id', $taker_id)
                     ->update([
                         'status'=>2,
