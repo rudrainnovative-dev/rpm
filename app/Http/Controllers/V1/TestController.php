@@ -11,6 +11,7 @@ use App\Models\Sectionsetting;
 use App\Models\Ordersetting;
 use App\Models\Testquestion;
 use App\Models\Registationfield;
+use App\Models\Assigncandidate;
 use Auth;
 use DB;
 
@@ -24,6 +25,11 @@ class TestController extends Controller
     }
 
     public function index(Request $request) {
+
+        if($request->has('search')) {
+            $search = $request->search;
+        }
+
         if($request->test) {
             $tests = Test::with('purpose')
                         ->where('user_id', Auth::id())
@@ -40,6 +46,11 @@ class TestController extends Controller
         else {
             $tests = Test::with(['purpose','test_questions'])
                         ->withCount(['taker'])
+                        ->where(function($query) use($search) {
+                            if($search) {
+                                $query->where('name', 'like', '%'.$search.'%');
+                            }
+                        })
                         ->where('user_id', Auth::id())
                         ->orderBy('id', 'desc')
                         ->paginate(10);

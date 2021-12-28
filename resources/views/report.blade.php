@@ -11,8 +11,8 @@
     .custom-progress {
         width:100%;
         background:#cecece;
-        height:20px;
-        margin: 20px 0px 0px;
+        height:18px;
+        margin: 50px 0px 0px;
     }
     .progress-div {
         height:100%;
@@ -23,7 +23,7 @@
     }
     .progress-extra-div {
         width:100%;
-        margin-bottom: 20px;
+        margin-bottom: 50px;
     }
 </style>
 @php
@@ -49,6 +49,10 @@
             $bar_label = '';
 
             if(!isset($correct_sections[$id])) {
+
+                $chartArray[$id]['total'] = 0;
+                $chartArray[$id]['color'] = '#ff0000';
+                $chartArray[$id]['label'] = 'Very Low';
                 continue;
             }
 
@@ -214,7 +218,6 @@
         </tr>
     </tbody>
 </table>
-@if(isset($chartArray[3]))
 <table class="table">
     <thead>
         <tr>
@@ -242,10 +245,7 @@
         </tr>
     </tbody>
 </table>
-@endif
-
-@if(isset($chartArray[2]))
-<table class="table">
+<table class="table" style="page-break-before: always;">
     <thead>
         <tr>
             <th><h5><strong>Numerical Ability</strong></h5></th>
@@ -272,9 +272,6 @@
         </tr>
     </tbody>
 </table>
-@endif
-
-@if(isset($chartArray[1]))
 <table class="table">
     <thead>
         <tr>
@@ -302,9 +299,6 @@
         </tr>
     </tbody>
 </table>
-@endif
-
-@if(isset($chartArray[4]))
 <table class="table">
     <thead>
         <tr>
@@ -332,43 +326,51 @@
         </tr>
     </tbody>
 </table>
-@endif
-
-<table class="table">
+<table class="table" style="page-break-before: always;">
     <thead>
         <tr>
             <th><h5><strong>Test Log</strong></h5></th>
         </tr>
     </thead>
+</table>
+@if(isset($avatars[0]))
+<table class="table">
     <tbody>
-        @if(isset($avatars[0]))
         <tr>
-            <td><strong>Images of Test Taker</strong></td>
+            <td><p><strong>Images of Test Taker</strong></p></td>
         </tr>
         <tr>
             <td>
             @forelse($avatars as $avatar)
-                <img src="{{ $avatar->snap }}" width="300" style="border:solid 1px #000; padding: 5px;margin:5px;"/>
+                <img src="{{ $avatar->snap }}" style="width: 200px;border:solid 1px #000; padding: 5px;margin:5px;"/>
             @empty
 
             @endforelse
             </td>
         </tr>
-        @endif
-        @if(isset($screenshots[0]))
-        <tr>
-            <td><strong>Screenshots of Test Taker</strong></td>
-        </tr>
-        <tr>
-            <td>
-            @forelse($screenshots as $screenshot)
-                <img src="{{ $screenshot->snap }}" width="300" style="border:solid 1px #000; padding: 5px;margin:5px;"/>
-            @empty
+    </tbody>
+</table>
+@endif
+@if(isset($screenshots[0]))
+    <table class="table" >
+        <tbody>
+            <tr>
+                <td><p><strong>Screenshots of Test Taker</strong></p></td>
+            </tr>
+            <tr>
+                <td>
+                    @forelse($screenshots as $screenshot)
+                        <img src="{{ $screenshot->snap }}" style="width: 200px; border:solid 1px #000; padding: 5px;margin:5px;"/>
+                    @empty
 
-            @endforelse
-            </td>
-        </tr>
-        @endif
+                    @endforelse
+                </td>
+            </tr>
+        </tbody>
+    </table>
+@endif
+<table class="table">
+    <tbody>
         <tr>
             <td>
                 <h6><strong>{{ Date('d F, Y', strtotime($taker->created_at)) }}</strong></h6>

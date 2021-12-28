@@ -38,7 +38,8 @@
                            </div>
                         </div>
                         <div class="col-md-4 col-12">
-                           <button type="submit" class="btn btn-primary btn-sm d-inline-block mt-4">Add</button>
+                           <label class="mb-2 fw-bold">&nbsp;</label>
+                           <button type="submit" class="btn btn-primary btn-sm d-inline-block">Add</button>
                         </div>
                      </div>
                      <div class="row  align-items-end my-4">
@@ -55,7 +56,7 @@
                      <div class="row" v-if="default_check">
                         <div class="col-md-12 col-12">
                            <div class="card card-xl-stretch w-100 mb-xl-8 mb-5">
-                              <div class="card-body p-0">
+                              <div class="card-body">
                                  <h6 class="fw-bolder mb-5">Default Settings</h6>
                                  <div class="row">
                                     <div class="col-md-4 col-12">

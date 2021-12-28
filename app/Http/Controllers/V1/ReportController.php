@@ -60,6 +60,8 @@ class ReportController extends Controller
     }
 
     public function report_data($taker_id) {
+
+
         $categories = Category::orderBy('id', 'asc')->pluck('name', 'id');
         $taker = Testtaker::where('id', $taker_id)
                     ->withCount(['answers AS correct_marks' => function($query) {
@@ -70,6 +72,7 @@ class ReportController extends Controller
 
         $get_performance = Performancecriteria::where('user_id', $taker->user_id)
                         ->with(['options', 'options.op_criteria'])
+                        ->whereDate('created_at', '<', $taker->created_at)
                         ->orderBy('id', 'desc')
                         ->first();
 

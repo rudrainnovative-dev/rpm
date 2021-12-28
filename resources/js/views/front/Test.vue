@@ -50,6 +50,7 @@
                                 <div class="alert alert-info">
                                     <h5>Section Instruction for <u>{{ selected_category.name }}</u></h5>
                                     <p class="mt-4">{{ selected_category.info }}</p>
+                                    <p class="mt-4 text-danger" v-if="required_all">Note: Mark all Questions Mandatory</p>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +76,7 @@
                             </div>
                             <div class="separator mb-2 mt-7"></div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12 text-right mb-8">
                                     <div class="w-100 ps-lg-7 mt-md-8 mt-5 ">
                                         <button type="button" class="d-inline-block btn btn-secondary btn-sm mr-2" v-on:click="getQuestion(test.question.current_page -1 )" v-if="test.question.current_page <= test.question.total && test.question.current_page != 1">Prev Question</button> 
                                         <button type="button" class="d-inline-block btn btn-sm btn-dark" v-on:click="getQuestion(test.question.current_page + 1)" v-if="test.question.current_page < test.question.total">Next Question</button>
@@ -83,8 +84,8 @@
                                         <button type="button" class="d-inline-block btn btn-sm btn-dark" v-on:click="finishTest()" v-if="test.question.current_page == test.question.total && categories.length == selected_category.key">Finish Test</button>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="d-flex justify-content-end align-items-center flex-wrap">
+                                <div class="col-md-12 text-center">
+                                    <div class="mt-4 align-items-center flex-wrap">
                                         <pagination :data="test.question" :limit="2" @pagination-change-page="getQuestion"></pagination>
                                     </div>
                                 </div>
@@ -112,7 +113,7 @@
                             </div>
                             <div class="separator mb-2 mt-7"></div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12 text-right mb-8">
                                     <div class="w-100 ps-lg-7 mt-md-8 mt-5 ">
                                         <button type="button" class="d-inline-block btn btn-sm btn-dark" v-on:click="nextSection()" v-if="categories.length > selected_category.key">Next Section</button>
                                         <button type="button" class="d-inline-block btn btn-sm btn-dark" v-on:click="finishTest()" v-if="categories.length == selected_category.key">Finish Test</button>
@@ -123,28 +124,29 @@
                     </div>
                 </div>
                 <div class="row" v-if="thankuscreen">
-                    <div class="col-md-12 my-8" v-if="!report_display">
+                    <div class="col-md-12 my-8 text-center" v-if="!report_display">
                         <div class="alert alert-info">
-                            <h4>Thank you</h4>
-                            <span class="d-block">Your test have been successfully submited.</span>
+                            <h4>Thank you for taking the time.</h4>
+                            <span class="d-block">Your Test have been successfully submited.</span>
                             <span class="d-block">You can closed this window.</span>
                         </div>
                     </div>
                     <Reportdisplay :taker="test.taker_id" v-else/>
                 </div>
                 <div class="row" v-if="timeoutscreen">
-                    <div class="col-md-12 my-8" v-if="!report_display">
-                        <div class="alert alert-info">
-                            <h4>Your time is finish.</h4>
-                            <button type="btn btn-secondary" v-on:click="finishTestTimeout">Finish Test</button>
+                    <div class="col-md-12 my-8 text-center" v-if="!report_display">
+                        <div class="alert alert-danger">
+                            <h4 class="mb-7">Your time have been finished.</h4>
+                            <p>Please click the Finish Test button and save your Test.</p>
+                            <button type="button" class = "btn btn-sm btn-danger" v-on:click="finishTestTimeout">Finish Test</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row my-8" v-else>
                 <div class="col-md-12 col-12 text-center">
-                    <div class="border border-secondary p-8">
-                        <span class="text-dark font-weight-blod">{{ test.errors.validate }}</span>
+                    <div class="border border-secondary py-8 px-4 rounded">
+                        <strong class="text-dark">{{ test.errors.validate }}</strong>
                     </div>
                 </div>
             </div>
@@ -202,6 +204,7 @@
                registation_fields: '',
                selected_answers: [],
                progress_bar: '',
+               required_all: false,
             }
         },
         methods:{
@@ -240,6 +243,23 @@
 
                     if(this.test.settings.includes(5)) {
                         this.report_display = true
+                    }
+
+                    if(this.test.settings.includes(11)) {
+                        this.required_all = true
+                    }
+
+                    if(!this.test.settings.includes(1)) {
+                        let browser = this.getCurrentBrowser()
+                        if(browser.name != "Chrome" || browser.version < 95) {
+                            this.test.errors.validate = "Whoops, We can't run your tests. Please Upgrade or use Chrome Browser(greater then or equal to version 95)."
+                            return false
+                        }
+                    }
+
+                    if(this.test.settings.includes(9)) {
+                        this.test.errors.validate = "This test has been deactivated. Please contact your administrator for assistance."
+                        return false
                     }
 
                     this.validateTest = true
@@ -444,6 +464,25 @@
                         e.preventDefault()
                     }
                 }, false)
+            },
+            getCurrentBrowser() {
+                var ua=navigator.userAgent,tem,M=ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []
+
+                if(/trident/i.test(M[1])) {
+                    tem=/\brv[ :]+(\d+)/g.exec(ua) || []
+                    return {name:'IE',version:(tem[1]||'')}
+                }   
+                if(M[1]==='Chrome') {
+                    tem=ua.match(/\bOPR|Edge\/(\d+)/)
+                    if(tem!=null)   {return {name:'Opera', version:tem[1]};}
+                }   
+                M=M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?']
+                
+                if((tem=ua.match(/version\/(\d+)/i))!=null) {M.splice(1,1,tem[1]);}
+                return {
+                  name: M[0],
+                  version: M[1]
+                };
             }
         }
     }

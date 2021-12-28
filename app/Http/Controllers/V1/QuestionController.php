@@ -23,6 +23,11 @@ class QuestionController extends Controller
 
     public function index(Request $request) {
 
+        $search = "";
+        if($request->has('search')) {
+            $search = $request->search;
+        }
+
         if($request->category_id) {
             $questions = Questionbank::where('category_id', $request->category_id)
                 ->where('user_id', Auth::id())
@@ -39,6 +44,11 @@ class QuestionController extends Controller
         else {
             $questions = Questionbank::with(['category', 'options'])
                         ->where('user_id', Auth::id())
+                        ->where(function($query) use($search) {
+                            if($search) {
+                                $query->where('title', 'like', '%'.$search.'%');
+                            }
+                        })
                         ->orderBy('id','desc')
                         ->paginate(5);
             
@@ -141,7 +151,7 @@ class QuestionController extends Controller
     }
     
     public function destroy(Questionbank $question) {
-        $question->where('user_id', Auth::id())->delete();
+        Questionbank::where('id', $question->id)->where('user_id', Auth::id())->delete();
         Questionoption::where('question_id', $question->id)->where('user_id', Auth::id())->delete();
         
         return response()->json([
@@ -181,7 +191,6 @@ class QuestionController extends Controller
         }
 
         $excelData = Excel::toArray(new QuestionImport, $path);
-        
         if(!empty($excelData[0])) {
             $header = array_keys($excelData[0][0]);
             $keys = ['category', 'question', 'option1', 'option2', 'option3', 'option4', 'correct', 'marks'];
@@ -198,7 +207,7 @@ class QuestionController extends Controller
                             [
                                 'correct' => $data['correct'],
                                 'marks' => $data['marks'],
-                                'answers_justification' => isset($data['justification'])?$data['justification']:'',
+                                'answers_justification' => isset($data['answer_of_justification'])?$data['answer_of_justification']:'',
                                 'user_id' => Auth::id(),
                                 'created_at' => Date('Y-m-d H:i:s'),
                                 'updated_at' => Date('Y-m-d H:i:s')

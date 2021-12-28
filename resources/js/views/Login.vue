@@ -8,7 +8,7 @@
           <p class="font-weight-lighter text-white opacity-80">Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur</p>
         </div>
         <div class="d-none flex-column-auto d-lg-flex justify-content-between mt-10">
-          <div class="opacity-70 font-weight-bold text-white">© 2021 RPM</div>
+          <div class="opacity-70 font-weight-bold text-white">© {{ new Date().getFullYear() }} RPM</div>
             <ul class="m-0 list-unstyled list-inline">
               <li class="list-inline-item">
                 <a href="#" class="text-white">Privacy</a>

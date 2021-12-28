@@ -55,7 +55,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="col-md-12 col-12">
+                                    <div class="col-md-12 col-12 mt-5">
                                         <div class="d-flex justify-content-end align-items-center flex-wrap">
                                             <pagination :data="test_questions" :limit="2" @pagination-change-page="getTestQuestions"></pagination>
                                         </div>

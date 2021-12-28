@@ -8,7 +8,7 @@
           <p class="font-weight-lighter text-white opacity-80">Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur</p>
         </div>
         <div class="d-none flex-column-auto d-lg-flex justify-content-between mt-10">
-          <div class="opacity-70 font-weight-bold text-white">© 2021 RPM</div>
+          <div class="opacity-70 font-weight-bold text-white">© {{ new Date().getFullYear() }} RPM</div>
             <ul class="m-0 list-unstyled list-inline">
               <li class="list-inline-item">
                 <a href="#" class="text-white">Privacy</a>
@@ -70,7 +70,6 @@
                 <input type="submit" class="btn btn-primary font-weight-bold" value="Update">
               </div>
             </form>
-
             <div class="mt-5 mb-15 mb-lg-0 flex-column-auto justify-content-center py-5">
               <span class="font-weight-bold text-dark-50">Rember Password</span>
                <router-link :to="{ name: 'Login' }" class="text-dark-50 text-hover-primary my-3 mr-2">Sign In</router-link>

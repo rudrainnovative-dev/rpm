@@ -15,6 +15,11 @@ class QuestionImport implements ToModel, WithHeadingRow
     * @return \Illuminate\Database\Eloquent\Model|null
     */
     public function model(array $row) {
+        
+    }
 
+    public function headingRow(): int
+    {
+        return 2;
     }
 }

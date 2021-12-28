@@ -18,6 +18,7 @@ use App\Models\Testtakerscreenshot;
 use App\Models\Performancecriteria;
 use DB;
 use File;
+use Carbon\Carbon;
 
 class OnlinetestController extends Controller
 {
@@ -25,7 +26,7 @@ class OnlinetestController extends Controller
         
         if($request->cid && $request->cid != 'YWRtaW4=') {
             $cid = base64_decode($request->cid);
-            if(!Assigncandidate::where('id', $cid)->whereRaw('(now() between start and end)')->where('status', '0')->exists()) {
+            if(!Assigncandidate::where('id', $cid)->where('start', '<=', Carbon::now())->where('end', '>=', Carbon::now())->where('status', '0')->exists()) {
                 return response()->json([
                     'success' => false,
                     'error' => 'This test has been deactivated. Please contact your administrator.',
@@ -40,6 +41,21 @@ class OnlinetestController extends Controller
             if(!empty($test)) {
 
                 $test_settings = Testsetting::where('test_id', $test->id)->pluck('criteria_id');
+
+                if (!in_array(10, $test_settings->toArray()) && $request->cid != 'admin') {
+                    $checkTest = Testtaker::where('test_id', $test->id)
+                                ->whereBetween('created_at', [Carbon::now()->subMinute(30), Carbon::now()])
+                                ->where('status', 1)    
+                                ->first();
+                            
+                    if(!empty($checkTest)) {
+                        return response()->json([
+                            'success' => false,
+                            'error' => 'The test will be accessed by other candidates at the time. Please try latter to accees this test.',
+                        ], 400);
+                    }
+                }
+                
                 $order_settings = Ordersetting::where('test_id', $test->id)->pluck('order', 'section_id');
                 $section_settings = Sectionsetting::where('test_id', $test->id)->pluck('instruction', 'section_id');
                 $test_questions = Testquestion::with('category')

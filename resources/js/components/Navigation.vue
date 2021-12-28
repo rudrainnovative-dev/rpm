@@ -2,8 +2,7 @@
   <div id="sidebar-main">
     <div id="sidebar_aside" class="aside aside-dark aside-hoverable" data-kt-drawer="true" data-kt-drawer-name="aside" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="start" data-kt-drawer-toggle="#sidebar_aside_mobile_toggle">
       <div class="aside-logo flex-column-auto" id="sidebar_aside_logo">
-          <h2 class="text-white fw-bolder logo display-6"><router-link :to="{ name: 'Welcome' }">RPM</router-link></h2>
-        </a>
+          <h2 class="text-white fw-bolder logo display-6"><router-link :to="{ name: 'Welcome' }" class="text-white">RPM</router-link></h2>
         <div id="sidebar_aside_toggle" class="btn btn-icon w-auto px-0 btn-active-color-primary aside-toggle" data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="aside-minimize">
           <span class="svg-icon svg-icon-1 rotate-180">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">

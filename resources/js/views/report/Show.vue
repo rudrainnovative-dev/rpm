@@ -140,7 +140,7 @@
                                 </h2>
                                 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample" style="">
                                     <div class="accordion-body">
-                                        <p class="m-0">General Aptitude is defined as   potential   of the candidate and    the ability to grasp new concepts   which   are crucial to his/ her role as an employee in the organization. It is the innate, learned or   acquired ability of an  individual to   perform certain tasks. It   helps   assess Individual's capacity for    learning in general regardless of   any specific skill.</p>
+                                        <p class="m-0">General Aptitude is defined as   potential   of the candidate and    the ability to grasp new concepts   which   are crucial to his/ her role as an employee in the organization. It is the innate, learned or   acquired ability of an  individual to   perform certain tasks. It   helps   assess Individual's capacity for learning in general regardless of   any specific skill.</p>
                                         <highcharts :options="chartOptions" class="my-5"></highcharts>
                                     </div>
                                 </div>
@@ -446,6 +446,8 @@ export default {
                         label = element.name;
                     }
                 })
+
+                console.log(label)
 
                 var color = this.colors(label)
 

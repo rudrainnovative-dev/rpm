@@ -2,9 +2,9 @@ import Api from "./Api";
 import Csrf from "./Csrf";
 
 export default {
-  async index(page) {
+  async index(page, search) {
     let token = localStorage.access_token;
-    return Api.get("/assign?page="+page, { headers: { "Authorization" : `Bearer ${token}`} });
+    return Api.get("/assign?page="+page+"&search="+search, { headers: { "Authorization" : `Bearer ${token}`} });
   },
 
   async show(id) {

@@ -19,7 +19,21 @@ class AssignController extends Controller
     }
 
     public function index(Request $request) {
-        $assigned = Assigncandidate::with(['test'])->orderBy('id', 'desc')->where('user_id', Auth::id())->paginate(10);
+        
+        $search = "";
+        if($request->has('search')) {
+            $search = $request->search;
+        }
+
+        $assigned = Assigncandidate::with(['test'])
+                    ->where(function($query) use($search) {
+                        if($search) {
+                            $query->where('email', 'like', '%'.$search.'%');
+                        }
+                    })
+                    ->orderBy('id', 'desc')
+                    ->where('user_id', Auth::id())
+                    ->paginate(10);
         
         return response()->json([
                 'success' => true,
@@ -61,13 +75,13 @@ class AssignController extends Controller
                     $assign_candidate->email = $list['email'];
                     $assign_candidate->test_id = $list['test_id'];
 
-                    if(isset($request->default_check) && $list['start']) {
+                    if(!isset($request->default_check) && $list['start']) {
                        $start = Date('Y-m-d H:i:s', strtotime($list['start']));
                     }
 
                     $assign_candidate->start = $start;
 
-                    if(isset($request->default_check) && $list['end']) {
+                    if(!isset($request->default_check) && $list['end']) {
                        $end = Date('Y-m-d H:i:s', strtotime($list['end']));
                     }
 

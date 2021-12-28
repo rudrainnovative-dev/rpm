@@ -34,14 +34,14 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="card-toolbar">
+                                <div class="card-toolbar" :class="(tab3)?'invisible':'visible'">
                                     <div class="text-end">
                                         <div class="dropdown">
                                             <button type="button" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-outline-default px-0 my-3">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="bi bi-three-dots-vertical"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"></path></svg>
                                             </button>
                                             <ul aria-labelledby="" role="menu" class="dropdown-menu">
-                                                <li v-if="!tab3">
+                                                <li>
                                                     <a href="javascript:void(0)" class="dropdown-item" v-on:click="sendReportClick">Send Report to Candidate</a>
                                                 </li>
                                             </ul>
@@ -250,8 +250,9 @@ export default {
             });
         },
         async downloadReport(id) {
+
             this.loader_spin = true
-            Report.pdf(this.$route.params.id).then(response => {
+            Report.pdf(id).then(response => {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;

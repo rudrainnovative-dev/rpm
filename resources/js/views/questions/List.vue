@@ -21,7 +21,24 @@
                     <div class="col-md-12 col-12 d-flex">
                         <div class="card card-xl-stretch w-100">
                             <div class="card-header border-0">
-                                <h3 class="card-title fw-bolder text-dark m-0"></h3>
+                                <div class="form-group my-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control form-control-sm form-control-solid bg-white" v-model="search" placeholder="Search Question...">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-light-dark btn-sm px-3 rounded-0 rounded-end" type="button" v-on:click="searchClick">
+                                                <span class="svg-icon svg-icon-2 m-0">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                            <rect x="0" y="0" width="24" height="24"></rect>
+                                                            <path d="M14.2928932,16.7071068 C13.9023689,16.3165825 13.9023689,15.6834175 14.2928932,15.2928932 C14.6834175,14.9023689 15.3165825,14.9023689 15.7071068,15.2928932 L19.7071068,19.2928932 C20.0976311,19.6834175 20.0976311,20.3165825 19.7071068,20.7071068 C19.3165825,21.0976311 18.6834175,21.0976311 18.2928932,20.7071068 L14.2928932,16.7071068 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"></path>
+                                                            <path d="M11,16 C13.7614237,16 16,13.7614237 16,11 C16,8.23857625 13.7614237,6 11,6 C8.23857625,6 6,8.23857625 6,11 C6,13.7614237 8.23857625,16 11,16 Z M11,18 C7.13400675,18 4,14.8659932 4,11 C4,7.13400675 7.13400675,4 11,4 C14.8659932,4 18,7.13400675 18,11 C18,14.8659932 14.8659932,18 11,18 Z" fill="#000000" fill-rule="nonzero"></path>
+                                                        </g>
+                                                    </svg>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="d-flex align-items-center py-1">
                                     <router-link :to='{name:"QuestionAdd"}' class="btn btn-sm btn-light me-4">Add Question</router-link>
                                     <button type="button" class="btn btn-sm btn-flex btn-primary btn-active-primary" v-on:click="OpenModel">Upload Excel</button>
@@ -63,7 +80,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div class="col-md-12 col-12">
+                                <div class="col-md-12 col-12 mt-5">
                                     <div class="d-flex justify-content-end align-items-center flex-wrap">
                                         <pagination :data="questions" :limit="2" @pagination-change-page="getQuestions"></pagination>
                                     </div>
@@ -103,7 +120,7 @@
                                         </div>
                                         <div class="form-group">
                                             <button type="submit" class="btn btn-sm btn-primary" :disabled="disabled"><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" v-if="disabled"></span> Upload</button>
-                                            <a href="/assets/excel/questions.xlsx" class="text-info float-right">Download sample file</a>
+                                            <a href="/assets/excel/sample_questions.xlsx" class="text-info float-right">Download sample file</a>
                                         </div>
                                     </div>
                                 </form>
@@ -135,7 +152,8 @@ export default {
                 edit: 'Edit',
                 delete: 'Delete'
             },
-            error: ''
+            error: '',
+            search: ''
         }
     },
     mounted(){
@@ -144,7 +162,7 @@ export default {
     methods:{
         async getQuestions(page = 1) {
             this.loader_spin = true
-            Question.index(page).then(response => {
+            Question.index(page, this.search).then(response => {
                 this.questions = response.data.questions;
                 this.questionsData = response.data.questions.data;
                 this.loader_spin = false
@@ -189,6 +207,9 @@ export default {
                 }
                 this.disabled = false
             });
+        },
+        async searchClick(){
+            this.getQuestions()
         }
     }
 }
