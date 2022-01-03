@@ -15,12 +15,12 @@ class Test extends Model
         'public_id',    
         'name',
         'purpose_id',
-        'assessment_type', 
-        'assessment_time_from',
-        'assessment_time_to',
+        'assessment_type',
         'timezone',
         'duration',
-        'status'
+        'status',
+        'start_message',
+        'end_message',
     ];
 
     public function purpose() {

@@ -31,9 +31,14 @@ Vue.filter('formatTime', function(value) {
 })
 
 import wysiwyg from "vue-wysiwyg";
-Vue.use(wysiwyg, {});
+Vue.use(wysiwyg, {  hideModules: { code: true }});
 
 import "vue-wysiwyg/dist/vueWysiwyg.css";
+
+
+import tinymce from 'vue-tinymce-editor'
+Vue.component('tinymce', tinymce)
+
 
 // alert plugin on vue
 import Toast from "vue-toastification";

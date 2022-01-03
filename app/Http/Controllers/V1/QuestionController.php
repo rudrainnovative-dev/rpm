@@ -71,31 +71,38 @@ class QuestionController extends Controller
             'marks' => 'required'
         ]);
         
-        $question = new Questionbank;
-        $question->category_id = $request->category_id;
-        $question->title = $request->title;
-        $question->marks = $request->marks;
-        $question->correct = $request->correct;
-        $question->answers_justification = $request->answers_justification;
-        $question->user_id = Auth::id();
-        $question->save();
+        if(!Questionbank::where('title', $request->title)->exists()) {
+            $question = new Questionbank;
+            $question->category_id = $request->category_id;
+            $question->title = $request->title;
+            $question->marks = $request->marks;
+            $question->correct = $request->correct;
+            $question->answers_justification = $request->answers_justification;
+            $question->user_id = Auth::id();
+            $question->save();
 
-        if($question->id) {
-            foreach($request->options as $key => $value) {
-                if($value) {
-                    $options = new Questionoption;
-                    $options->question_id = $question->id;
-                    $options->option = $value;
-                    $options->user_id = Auth::id();
-                    $options->save();
-                }
-            } 
+            if($question->id) {
+                foreach($request->options as $key => $value) {
+                    if($value) {
+                        $options = new Questionoption;
+                        $options->question_id = $question->id;
+                        $options->option = $value;
+                        $options->user_id = Auth::id();
+                        $options->save();
+                    }
+                } 
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Question created successfully.'
+            ], 200);
         }
 
         return response()->json([
-            'success' => true,
-            'message' => 'Question created successfully.'
-        ], 200);
+                'success' => false,
+                'error' => 'Question already exists.'
+            ], 400);
     }
 
     public function show(Questionbank $question) {
@@ -240,7 +247,7 @@ class QuestionController extends Controller
             else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Uploaded excel have not valid header columns.',
+                    'error' => 'Uploaded excel have not valid header columns.',
                 ], 400);
             }
         }
@@ -248,7 +255,7 @@ class QuestionController extends Controller
             return response()
                 ->json([
                     'success' => false,
-                    'message' => 'Uploaded excel empty row value.',
+                    'error' => 'Uploaded excel empty row value.',
                 ], 400);
         }
     }

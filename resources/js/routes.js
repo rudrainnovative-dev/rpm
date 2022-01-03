@@ -39,24 +39,12 @@ import OnlineTestPreview from "./views/preview/TestPerview.vue";
 
 import ReportList from "./views/report/Index.vue";
 import ReportShow from "./views/report/Show.vue";
-
+import ReportShowCandidate from "./views/report/ShowCandidate.vue";
 import PageNotFound from "./views/PageNotFound.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
-  // {
-  //   path: '/',
-  //   component: DashboardLayout,
-  //   children: [
-  //     {
-  //       path: '',
-  //       component: Welcome,
-  //       name: 'Welcome',
-  //       meta: { title: 'RPM' }
-  //     }
-  //   ],
-  // },
   {
     path: '/',
     component: DashboardLayout,
@@ -81,18 +69,6 @@ const routes = [
       }
     ],
   },
-  // {
-  //   path: '/register',
-  //   component: PublicLayout,
-  //   children: [
-  //     {
-  //       path: '',
-  //       component: Register,
-  //       name: 'Register',
-  //       meta: { title: 'Register | RPM', guestOnly: true }
-  //     }
-  //   ],
-  // },
   {
     path: '/forget-password',
     component: PublicLayout,
@@ -354,6 +330,18 @@ const routes = [
         component: ReportShow,
         name: 'ReportShow',
         meta: { title: 'Report Show | RPM', authOnly: true }
+      }
+    ],
+  },
+  {
+    path: '/share-report',
+    component: PublicLayout,
+    children: [
+      {
+        path: '',
+        component: ReportShowCandidate,
+        name: 'ReportShowCandidate',
+        meta: { title: 'Candidate Report | RPM' }
       }
     ],
   },

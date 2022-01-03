@@ -1,13 +1,22 @@
-.loading, .loading_front {
+.loading {
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
     background: #fff;
+    z-index: 99;
+}
+.loading_front {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
 }
 .loader {
-    left: 50%;
+    left: 49%;
     margin-left: 4em;
     font-size: 10px;
     border: .6em solid rgba(218, 219, 223, 1);
@@ -157,4 +166,8 @@ table .action-td {
   visibility: visible;
   opacity: 1;
   transition: opacity .15s;
+}
+
+.editr--content table th, .editr--content table td{
+  border: none !important;
 }

@@ -1,4 +1,27 @@
 
+.input-group-append .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon){
+	border: 1px solid #c6c8c9;
+}
+.editr--content{
+	background: #ededed;
+}
+body .table-striped tbody tr:nth-of-type(odd) {
+	background-color: #dddedf;
+}
+.aside-dark .menu .menu-item .menu-link.router-link-active{
+	background: #181824;
+}
+.modal-content .btn.btn-active-color-primary:hover:not(.btn-active){
+	color: #000;
+}
+
+#min_height_model_div table td p {
+	margin: 0;
+}
+.td-margin-0 td p{
+	margin-bottom: 0;
+}
+
 /*login page*/
 
 @media(min-width: 992px){

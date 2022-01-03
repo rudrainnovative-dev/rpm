@@ -81,7 +81,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/all_tests', function() {
         return response()->json([
             'message' => 'All Test.',
-            'tests' => Test::orderBy('id','desc')->select('id', 'name')->get()
+            'tests' => Test::orderBy('id','desc')->select('id', 'name', 'assessment_type')->get()
         ], 200);
     });
 });
@@ -97,3 +97,4 @@ Route::post('/online-test-snap', [OnlinetestController::class, 'taker_snap']);
 Route::post('/online-test-screenshot', [OnlinetestController::class, 'taker_screenshot']);
 Route::post('/online-test/{id}/update', [OnlinetestController::class, 'updateStatus']);
 Route::get('/online-test/{id}/report', [OnlinetestController::class, 'report']);
+Route::get('/share-report', [ReportController::class, 'reportCandidate']);

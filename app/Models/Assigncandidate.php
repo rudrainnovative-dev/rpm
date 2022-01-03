@@ -13,12 +13,14 @@ class Assigncandidate extends Model
 
     protected $fillable = [
         'assign_id',
+        'name',
         'email',    
         'test_id',
         'start',
         'end', 
         'resume',
         'share',
+        'assessment_type',
         'status',
         'user_id',
     ];

@@ -27,19 +27,19 @@
                     </tr>
                   </thead>
                   <tbody v-if="upcomming_test.length > 0">
-                      <tr v-for="test in upcomming_test">
-                        <td class="align-middle">{{ test.email }}</td>
-                        <td class="align-middle">
-                          <span class="badge badge-light my-1">{{ test.start | formatDate }}</span>
-                          <span class="badge badge-light my-1">{{ test.end | formatDate }}</span>
-                        </td>
-                        <td class="align-middle">{{ test.test.name }}</td>
-                      </tr>
+                    <tr v-for="test in upcomming_test">
+                      <td class="align-middle">{{ test.email }}</td>
+                      <td class="align-middle">
+                        <span class="badge badge-light my-1">{{ test.start | formatDate }}</span>
+                        <span class="badge badge-light my-1">{{ test.end | formatDate }}</span>
+                      </td>
+                      <td class="align-middle">{{ test.test.name }}</td>
+                    </tr>
                   </tbody>
                   <tbody v-else>
-                      <tr>
-                        <td colspan="3" class="align-middle">No any Upcoming Tests.</td>
-                      </tr>
+                    <tr>
+                      <td colspan="3" class="align-middle">No any Upcoming Tests.</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -51,40 +51,40 @@
               <div class="card-header border-0">
                 <h3 class="card-title fw-bolder text-dark m-0">Recently Created Tests</h3>
               </div>
-            <div class="separator mb-2"></div>
-            <div class="card-body">
-              <table class="table table-rounded table-striped border gy-7 gs-7 m-0">
-                <thead>
-                  <tr class="fw-bold fs-6 text-gray-800 border-bottom border-gray-200">
-                    <th class="fw-bolder align-middle">Test Name</th>
-                    <th class="fw-bolder align-middle">No. of Questions</th>
-                    <th class="fw-bolder align-middle">Action</th>
-                  </tr>
-                </thead>
-                <tbody v-if="recent_test.length > 0">
-                  <tr v-for="test in recent_test">
-                    <td class="align-middle">{{ test.name }}</td>
-                    <td class="align-middle">{{ test.test_questions.length }}</td>
-                    <td class="align-middle">
-                      <router-link :to='{name:"OnlineTestPreview",params:{id:test.public_id, user:"admin"}}' target="_blank"><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button" v-tooltip="tooltip.show"><i class="p-0 fa fa-eye"></i></button></router-link>
-                    </td>
-                  </tr>
-                </tbody>
-                <tbody v-else>
-                  <tr>
-                    <td colspan="3" class="align-middle">No any record(s).</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="separator mb-2"></div>
+              <div class="card-body">
+                <table class="table table-rounded table-striped border gy-7 gs-7 m-0">
+                  <thead>
+                    <tr class="fw-bold fs-6 text-gray-800 border-bottom border-gray-200">
+                      <th class="fw-bolder align-middle">Test Name</th>
+                      <th class="fw-bolder align-middle text-center">No. of Questions</th>
+                      <th class="fw-bolder align-middle text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody v-if="recent_test.length > 0">
+                    <tr v-for="test in recent_test">
+                      <td class="align-middle">{{ test.name }}</td>
+                      <td class="align-middle text-center">{{ test.test_questions.length }}</td>
+                      <td class="align-middle text-center">
+                        <router-link :to='{name:"OnlineTestPreview",params:{id:test.public_id, user:"admin"}}' target="_blank"><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button" v-tooltip="tooltip.show"><i class="p-0 fa fa-eye"></i></button></router-link>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody v-else>
+                    <tr>
+                      <td colspan="3" class="align-middle">No any record(s).</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-6 col-12 d-flex">
-          <div class="card card-xl-stretch mb-xl-8 w-100">
-            <div class="card-header border-0">
-              <h3 class="card-title fw-bolder text-dark m-0">Completed Tests</h3>
-            </div>
-            <div class="separator mb-2"></div>
+          <div class="col-md-6 col-12 d-flex">
+            <div class="card card-xl-stretch mb-xl-8 w-100">
+              <div class="card-header border-0">
+                <h3 class="card-title fw-bolder text-dark m-0">Completed Tests</h3>
+              </div>
+              <div class="separator mb-2"></div>
               <div class="card-body">
                 <table class="table table-rounded table-striped border gy-7 gs-7 m-0">
                   <thead>
@@ -92,16 +92,23 @@
                       <th class="fw-bolder align-middle">Candidate Name</th>
                       <th class="fw-bolder align-middle">Test Date</th>
                       <th class="fw-bolder align-middle">Test Name</th>
-                      <th class="fw-bolder align-middle">View Report</th>
+                      <th class="fw-bolder align-middle text-center">View Report</th>
                     </tr>
                   </thead>
                   <tbody v-if="completed_test.length > 0">
-                    <tr v-for="test in completed_test">
-                      <td class="align-middle">{{ test.name }}</td>
-                      <td class="align-middle">{{ test.created_at | formatDate }}</td>
-                      <td class="align-middle">{{ test.test_name }}</td>
-                      <td class="align-middle">
-                        <router-link :to='{name:"ReportShow",params:{id:test.id}}'><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button" v-tooltip="'Show Report'"><i class="p-0 fa fa-eye"></i></button></router-link>
+                    <tr v-for="test_taker in completed_test">
+                      <td class="align-middle">{{ test_taker.name }}</td>
+                      <td class="align-middle">{{ test_taker.created_at | formatDate }}</td>
+                      <td class="align-middle">{{ test_taker.test_name }}</td>
+                      <td class="align-middle text-center">
+                        <ul class="list-unstyled list-inline m-0">
+                          <li class="list-inline-item">
+                            <router-link :to='{name:"ReportShow",params:{id:test_taker.id}}'><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button" v-tooltip="'Show Report'"><i class="p-0 fa fa-eye"></i></button></router-link>
+                          </li>
+                          <li class="list-inline-item">
+                            <button class="btn btn-sm btn-light-primary p-0 text-center h-30px w-30px" type="button" @click="downloadReport(test_taker.id)" v-tooltip="'Download Report'"><i class="p-0 fa fa-download"></i></button>
+                          </li>
+                        </ul>
                       </td>
                     </tr>
                   </tbody>
@@ -124,34 +131,51 @@
 </template>
 
 <script>
-import Dashboard from "../apis/Dashboard";
-export default {
-  data() {
-    return {
+  import Dashboard from "../apis/Dashboard";
+  import Report from "../apis/Report";
+  export default {
+    data() {
+      return {
         recent_test: {},
         upcomming_test: {},
         completed_test: {},
         loader_spin: true,
         tooltip: {
-            show: 'Show',
-            edit: 'Edit',
-            delete: 'Delete'
+          show: 'Show',
+          edit: 'Edit',
+          delete: 'Delete'
         }
-    };
-  },
-  mounted() {
-    this.getData()
-  },
-  methods: {
-    async getData() {
-      Dashboard.index().then(response => {
-        this.recent_test = response.data.tests
-        this.upcomming_test = response.data.upcomming_test
-        this.completed_test = response.data.completed_test
-        this.loader_spin = false
-      });
+      };
+    },
+    mounted() {
+      this.getData()
+    },
+    methods: {
+      async getData() {
+        Dashboard.index().then(response => {
+          this.recent_test = response.data.tests
+          this.upcomming_test = response.data.upcomming_test
+          this.completed_test = response.data.completed_test
+          this.loader_spin = false
+        });
+      },
+      async downloadReport(id) {
+        this.loader_spin = true
+        Report.pdf(id).then(response => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', 'report_'+id+'.pdf');
+          document.body.appendChild(link);
+          link.click();
+          this.loader_spin = false
+          this.$toast.success('Pdf download successfully.');
+        })
+        .catch(error=> {
+          this.loader_spin = false
+        });
+      },
     }
-  }
 
-};
+  };
 </script>

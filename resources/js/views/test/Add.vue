@@ -4,15 +4,15 @@
             <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
                 <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title me-3 mb-5 mb-lg-0 lh-1">
                     <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Create Test</h1>    
-                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 mt-1">
+                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-3">
                         <li class="breadcrumb-item text-muted">
-                            <router-link :to='{name:"Dashboard"}' class="text-link small">Dashboard</router-link>
+                            <router-link :to='{name:"Dashboard"}' class="text-link fs-6">Dashboard</router-link>
                         </li>
                         <li class="breadcrumb-item text-muted">
-                            <router-link :to='{name:"Test"}' class="text-link small">All Tests</router-link>
+                            <router-link :to='{name:"Test"}' class="text-link fs-6">All Tests</router-link>
                         </li>
                         <li class="breadcrumb-item text-muted">
-                            <p class="text-muted m-0 small">Create Test</p>
+                            <p class="text-muted m-0 fs-5">Create Test</p>
                         </li>
                     </ul>
                 </div>
@@ -33,13 +33,13 @@
                                     <div class="row">
                                         <div class="col-md-4 col-12">
                                             <div class="form-group">
-                                                <label for="ques-name" class="mb-2 fw-bold">Test Name<span class="text-danger">*</span></label>
+                                                <label for="ques-name" class="mb-3 fw-bolder fs-5">Test Name<span class="text-danger">*</span></label>
                                                 <input type="test" class="form-control form-control-solid form-control-sm" v-model="test.name" placeholder="Enter Test Name" required/>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-12">
                                             <div class="form-group">
-                                            <label for="ques-category" class="mb-2 fw-bold">Purpose of the Test<span class="text-danger">*</span></label>
+                                            <label for="ques-category" class="mb-3 fw-bolder fs-5">Purpose of the Test<span class="text-danger">*</span></label>
                                                 <select class="form-control form-control-solid form-control-sm" v-model="test.purpose_id" placeholder="Purpose of test" required>
                                                     <option v-for="purpose in purposes" :value="purpose.id">{{ purpose.purpose }}</option>
                                                 </select>
@@ -50,11 +50,11 @@
                                             <div class="radio-inline">
                                                 <label class="radio">
                                                     <input type="radio" v-model="test.assessment_type" :value="1" name="assessment_type" required>
-                                                    <span></span>Time Assessment
+                                                    <span class="me-2"></span>Time Assessment
                                                 </label>
                                                 <label class="radio">
                                                     <input type="radio" v-model="test.assessment_type" :value="2" name="assessment_type" required>
-                                                    <span></span> Deadline Based Assessment
+                                                    <span class="me-2"></span> Deadline Based Assessment
                                                 </label>
                                             </div>
                                         </div>

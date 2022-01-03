@@ -1,40 +1,18 @@
 <template>
-    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-        <div class="toolbar" id="kt_toolbar">
-            <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
-                <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title me-3 mb-5 mb-lg-0 lh-1">
-                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Test Performance</h1>                               
-                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-3">
-                        <li class="breadcrumb-item text-muted">
-                            <router-link :to='{name:"Dashboard"}' class="text-link small fs-6">Dashboard</router-link>
-                        </li>
-                        <li class="breadcrumb-item text-muted">
-                            <router-link :to='{name:"Test"}' class="text-link small fs-6">Test</router-link>
-                        </li>
-                        <li class="breadcrumb-item text-muted">
-                            <p class="text-muted m-0 small fs-6">Test Performance</p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+    <div class="d-flex flex-column flex-column-fluid" id="kt_content">
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <div id="kt_content_container" class="container">
-                <div class="row">
-                    <div class="col-md-6 col-12 mb-2">
-                        <div class="input-group mb-3">
-                            <input type="text" :value="share_link" class="form-control form-control-solid form-control-sm" ref="share_link" :readonly="true"/>
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-sm btn-secondary" v-on:click="copyShareLink">Copy Share Link</button>
-                            </div>
-                        </div>
+                <div class="row align-items-center position-relative my-5">
+                    <div class="col-md-3 col-12">
+                        <LogoHeader />
                     </div>
-                    <div class="col-md-6 col-12 text-right mb-2">
-                        <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary ml-4">Back</router-link>
+                    <div class="col-md-5 col-12 test-title position-md-absolute start-0 end-0 top-md-50 text-md-center mx-auto translate-md-middle-y">
+                    </div>
+                    <div class="col-md-4 col-12 position-md-absolute end-0 top-md-50 text-center mx-auto translate-md-middle-y">
                     </div>
                 </div>
                 <div class="row" v-if="report">
-                    <div class="col-md-12 col-12 d-flex flex-wrap">
+                    <div class="col-md-12 col-12 d-flex flex-wrap" v-if="page_valid">
                         <div class="card card-custom bg-primary w-100 mb-lg-8 mb-6">
                             <div class="card-header border-0">
                                 <div class="card-title m-0">
@@ -244,6 +222,11 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row" v-else>
+                        <div class="col-md-12">
+                            <div class="alert alert-danger">Invalid candidate.</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -256,11 +239,11 @@
 <script>
 import Report from "../../apis/Report"
 import {Chart} from 'highcharts-vue'
-
+import LogoHeader from '../../components/FrontHeader'
 export default {
     name:"questions",
     components: {
-        highcharts: Chart 
+        highcharts: Chart , LogoHeader
     },
     data() {
         return {
@@ -433,7 +416,7 @@ export default {
             categories: [],
             logs: [],
             selected_sections: [],
-            share_link: '',
+            page_valid: false
         }
     },
     mounted(){
@@ -441,12 +424,14 @@ export default {
     },
     methods:{
         async getReports(page = 1) {
+            if(!this.$route.query.key) {
+                return false
+            }
             this.loader_spin = true
-            Report.show(this.$route.params.id).then(response => {
+            Report.showCandidate(this.$route.query.key).then(response => {
                 const { taker, performance, categories, sections, correct_sections, avatars, screenshots, logs } = response.data
             
                 this.report = taker
-                this.share_link = window.location.origin+'/share-report?key='+this.report.key
                 var total = this.report.correct_marks*100/this.report.total_marks
                 
                 total = Math.ceil(total)
@@ -510,6 +495,7 @@ export default {
                 this.screenshots = screenshots
                 this.categories = categories
                 this.logs = logs
+                this.page_valid = true
                 this.loader_spin = false
             })
             .catch(error=> {
@@ -539,13 +525,6 @@ export default {
             else {
                 return '#50cd89'
             }
-        },
-        copyShareLink() {
-            var url = this.$refs.share_link;
-            url.innerHTML = window.location.href;
-            url.select();
-            document.execCommand("copy");
-            this.$toast.success('Share Link Copied!');
         }
     }
 }

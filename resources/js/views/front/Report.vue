@@ -1,8 +1,9 @@
 <template>
-    <div class="row">
+    <div class="row" v-show="show_report">
         <div class="col-md-12 col-12">
              <div class="alert alert-success text-center">
-                <h4>Thank you for taking the time to complete Test.</h4>
+                <h4 v-if="after_message">{{ after_message }}</h4>
+                <h4 v-else>Thank You!</h4>
                 <span class="d-block">Your result as following:</span>
             </div>
         </div>
@@ -44,7 +45,7 @@ import {Chart} from 'highcharts-vue'
 
 export default {
     name:"test-taker-report",
-    props: ['taker'],
+    props: ['taker', 'after_message'],
     components: {
         highcharts: Chart 
     },
@@ -86,6 +87,7 @@ export default {
             },
             performance: {},
             timeduration: '',
+            show_report: false
         }
     },
     mounted(){
@@ -94,9 +96,7 @@ export default {
     methods:{
         async getReport() {
             Online.report(this.taker).then(response => {
-
                 const { taker, performance, categories, sections, correct_sections } = response.data
-
                 this.report = taker
                 var total = this.report.correct_marks*100/this.report.total_marks
                 total = Math.ceil(total)
@@ -118,7 +118,7 @@ export default {
                 var color = this.colors(label)
                 var Obj = { name: label, data: [total], color: color }
                 this.chartOptions.series.push(Obj)
-                
+                this.show_report = true
                 this.loader_spin = false
             })
             .catch(error=> {

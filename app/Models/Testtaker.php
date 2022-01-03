@@ -13,6 +13,7 @@ class Testtaker extends Model
     protected $table = "test_takers";
 
     protected $fillable = [
+        'key',
         'name',
         'email',
         'dob',

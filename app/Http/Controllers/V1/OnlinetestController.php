@@ -19,29 +19,44 @@ use App\Models\Performancecriteria;
 use DB;
 use File;
 use Carbon\Carbon;
+use App\Http\Controllers\V1\ReportController;
 
 class OnlinetestController extends Controller
 {
     public function index(Request $request, $public_id) {
-        
+
         if($request->cid && $request->cid != 'YWRtaW4=') {
             $cid = base64_decode($request->cid);
-            if(!Assigncandidate::where('id', $cid)->where('start', '<=', Carbon::now())->where('end', '>=', Carbon::now())->where('status', '0')->exists()) {
+            $candidate = Assigncandidate::where('id', $cid)->first();
+            if(empty($candidate)) {
                 return response()->json([
                     'success' => false,
-                    'error' => 'This test has been deactivated. Please contact your administrator.',
+                    'error' => 'You are not allowed to take test. Please contact your administrator for assistance.',
+                ], 400);
+            }
+
+            if($candidate->start > Carbon::now() || $candidate->end < Carbon::now()) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Since this test has expired you cannot start a new test.',
+                ], 400);
+            }
+
+            if($candidate->status == 1) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Test is already finished by You. So you cannot start a new test',
                 ], 400);
             }
         }
 
-        if($public_id ) {
-
-            $test = Test::with(['purpose', 'registation_fields'])->where('public_id', $public_id)->first();
+        if($public_id) {
+            $test = Test::with(['purpose', 'registation_fields'])
+                    ->where('public_id', $public_id)
+                    ->first();
 
             if(!empty($test)) {
-
                 $test_settings = Testsetting::where('test_id', $test->id)->pluck('criteria_id');
-
                 if (!in_array(10, $test_settings->toArray()) && $request->cid != 'admin') {
                     $checkTest = Testtaker::where('test_id', $test->id)
                                 ->whereBetween('created_at', [Carbon::now()->subMinute(30), Carbon::now()])
@@ -51,11 +66,11 @@ class OnlinetestController extends Controller
                     if(!empty($checkTest)) {
                         return response()->json([
                             'success' => false,
-                            'error' => 'The test will be accessed by other candidates at the time. Please try latter to accees this test.',
+                            'error' => 'Test already accessed by other candidate at the time. Please try again after few moment.',
                         ], 400);
                     }
                 }
-                
+
                 $order_settings = Ordersetting::where('test_id', $test->id)->pluck('order', 'section_id');
                 $section_settings = Sectionsetting::where('test_id', $test->id)->pluck('instruction', 'section_id');
                 $test_questions = Testquestion::with('category')
@@ -66,8 +81,7 @@ class OnlinetestController extends Controller
 
                 $total_questions = Testquestion::where('test_id', $test->id)->count();
 
-                $categories = [];
-                $i = 0;
+                $i = 0; $categories = [];
                 foreach($test_questions as $question) {
                     $categories[$i]['id'] = $question->category_id;
                     $categories[$i]['name'] = $question->category->name;
@@ -79,28 +93,45 @@ class OnlinetestController extends Controller
                 $columns = array_column($categories, 'order');
                 array_multisort($columns, SORT_ASC, $categories);
 
+                if(empty($categories)) {
+                    return response()->json([
+                            'success' => false,
+                            'error' => 'This test have not created completed. Please contact your administrator for assistance.',
+                        ], 400);
+                }
+
+                $test_taker = [];
+                $totalDuration = '';
+                if($request->cid != 'YWRtaW4=') {
+                    $test_taker = Testtaker::with(['answers'])
+                            ->where('email', $candidate->email)
+                            ->where('test_id', $test->id)
+                            ->where('status', 1)
+                            ->orderBy('id', 'desc')
+                            ->first();
+
+                    if(!empty($test_taker)) {
+                        $totalDuration = Carbon::now()->diffInMinutes($test_taker->created_at);
+                    }
+                }
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Online Test',
                     'test' => $test,
                     'test_settings' => $test_settings,
                     'category' => $categories,
-                    'total_questions' => $total_questions
+                    'total_questions' => $total_questions,
+                    'test_taker' => $test_taker,
+                    'total_duration' => $totalDuration
                 ], 200);
             }
-            else {
-                return response()->json([
-                    'success' => false,
-                    'error' => 'This test has been deactivated. Please contact your administrator.',
-                ], 400);
-            }
         }
-        else {
-            return response()->json([
-                'success' => false,
-                'error' => 'This test has been deactivated. Please contact your administrator.',
-            ], 400);
-        }
+       
+        return response()->json([
+            'success' => false,
+            'error' => 'This test has been deactivated. Please contact your administrator for assistance.',
+        ], 400);
 
     }
 
@@ -114,7 +145,8 @@ class OnlinetestController extends Controller
                 'name' => 'required|max:255'
             ]);
 
-            $test = Test::where('id', $test_id)->with('test_questions', 'test_questions.question')->first();
+            $test = Test::where('id', $test_id)->with('test_questions', 'test_questions.question', 'test_questions.question.options', 'test_questions.category')->first();
+
             $total_marks = 0;
             if(!empty($test->test_questions)) {
                 foreach($test->test_questions as $item) {
@@ -122,53 +154,69 @@ class OnlinetestController extends Controller
                 }
             }
 
-            $validate = Assigncandidate::where('test_id', $test_id)
+            $candidate = Assigncandidate::where('test_id', $test_id)
                         ->where('email', $request->email)
                         ->where('status', 0)
+                        ->orderBy('id', 'desc')
                         ->first();
 
-            if($request->preview) {
-                $validate = ['success' => true];
-            }
+            if(!empty($candidate) && !empty($test)) {
+                $testTaker = Testtaker::where('email', $request->email)->where('test_id', $test_id)->where('status', 1)->orderBy('id', 'desc')->first();
+                if(empty($testTaker)) {
 
-            if(!empty($validate) && !empty($test)) {
+                    $taker = new Testtaker;
+                    $taker->key = uniqid();
+                    $taker->name = $request->name;
+                    $taker->email = $request->email;
+                    $taker->dob = $request->dob;
+                    $taker->gender = $request->gender;
+                    $taker->mobile = $request->mobile;
+                    $taker->avatar = $request->avatar;
+                    $taker->id_card = $request->id_card;
+                    $taker->test_id = $test_id;
+                    $taker->test_name = $test->name;
+                    $taker->total_questions = count($test->test_questions);
+                    $taker->total_marks = $total_marks;
+                    $taker->user_id = $candidate->user_id;
+                    $taker->status = 1;
+                    $taker->save();
+                    
+                    $answerLoad = [];
+                    $i = 0;
+                    foreach($test->test_questions as $item) {
+                        $answerLoad[$i]['taker_id'] = $taker->id;
+                        $answerLoad[$i]['question_id'] = $item->question->id;
+                        $answerLoad[$i]['question'] = $item->question->title;
+                        $answerLoad[$i]['category'] = $item->category->name;
+                        $answerLoad[$i]['category_id'] = $item->question->category_id;
+                        $answerLoad[$i]['option_one'] = $item->question->options[0]->option;
+                        $answerLoad[$i]['option_two'] = $item->question->options[1]->option;
+                        $answerLoad[$i]['option_three'] = $item->question->options[2]->option;
+                        $answerLoad[$i]['option_four'] = $item->question->options[3]->option;
+                        $answerLoad[$i]['correct'] = $item->question->correct;
+                        $answerLoad[$i]['marks'] = $item->question->marks;
+                        $answerLoad[$i]['test_id'] = $test_id;
+                        $answerLoad[$i]['created_at'] = Date('Y-m-d H:i:s');
+                        $answerLoad[$i]['updated_at'] = Date('Y-m-d H:i:s');
+                        $i++;
+                    }
 
-                $taker = new Testtaker;
-                $taker->name = $request->name;
-                $taker->email = $request->email;
-                $taker->dob = $request->dob;
-                $taker->gender = $request->gender;
-                $taker->mobile = $request->mobile;
-                $taker->avatar = $request->avatar;
-                $taker->id_card = $request->id_card;
-                $taker->test_id = $test_id;
-                $taker->test_name = $test->name;
-                $taker->total_questions = count($test->test_questions);
-                $taker->total_marks = $total_marks;
+                    Testtakeranswer::insert($answerLoad);
 
-                if(!$request->preview) {
-                    $taker->user_id = $validate->user_id;
-                }
-                
-                if(isset($request->preview)) {
-                    $taker->status = 3;    
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Registation successfully.',
+                        'taker' => $taker
+                    ], 200);
+
                 }
                 else {
-                    $taker->status = 1;
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Already Registation.',
+                        'taker' => $testTaker
+                    ], 200);
                 }
-                
-                $taker->save();
-
-                Assigncandidate::where('test_id', $test_id)
-                        ->where('email', $request->email)
-                        ->where('status', 0)
-                        ->update(['status' => 1]);
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Registation successfully.',
-                    'taker' => $taker
-                ], 200);
             }
 
 
@@ -215,25 +263,12 @@ class OnlinetestController extends Controller
     }
     
     public function answered(Request $request) {
-        if(isset($request->selected) && isset($request->question_id)) {
-            $taker_id = 0;
-            if(isset($request->taker_id)) {
-                $taker_id = $request->taker_id; 
-            }
-            $options = $request->options;
+        if(isset($request->selected) && isset($request->question_id) && $request->taker_id) {
+            
             $answered = $request->selected + 1;
             $create_update = Testtakeranswer::updateOrCreate([
-                                'taker_id' => $taker_id,
+                                'taker_id' => $request->taker_id,
                                 'question_id' => $request->question_id,
-                                'question' => $request->question,
-                                'category' => $request->category,
-                                'category_id' => $request->category_id,
-                                'option_one' => $options[0]['option'],
-                                'option_two' => $options[1]['option'],
-                                'option_three' => $options[2]['option'],
-                                'option_four' => $options[3]['option'],
-                                'correct' => $request->correct,
-                                'marks' => $request->marks,
                                 'test_id' => $request->test_id,
                             ], [
                                 'selected_option' => $answered
@@ -304,81 +339,28 @@ class OnlinetestController extends Controller
     }
 
     public function updateStatus(Request $request, $taker_id) {
-        if($taker_id && $request->taker_id == $taker_id && !$request->preview) {
+
+        if($taker_id && $request->taker_id == $taker_id) {
             Testtaker::where('id', $taker_id)
                     ->update([
                         'status'=>2,
                         'updated_at' => Date('Y-m-d H:i:s')
                     ]);
+            Assigncandidate::where('test_id', $request->id)
+                ->where('email', $request->taker_email)
+                ->where('status', 0)
+                ->update(['status' => 1]);
         }
     }
 
-
     public function report($taker_id) {
         if($taker_id) {
-            $categories = Category::orderBy('id', 'asc')->pluck('name', 'id');
-            $taker = Testtaker::where('id', $taker_id)
-                        ->withCount(['answers AS total_marks' => function($query) {
-                            $query->select(DB::raw('sum(marks)'));
-                        }])
-                        ->withCount(['answers AS correct_marks' => function($query) {
-                            $query->whereColumn('correct','selected_option');
-                            $query->select(DB::raw('sum(marks)'));
-                        }])
-                        ->first();
+            $reportController = (new ReportController);
+            $arrayData['success'] = true;
+            $arrayData['success'] = true;
+            $arrayData = $reportController->report_data($taker_id);
 
-            $get_performance = Performancecriteria::where('user_id', $taker->user_id)
-                            ->with(['options', 'options.op_criteria'])
-                            ->orderBy('id', 'desc')
-                            ->first();
-
-            $sections = Testtakeranswer::where('taker_id', $taker->id)
-                                ->select('category_id', DB::Raw('sum(marks) as total_marks'))
-                                ->groupBy('category_id')
-                                ->pluck('total_marks', 'category_id');
-
-            $correct_sections = Testtakeranswer::where('taker_id', $taker->id)
-                                ->whereColumn('correct','selected_option')
-                                ->select('category_id', DB::Raw('sum(marks) as total_marks'))
-                                ->groupBy('category_id')
-                                ->pluck('total_marks', 'category_id');
-
-            $performance = [];
-            if(isset($get_performance->options)) {
-                foreach($get_performance->options as $option) {
-
-                    $performance[$option->op_criteria->id]['name'] = $option->op_criteria->name;
-
-                    if($option->formula == '=') {
-                        $performance[$option->op_criteria->id]['min'] = $option->score;
-                        $performance[$option->op_criteria->id]['max'] = $option->score;
-                    }
-
-                    if($option->formula == '<') {
-                        $performance[$option->op_criteria->id]['min'] = 0;
-                        $performance[$option->op_criteria->id]['max'] = $option->score;
-                    }
-
-                    if($option->formula == '>') {
-                        $performance[$option->op_criteria->id]['min'] = $option->score;
-                        $performance[$option->op_criteria->id]['max'] = 100;
-                    }
-
-                    $performance[$option->op_criteria->id]['criteria'] = $option->criteria;
-                }
-            }
-
-            $performance = array_reverse($performance);
-
-            return response()->json([
-                    'success' => true,
-                    'message' => 'taker.',
-                    'taker' => $taker,
-                    'categories' => $categories,
-                    'performance' => $performance,
-                    'sections' => $sections,
-                    'correct_sections' => $correct_sections,
-                ], 200);
+            return response()->json($arrayData, 200);
         }
     }
 

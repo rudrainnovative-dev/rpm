@@ -4,15 +4,15 @@
             <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
                 <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title me-3 mb-5 mb-lg-0 lh-1">
                     <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Question #{{ this.$route.params.id }}</h1>                               
-                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 mt-1">
+                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-3">
                         <li class="breadcrumb-item text-muted">
-                            <router-link :to='{name:"Dashboard"}' class="text-link small">Dashboard</router-link>
+                            <router-link :to='{name:"Dashboard"}' class="text-link fs-6">Dashboard</router-link>
                         </li>
                         <li class="breadcrumb-item text-muted">
-                            <router-link :to='{name:"Question"}' class="text-link small">Question Bank</router-link>
+                            <router-link :to='{name:"Question"}' class="text-link fs-6">Question Bank</router-link>
                         </li>
                         <li class="breadcrumb-item text-muted">
-                            <p class="text-muted m-0 small">Question #{{ this.$route.params.id }}</p>
+                            <p class="text-muted m-0 fs-6">Question #{{ this.$route.params.id }}</p>
                         </li>
                     </ul>
                 </div>
@@ -23,30 +23,31 @@
                 <div class="row">
                     <div class="col-md-12 col-12">
                         <div class="d-flex align-items-center justify-content-md-end mb-4">
-                            <router-link :to='{name:"Question"}' class="btn btn-sm btn-secondary me-4">Back to List</router-link>
+                            <router-link :to='{name:"Question"}' class="btn btn-sm btn-secondary">Back to List</router-link>
                         </div>
                     </div>
                     <div class="col-md-12 col-12 d-flex">
                         <div class="card card-xl-stretch w-100">
                             <div class="card-body">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-md-4 col-12">
                                         <div class="form-group">
-                                            <label for="ques-category" class="mb-2 fw-bold">Question Category<span class="text-danger">*</span></label>
+                                            <label for="ques-category" class="mb-2 fw-bolder fs-5">Question Category<span class="text-danger">*</span></label>
                                             <select class="form-control form-control-solid form-control-sm" v-model="question.category_id" placeholder="Question Category" disabled required>
                                                 <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 col-12">
-                                        <div class="form-group">
-                                            <label for="ques-name" class="mb-2 fw-bold">Name of Question<span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control form-control-solid form-control-sm" v-model="question.title" placeholder="Enter Question Name" disabled required>
-                                            </div>
-                                        </div>
-                                    <div class="col-md-4 col-12"></div>
                                 </div>
-                                <div class="row mt-13">
+                                <div class="row  mb-3">
+                                    <div class="col-md-12 col-12">
+                                        <div class="form-group">
+                                            <label for="ques-name" class="mb-2 fw-bolder fs-5">Question<span class="text-danger">*</span></label>
+                                            <div v-html="question.title"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-13  mb-3">
                                     <div class="col-md-12 col-12 mb-3">
                                         <h4 class="fw-bolder">Answer</h4>
                                     </div>

@@ -61,7 +61,6 @@ class ReportController extends Controller
 
     public function report_data($taker_id) {
 
-
         $categories = Category::orderBy('id', 'asc')->pluck('name', 'id');
         $taker = Testtaker::where('id', $taker_id)
                     ->withCount(['answers AS correct_marks' => function($query) {
@@ -69,10 +68,22 @@ class ReportController extends Controller
                         $query->select(DB::raw('sum(marks)'));
                     }])
                     ->first();
+        if(empty($taker)) {
+            return [
+                'taker' => '',
+                'categories' => '',
+                'performance' => '',
+                'sections' => '',
+                'correct_sections' => '',
+                'avatars' => '',
+                'screenshots' => '',
+                'logs' => ''
+            ];
+        }
 
         $get_performance = Performancecriteria::where('user_id', $taker->user_id)
                         ->with(['options', 'options.op_criteria'])
-                        ->whereDate('created_at', '<', $taker->created_at)
+                        ->whereDate('created_at', '<=', $taker->created_at)
                         ->orderBy('id', 'desc')
                         ->first();
 
@@ -82,10 +93,11 @@ class ReportController extends Controller
                             ->pluck('total_marks', 'category_id');
 
         $logs = Testtakeranswer::where('taker_id', $taker->id)
-                            ->select('category_id', 'created_at')
+                            ->select('category_id', 'updated_at')
+                            ->whereNotNull('selected_option')
                             ->groupBy('category_id')
                             ->orderBy('created_at', 'asc')
-                            ->pluck('created_at', 'category_id');
+                            ->pluck('updated_at', 'category_id');
 
         $correct_sections = Testtakeranswer::where('taker_id', $taker->id)
                             ->whereColumn('correct','selected_option')
@@ -178,5 +190,23 @@ class ReportController extends Controller
             'success' => true,
             'message' => 'Performance report send to candidate.',
         ], 200);
+    }
+
+    public function reportCandidate(request $request) {
+        if($request->has('key')) {
+            $takers = Testtaker::where('key', $request->key)->first();
+            if(!empty($takers)) {
+                $data['success'] = true;
+                $data['message'] = 'taker.';
+                $data = $this->report_data($takers->id);
+                return response()->json($data, 200);
+            }
+            else {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Candidate not exists.'
+                ], 400);
+            }
+        }
     }
 }

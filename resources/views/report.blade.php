@@ -12,7 +12,7 @@
         width:100%;
         background:#cecece;
         height:18px;
-        margin: 50px 0px 0px;
+        margin: 30px 0px 0px;
     }
     .progress-div {
         height:100%;
@@ -23,7 +23,7 @@
     }
     .progress-extra-div {
         width:100%;
-        margin-bottom: 50px;
+        margin-bottom: 30px;
     }
 </style>
 @php
@@ -49,7 +49,6 @@
             $bar_label = '';
 
             if(!isset($correct_sections[$id])) {
-
                 $chartArray[$id]['total'] = 0;
                 $chartArray[$id]['color'] = '#ff0000';
                 $chartArray[$id]['label'] = 'Very Low';
@@ -155,11 +154,11 @@
                         </tr>
                         @if($taker->avatar)
                         <tr>
-                            <td colspan=2><strong>Profile Picture</strong></td>
+                            <td colspan=2><p><strong>Profile Picture</strong></p></td>
                         </tr>
                         <tr>
-                            <td clospan=2>
-                                <img src="{{ $taker->avatar?$taker->avatar: public_path('img/dummy-img.png') }}" width="100%"/>
+                            <td colspan=2>
+                                <img src="{{ $taker->avatar?$taker->avatar: public_path('img/dummy-img.png') }}" style="width:200px;"/>
                             </td>
                         </tr>
                         @endif
@@ -177,13 +176,17 @@
                             <td class="font-weight-bold">Gender</td>
                             <td>{{ $taker->gender?$taker->gender:'Not Filled' }}</td>
                         </tr>
+                        <tr>
+                            <td><strong>&nbsp;</strong></td>
+                            <td>&nbsp;</td>
+                        </tr>
                         @if($taker->avatar)
                         <tr>
-                            <td colspan=2><strong>Id Card</strong></td>
+                            <td colspan=2><p><strong>Id Card</strong></p></td>
                         </tr>
                         <tr>
-                            <td clospan=2>
-                                <img src="{{ $taker->id_card?$taker->id_card: public_path('img/dummy-img.png') }}" width="100%"/>
+                            <td colspan=2>
+                                <img src="{{ $taker->id_card?$taker->id_card: public_path('img/dummy-img.png') }}" style="width:200px;"/>
                             </td>
                         </tr>
                         @endif
@@ -193,7 +196,7 @@
         </tr>
     </tbody>
 </table>
-<table class="table">
+<table class="table" style="page-break-inside: auto;">
     <thead>
         <tr>
             <th><h5><strong>Performance Summary</strong></h5></th>
@@ -218,7 +221,8 @@
         </tr>
     </tbody>
 </table>
-<table class="table">
+@if(isset($chartArray[3]) && isset($sections[3]))
+<table class="table" style="page-break-inside: auto;">
     <thead>
         <tr>
             <th><h5><strong>Reasoning Ability</strong></h5></th>
@@ -245,7 +249,9 @@
         </tr>
     </tbody>
 </table>
-<table class="table" style="page-break-before: always;">
+@endif
+@if(isset($chartArray[2]) && isset($sections[2]))
+<table class="table" style="page-break-inside: auto;">
     <thead>
         <tr>
             <th><h5><strong>Numerical Ability</strong></h5></th>
@@ -272,7 +278,9 @@
         </tr>
     </tbody>
 </table>
-<table class="table">
+@endif
+@if(isset($chartArray[1]) && isset($sections[1]))
+<table class="table" style="page-break-inside: auto;">
     <thead>
         <tr>
             <th><h5><strong>Attentions Ability</strong></h5></th>
@@ -299,7 +307,9 @@
         </tr>
     </tbody>
 </table>
-<table class="table">
+@endif
+@if(isset($chartArray[4]) && isset($sections[4]))
+<table class="table" style="page-break-inside: auto;">
     <thead>
         <tr>
             <th><h5><strong>Verbal Ability</strong></h5></th>
@@ -326,6 +336,7 @@
         </tr>
     </tbody>
 </table>
+@endif
 <table class="table" style="page-break-before: always;">
     <thead>
         <tr>
@@ -334,7 +345,7 @@
     </thead>
 </table>
 @if(isset($avatars[0]))
-<table class="table">
+<table class="table" style="page-break-inside: auto;">
     <tbody>
         <tr>
             <td><p><strong>Images of Test Taker</strong></p></td>
@@ -352,24 +363,23 @@
 </table>
 @endif
 @if(isset($screenshots[0]))
-    <table class="table" >
+    <table class="table" style="page-break-inside: auto;">
         <tbody>
             <tr>
                 <td><p><strong>Screenshots of Test Taker</strong></p></td>
             </tr>
+            @forelse($screenshots as $screenshot)
             <tr>
-                <td>
-                    @forelse($screenshots as $screenshot)
-                        <img src="{{ $screenshot->snap }}" style="width: 200px; border:solid 1px #000; padding: 5px;margin:5px;"/>
-                    @empty
-
-                    @endforelse
+                <td style="text-align: center;vertical-align: bottom;">
+                    <img src="{{ $screenshot->snap }}" style="width: 500px;padding: 20px 0px;"/>
                 </td>
             </tr>
+            @empty
+            @endforelse
         </tbody>
     </table>
 @endif
-<table class="table">
+<table class="table" style="page-break-inside: auto;">
     <tbody>
         <tr>
             <td>
@@ -385,6 +395,11 @@
                     @if(!empty($avatars))
                     <li>
                         <span class="text-muted">{{ Date('h:i a', strtotime($taker->created_at)) }}</span> Candidate gave us right to the following feeds: camera, microphone.
+                    </li>
+                    @endif
+                    @if(!empty($screenshots))
+                    <li>
+                        <span class="text-muted">{{ Date('h:i a', strtotime($taker->created_at)) }}</span> Candidate gave us right to screencapture.
                     </li>
                     @endif
                     @forelse($logs as $key=>$time)

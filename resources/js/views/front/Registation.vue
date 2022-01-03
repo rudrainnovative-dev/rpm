@@ -61,7 +61,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
-                                    <div style="height: 140px" class="border p-2 text-center">
+                                    <div style="height: 220px" class="border p-2 text-center">
                                         <span class="text-danger d-block" v-if="webcame_message">{{ webcame_message }}</span>
                                         <video ref="camera" :width="canvasWidth" :height="canvasHeight" autoplay></video>
                                         <canvas v-show="false" ref="canvas" :width="canvasWidth" :height="canvasHeight"></canvas>
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12 col-12 text-right">
+                        <div class="col-md-12 col-12 text-right" v-if="!webcame_message">
                             <div class="form-group mt-5">
                                 <button type="submit" class="btn btn-primary btn-sm" :disabled="disabled"><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" v-if="disabled"></span> Next</button>
                             </div>
@@ -110,7 +110,7 @@
                     id_card:'',
                 },
                 canvasWidth:200,
-                canvasHeight:114,
+                canvasHeight:200,
                 webcame_message:'',
                 errors: {
                     'name': '',

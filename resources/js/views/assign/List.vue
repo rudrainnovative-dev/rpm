@@ -4,12 +4,12 @@
          <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
             <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title me-3 mb-5 mb-lg-0 lh-1">
                <h1 class="d-flex align-items-center text-dark fw-bolder m-0 fs-3">Assigned Candidates to Test</h1>
-               <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 mt-1">
+               <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 mt-3">
                   <li class="breadcrumb-item text-muted">
-                     <router-link :to='{name:"Dashboard"}' class="text-link small">Dashboard</router-link>
+                     <router-link :to='{name:"Dashboard"}' class="fs-6 text-link small">Dashboard</router-link>
                   </li>
                   <li class="breadcrumb-item text-muted">
-                     <p class="text-muted m-0 small">Assigned Candidates to Test</p>
+                     <p class="text-muted m-0 fs-6">Assigned Candidates to Test</p>
                   </li>
                </ul>
             </div>
@@ -23,7 +23,7 @@
                      <div class="card-header border-0">
                         <div class="form-group my-3">
                            <div class="input-group">
-                              <input type="text" placeholder="Search Candidate..." class="form-control form-control-sm form-control-solid bg-white" v-model="search">
+                              <input type="text" placeholder="Search Candidate..." class="form-control form-control-sm form-control-solid bg-white" v-model="search" v-on:keyup.enter="searchClick">
                               <div class="input-group-append">
                                  <button type="button" class="btn btn-light-dark btn-sm px-3 rounded-0 rounded-end" v-on:click="searchClick">
                                     <span class="svg-icon svg-icon-2 m-0">
@@ -34,7 +34,7 @@
                            </div>
                         </div>
                         <div class="d-flex align-items-center py-1">
-                           <router-link :to='{name:"AssignAdd"}' class="btn btn-sm btn-primary me-4">Assign Candidate to Test</router-link>
+                           <router-link :to='{name:"AssignAdd"}' class="btn btn-sm btn-primary">Assign Candidate to Test</router-link>
                         </div>
                      </div>
                      <div class="separator mb-2"></div>
@@ -44,16 +44,19 @@
                                <tr class="fw-bold fs-6 text-gray-800 border-bottom border-gray-200">
                                    <th class="fw-bolder align-middle">Candidate</th>
                                    <th class="fw-bolder align-middle">Test Name</th>
-                                   <th class="fw-bolder align-middle">Share</th>
-                                   <th class="fw-bolder align-middle">Action</th>
+                                   <th class="fw-bolder align-middle text-center">Share</th>
+                                   <th class="fw-bolder align-middle text-center">Action</th>
                                </tr>
                            </thead>
                            <tbody v-if="this.assignedData.length > 0">
                               <tr v-for="assign in this.assignedData">
-                                 <td class="align-middle">{{ assign.email }}</td>
+                                 <td class="align-middle">
+                                    {{ assign.email }}
+                                    <small class="d-block text-muted" v-if="assign.assessment_type === 2">{{ assign.start | formatFullDate }} - {{ assign.end | formatFullDate }}</small>
+                                 </td>
                                  <td class="align-middle">{{ assign.test.name }}</td>
-                                 <td class="align-middle"><span v-if="assign.share">Yes</span><span v-else>No</span></td>
-                                 <td class="align-middle action-td">
+                                 <td class="align-middle text-center"><span v-if="assign.share">Yes</span><span v-else>No</span></td>
+                                 <td class="align-middle action-td text-center">
                                     <ul class="list-unstyled list-inline m-0">
                                        <li class="list-inline-item mb-2" title="View" v-tooltip="tooltip.share">
                                           <router-link :to='{name:"AssignSendOne",params:{id:assign.id}}'><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button"><i class="p-0 fa fa-paper-plane"></i></button></router-link>
@@ -67,7 +70,7 @@
                            </tbody>
                            <tbody v-else>
                               <tr>
-                                 <td span="3">No Record Found</td>
+                                 <td colspan="4">No Record Found</td>
                               </tr>
                            </tbody>
                         </table>

@@ -11,12 +11,6 @@ use Auth;
 
 class AssignController extends Controller
 {
-    function __construct() {
-         // $this->middleware('permission:question-list|question-create|question-edit|question-delete', ['only' => ['index','show']]);
-         // $this->middleware('permission:question-create', ['only' => ['create','store']]);
-         // $this->middleware('permission:question-edit', ['only' => ['edit','update']]);
-         // $this->middleware('permission:question-delete', ['only' => ['destroy']]);
-    }
 
     public function index(Request $request) {
         
@@ -71,7 +65,10 @@ class AssignController extends Controller
                 if(empty($checkCandidate)) {
                     $assign_candidate = new Assigncandidate;
                     $assign_candidate->assign_id = $assign->id;
-                    $assign_candidate->name = $list['email'];
+
+                    $name = explode("@", $list['email']);
+
+                    $assign_candidate->name = $name[0];
                     $assign_candidate->email = $list['email'];
                     $assign_candidate->test_id = $list['test_id'];
 
@@ -92,6 +89,7 @@ class AssignController extends Controller
                     }
 
                     $assign_candidate->resume = $resume;
+                    $assign_candidate->assessment_type = $list['type'];
                     $assign_candidate->share = 0;
                     $assign_candidate->user_id = Auth::id();
                     $assign_candidate->save(); 

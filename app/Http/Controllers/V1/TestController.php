@@ -17,12 +17,6 @@ use DB;
 
 class TestController extends Controller
 {
-    function __construct() {
-         // $this->middleware('permission:question-list|question-create|question-edit|question-delete', ['only' => ['index','show']]);
-         // $this->middleware('permission:question-create', ['only' => ['create','store']]);
-         // $this->middleware('permission:question-edit', ['only' => ['edit','update']]);
-         // $this->middleware('permission:question-delete', ['only' => ['destroy']]);
-    }
 
     public function index(Request $request) {
 
@@ -39,7 +33,7 @@ class TestController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'All Question.',
+                'message' => 'All Tests.',
                 'tests' => $tests
             ], 200);
         }
@@ -53,11 +47,11 @@ class TestController extends Controller
                         })
                         ->where('user_id', Auth::id())
                         ->orderBy('id', 'desc')
-                        ->paginate(10);
+                        ->paginate(9);
 
             return response()->json([
                 'success' => true,
-                'message' => 'All Question.',
+                'message' => 'All Tests.',
                 'tests' => $tests
             ], 200);
         }
@@ -153,28 +147,34 @@ class TestController extends Controller
             'name' => 'required',
             'purpose_id' => 'required',
             'assessment_type' => 'required',
-            'duration' => 'required'
         ]);
         
-        $fromDate = NULL;
-        $toDate = NULL;
-        if($request->assessment_type == 'Deadline Based Assessment' && $request->assessment_time_from && $request->assessment_time_to) {
-            $fromDate = Date('Y-m-d H:i:s', strtotime($request->assessment_time_from));
-            $toDate = Date('Y-m-d H:i:s', strtotime($request->assessment_time_to));
+        $duration = Null;
+        if($request->assessment_type == 1) {
+            $duration = $request->duration;
+        }
+
+        $start_message = "";
+        $end_message = "";
+
+        if($request->has('start_message')) {
+            $start_message = $request->start_message;
+        }
+
+        if($request->has('end_message')) {
+            $end_message = $request->end_message;
         }
 
         $test->update([
                         'name' => $request->name,
                         'purpose_id' => $request->purpose_id,
                         'assessment_type' => $request->assessment_type,
-                        'duration' => $request->duration,
-                        'assessment_time_from' => $fromDate,
-                        'assessment_time_to' => $toDate,
+                        'duration' => $duration,
+                        'start_message' => $start_message,
+                        'end_message' => $end_message,
                         'timezone' => date_default_timezone_get()
                     ]);
         
-
-        // test question list
         $allQuestions = [];
         $i = 0;
         foreach($request->selected_question as $data) {
@@ -284,11 +284,11 @@ class TestController extends Controller
                 $copy_test->public_id = uniqid();
                 $copy_test->name = $request->name;
                 $copy_test->purpose_id = $test->purpose_id;
-                $copy_test->assessment_time_from = $test->assessment_time_from;
-                $copy_test->assessment_time_to = $test->assessment_time_to;
                 $copy_test->assessment_type = $test->assessment_type;
                 $copy_test->duration = $test->duration;
                 $copy_test->timezone = $test->timezone;
+                $copy_test->start_message = $test->start_message;
+                $copy_test->end_message = $test->end_message;
                 $copy_test->user_id = Auth::id();
                 $copy_test->created_at = Date('Y-m-d H:i:s');
                 $copy_test->updated_at = Date('Y-m-d H:i:s');

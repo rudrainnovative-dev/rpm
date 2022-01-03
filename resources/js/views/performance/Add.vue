@@ -4,12 +4,12 @@
          <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
             <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title  me-3 mb-5 mb-lg-0 lh-1">
                <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Set Performance Criteria</h1>
-               <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 mt-1">
+               <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-3">
                   <li class="breadcrumb-item text-muted">
-                     <router-link :to='{name:"Dashboard"}' class="text-link small">Dashboard</router-link>
+                     <router-link :to='{name:"Dashboard"}' class="text-link fs-6">Dashboard</router-link>
                   </li>
                   <li class="breadcrumb-item text-muted">
-                     <p class="text-muted m-0 small">Set Performance Criteria</p>
+                     <p class="text-muted m-0 fs-6">Set Performance Criteria</p>
                   </li>
                </ul>
             </div>
@@ -26,8 +26,8 @@
                      <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                         <div class="dropdown">
                            <button type="button" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-sm btn-primary" :class="(this.performance_history.length == 0)?'disabled':''">See Older Versions<i class="fa fa-angle-down ms-2 p-0"></i></button>
-                           <ul aria-labelledby="" role="menu" class="dropdown-menu" style="">
-                              <li class="border-bottom" v-for="history in this.performance_history">
+                           <ul aria-labelledby="" role="menu" class="dropdown-menu p-0 w-100 overflow-hidden z-index-1" style="">
+                              <li class="dropdown-item" v-for="history in this.performance_history">
                                  <router-link :to='{name:"PerformanceShow", params: { id: history.id }}' class="d-block text-dark fw-normal px-4 py-2 fw-normal">v{{history.id}}.0</router-link>
                               </li>
                            </ul>
@@ -73,7 +73,8 @@
                                           <div class="col-md-4 col-12">
                                              <div class="form-group">
                                                 <label class="w-100 mb-2 fw-bold">Score Percentage<small class="text-danger">*</small></label>
-                                                <input type="number" class="form-control form-control-solid form-control-sm" :name="row.score" v-model="row.score" placeholder="Enter a value" min = '0' required>
+                                                <input type="number" class="form-control form-control-solid form-control-sm" :name="row.score" v-model="row.score" placeholder="Enter a value"  v-on:keyup="validateRange" required>
+                                                <small class="text-muted">You can enter value from 0 to 100.</small>
                                              </div>
                                           </div>
                                        </div>
@@ -204,6 +205,10 @@ export default {
       },
       async removeRow(type_id, index) {
          this.$delete(this.performance.data[type_id], index)
+      },
+      async validateRange(event) {
+         if(event.target.value >= 0 && event.target.value <= 100) { }
+         else { event.target.value = '' }
       }
    }
 }

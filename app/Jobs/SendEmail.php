@@ -43,7 +43,7 @@ class SendEmail implements ShouldQueue
             
             $inputs = [
                 'email' => $list['email'],
-                'name' => $list['email'],
+                'name' => $list['name'],
                 'subject' => $subject
             ];
             
@@ -57,7 +57,7 @@ class SendEmail implements ShouldQueue
 
             $link = $this->test_url.$list['test']['public_id'].'/'.base64_encode($list['id']);
             
-            $text_message = str_replace(['{test_link}', '{candidate}', '{job_role}'], [$link, $list['email'], $job_role], $this->data['message']);
+            $text_message = str_replace(['{test_link}', '{candidate}', '{job_role}', '{assign_from}', '{assign_to}'], [$link, $list['name'], $job_role, $list['start'], $list['end']], $this->data['message']);
            
             $data = [
                         'start' => $list['start'],

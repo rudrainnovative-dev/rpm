@@ -11,6 +11,10 @@ export default {
     let token = localStorage.access_token;
     return Api.get(`/report/${id}/show`, { headers: { "Authorization" : `Bearer ${token}`} });
   },
+
+  async showCandidate(key) {
+    return Api.get(`/share-report?key=`+key);
+  },
   
   async pdf(id) {
     let token = localStorage.access_token;

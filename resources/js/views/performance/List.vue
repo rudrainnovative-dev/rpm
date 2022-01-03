@@ -4,12 +4,12 @@
             <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
                 <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title me-3 mb-5 mb-lg-0 lh-1">
                     <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Performance Criteria</h1>                               
-                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 mt-1">
+                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 mt-3">
                         <li class="breadcrumb-item text-muted">
-                            <router-link :to='{name:"Dashboard"}' class="text-muted small">Dashboard</router-link>
+                            <router-link :to='{name:"Dashboard"}' class="fs-6 text-muted small">Dashboard</router-link>
                         </li>
                         <li class="breadcrumb-item text-muted">
-                            <p class="text-muted m-0 small">Performance Criteria</p>
+                            <p class="text-muted m-0 fs-6">Performance Criteria</p>
                         </li>
                     </ul>
                 </div>
