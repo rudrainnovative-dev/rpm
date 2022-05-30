@@ -11,6 +11,8 @@ use App\Models\Test;
 
 class QuestionBankTest extends TestCase
 {
+    protected $user_email = "hr@admin.com";
+
     /**
      * A basic feature test question list.
      *
@@ -18,17 +20,17 @@ class QuestionBankTest extends TestCase
      */
     public function test_question_list()
     {
-        $user = User::where('email', 'hr@admin.com')->first();
+        $user = User::where('email', $this->user_email)->first();
 
         if($user) {
-
             $token = $user->createToken('auth_token')->plainTextToken;
-            
             $response = $this->withHeaders(['Authorization' => "Bearer $token"])
                 ->json('GET', '/api/question', [
                     'search' => ''
                 ]);
 
+            $this->assertArrayHasKey('success', $response);
+            $this->assertArrayHasKey('questions', $response);
             $response->assertStatus(200);
         }
         else {
@@ -43,7 +45,7 @@ class QuestionBankTest extends TestCase
      */
     public function test_question_add()
     {
-        $user = User::where('email', 'hr@admin.com')->first();
+        $user = User::where('email', $this->user_email)->first();
 
         if($user) {
             $token = $user->createToken('auth_token')->plainTextToken;
@@ -60,6 +62,8 @@ class QuestionBankTest extends TestCase
             if(!Questionbank::where('title', 'Test Question')->exists()) {
                 $response = $this->withHeaders(['Authorization' => "Bearer $token"])
                         ->json('POST', '/api/question', $questionData);            
+                $this->assertArrayHasKey('success', $response);
+                $this->assertArrayHasKey('message', $response);
                 $response->assertStatus(200);
             }
             else {
@@ -80,7 +84,7 @@ class QuestionBankTest extends TestCase
      */
     public function test_question_update()
     {
-        $user = User::where('email', 'hr@admin.com')->first();
+        $user = User::where('email', $this->user_email)->first();
 
         if($user) {
             $token = $user->createToken('auth_token')->plainTextToken;
@@ -99,6 +103,10 @@ class QuestionBankTest extends TestCase
                 $question = Questionbank::where('title', 'Test Question')->first();
                 $response = $this->withHeaders(['Authorization' => "Bearer $token"])
                         ->json('POST', '/api/question/'.$question->id, $questionData);
+                
+                $this->assertArrayHasKey('success', $response);
+                $this->assertArrayHasKey('message', $response);
+                $this->assertArrayHasKey('question', $response);
                 $response->assertStatus(200, $response->getStatusCode());
             }
         }
@@ -114,7 +122,7 @@ class QuestionBankTest extends TestCase
      */
     public function test_question_delete()
     {
-        $user = User::where('email', 'hr@admin.com')->first();
+        $user = User::where('email', $this->user_email)->first();
         if($user) {
             $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -124,6 +132,8 @@ class QuestionBankTest extends TestCase
                 $response = $this->withHeaders(['Authorization' => "Bearer $token"])
                         ->json('DELETE', '/api/question/'.$question->id);
 
+                $this->assertArrayHasKey('success', $response);
+                $this->assertArrayHasKey('message', $response);
                 $response->assertStatus(200);
             }
         }
@@ -139,16 +149,22 @@ class QuestionBankTest extends TestCase
      */
     public function test_test_question()
     {   
-        $user = User::where('email', 'hr@admin.com')->first();
-        $test = Test::where('user_id', $user->id)->first();
-        if($user && $test) {
+        $user = User::where('email', $this->user_email)->first();
+        if($user) {
+            $test = Test::where('user_id', $user->id)->first();
+            if($test) {
+                $token = $user->createToken('auth_token')->plainTextToken;
+                $response = $this->withHeaders(['Authorization' => "Bearer $token"])
+                            ->json('GET', '/api/question/test/'.$test->id);
 
-            $token = $user->createToken('auth_token')->plainTextToken;
-            $response = $this->withHeaders(['Authorization' => "Bearer $token"])
-                        ->json('GET', '/api/question/test/'.$test->id);
-
-            $response->assertStatus(200);
-            
+                $this->assertArrayHasKey('success', $response);
+                $this->assertArrayHasKey('message', $response);
+                $this->assertArrayHasKey('questions', $response);
+                $response->assertStatus(200);
+            }
+            else {
+                $this->assertTrue(true, "Unauthorized");
+            }
         }
         else {
             $this->assertTrue(true, "Unauthorized");
