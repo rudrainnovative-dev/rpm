@@ -85,15 +85,21 @@ class PreviewTestTest extends TestCase
                 $response = $this->withHeaders(['Authorization' => "Bearer $token"])
                     ->json('GET', '/api/online-test/'.$test->public_id.'?cid=YWRtaW4=');
 
-                $this->assertArrayHasKey('success', $response);
-                $this->assertArrayHasKey('message', $response);
-                $this->assertArrayHasKey('test', $response);
-                $this->assertArrayHasKey('test_settings', $response);
-                $this->assertArrayHasKey('category', $response);
-                $this->assertArrayHasKey('total_questions', $response);
-                $this->assertArrayHasKey('test_taker', $response);
-                $this->assertArrayHasKey('total_duration', $response);
-                $response->assertStatus(200);
+                if($response->getData()->success) {
+                    $this->assertArrayHasKey('success', $response);
+                    
+                    $this->assertArrayHasKey('message', $response);
+                    $this->assertArrayHasKey('test', $response);
+                    $this->assertArrayHasKey('test_settings', $response);
+                    $this->assertArrayHasKey('category', $response);
+                    $this->assertArrayHasKey('total_questions', $response);
+                    $this->assertArrayHasKey('test_taker', $response);
+                    $this->assertArrayHasKey('total_duration', $response);
+                    $response->assertStatus(200);
+                }
+                else {
+                    $response->assertStatus(400);
+                }
             }
             else {
                 $this->assertTrue(true, "Unauthorized");
