@@ -31,14 +31,19 @@
               <h1 class="">Sign In</h1>
               <p class="text-muted font-weight-bold">Enter your email and password</p>
             </div>
-            <div class="form-group fv-plugins-icon-container mb-7">
-              <input type="email" class="form-control form-control-solid h-auto py-5 px-6 fw-normal" v-model="form.email" placeholder="Email Address" autocomplete="off"/>
-              <span class="text-danger" v-if="errors.email">{{ errors.email[0] }}</span>
-            </div>
-            <div class="form-group fv-plugins-icon-container mb-7">
-              <input type="password" class="form-control form-control-solid h-auto py-5 px-6 fw-normal" v-model="form.password" placeholder="Password" />
-              <span class="text-danger" v-if="errors.password">{{ errors.password[0] }}</span>
-            </div>
+            
+            <form @submit.prevent="login">
+              <div class="form-group fv-plugins-icon-container mb-7">
+                <input type="email" class="form-control form-control-solid h-auto py-5 px-6 fw-normal" v-model="form.email" placeholder="Email Address" autocomplete="off"/>
+                <span class="text-danger" v-if="errors.email">{{ errors.email[0] }}</span>
+              </div>
+              <div class="form-group fv-plugins-icon-container mb-7">
+                <input type="password" class="form-control form-control-solid h-auto py-5 px-6 fw-normal" v-model="form.password" placeholder="Password" />
+                <span class="text-danger" v-if="errors.password">{{ errors.password[0] }}</span>
+              </div>
+              <button type="submit" class="d-none">submit</button>
+            </form>
+
             <div class="form-group d-flex flex-wrap justify-content-between align-items-center">
               <router-link :to="{ name: 'ForgetPassword' }" class="text-dark-50 text-hover-primary my-3 mr-2">Forgot Password ?</router-link>
 

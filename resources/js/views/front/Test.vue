@@ -1,5 +1,5 @@
 <template>
-    <div class="post d-flex flex-column-fluid" id="kt_post" @click.right.prevent @copy.prevent @paste.prevent>
+    <div class="post d-flex flex-column-fluid" id="kt_post" @click.right.prevent @click.tab.prevent @copy.prevent @paste.prevent>
         <div id="kt_content_container" class="container-fluid" ref="screenPrint">
             <div class="row align-items-center position-relative py-2">
                 <div class="col-md-3 col-12">
