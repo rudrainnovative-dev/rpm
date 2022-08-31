@@ -160,6 +160,8 @@ class QuestionController extends Controller
     public function destroy(Questionbank $question) {
         Questionbank::where('id', $question->id)->where('user_id', Auth::id())->delete();
         Questionoption::where('question_id', $question->id)->where('user_id', Auth::id())->delete();
+
+        Testquestion::where('question_id', $question->id)->delete();
         
         return response()->json([
             'success' => true,

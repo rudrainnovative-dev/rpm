@@ -17,8 +17,7 @@ class CreateQuestionOptionsTable extends Migration
             $table->id();
             $table->integer('question_id');
             $table->string('option');
-            $table->boolean('correct');
-            $table->integer('marks');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

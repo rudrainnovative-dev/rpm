@@ -1,5 +1,5 @@
 <template>
-    <div class="post d-flex flex-column-fluid" id="kt_post" @click.right.prevent @click.tab.prevent @copy.prevent @paste.prevent>
+    <div class="post d-flex flex-column-fluid" id="kt_post">
         <div id="kt_content_container" class="container-fluid" ref="screenPrint">
             <div class="row align-items-center position-relative py-2">
                 <div class="col-md-3 col-12">
@@ -210,6 +210,7 @@
                timer_enable: false,
                fixed_section: false,
                last_selected_page: 1,
+               finishTestButton: false,
             }
         },
         methods:{
@@ -481,6 +482,7 @@
                     }, 1000)
                 }
                 else {
+                    if(this.finishTestButton) return;
                     this.test_screen = false
                     this.timeoutscreen = true
                 }                  
@@ -492,7 +494,9 @@
                 this.stopWebCam()
             },
             async finishTest() {
+                if(this.progress_bar != "100") return alert("Please give answer of all question");
                 if(confirm("Are you sure you want to finish this test?")){
+                    this.finishTestButton = true;
                     this.updateTestStatus()
                     this.test_screen = false
                     this.thankuscreen = true

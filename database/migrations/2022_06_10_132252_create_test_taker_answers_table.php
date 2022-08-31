@@ -24,9 +24,9 @@ class CreateTestTakerAnswersTable extends Migration
             $table->text('option_two')->nullable();
             $table->text('option_three')->nullable();
             $table->text('option_four')->nullable();
-            $table->integer('correct');
+            $table->string('correct', 200);
             $table->integer('marks');
-            $table->integer('selected_option')->nullable();
+            $table->string('selected_option', 200)->nullable();
             $table->integer('test_id');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');

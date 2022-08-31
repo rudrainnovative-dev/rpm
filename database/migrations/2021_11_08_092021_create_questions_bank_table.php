@@ -17,7 +17,11 @@ class CreateQuestionsBankTable extends Migration
             $table->id();
             $table->integer('category_id');
             $table->text('title');
+            $table->integer('marks');
+            $table->text('correct');
+            $table->string('type', 50);
             $table->text('answers_justification')->nullable();
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

@@ -52,6 +52,6 @@ class Test extends Model
     }
 
     public function taker() {
-        return $this->hasMany(Testtaker::class, 'test_id', 'id');   
+        return $this->hasMany(Assigncandidate::class, 'test_id', 'id');   
     }
 }
