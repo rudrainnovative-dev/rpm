@@ -183,7 +183,7 @@ class ReportController extends Controller
 
         $job = (new \App\Jobs\SendEmailPDF($data))
             ->delay(now()->addSeconds(2)); 
-
+        
         $this->dispatch($job);
         
         return response()->json([

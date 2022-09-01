@@ -39,7 +39,8 @@ class SendEmailPDF implements ShouldQueue
         foreach ($this->data['lists'] as $id) {
             
             $reportController = (new ReportController);
-            $arrayData = $reportController->report_data($id);
+            $arrayData = $reportController->report_data($id); 
+            
             $pdf = PDF::loadView('report', $arrayData);
             
             $inputs['name'] = $arrayData['taker']['name'];
