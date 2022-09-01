@@ -25,7 +25,7 @@ class AssignController extends Controller
                             $query->where('email', 'like', '%'.$search.'%');
                         }
                     })
-                    ->orderBy('id', 'desc')
+                    ->orderBy('status', 'asc')->orderBy('id', 'desc')
                     ->where('user_id', Auth::id())
                     ->paginate(10);
         
@@ -121,8 +121,8 @@ class AssignController extends Controller
         //
     }
 
-    public function update(Request $request, Assign $assign) {
-        
+    public function update(Request $request, Assign $assign) { 
+
         if(!empty($request->lists) && $request->message) {
             
             $data['subject'] = 'Online Test';
@@ -139,6 +139,20 @@ class AssignController extends Controller
                 'message' => 'Mail sent.',
             ], 200);
             
+        }else if(isset($request->for) && $request->for == "update_assigned_candidate") {
+            
+            $mess = Assigncandidate::where('id', $request->id)
+            ->update($request->candidate);
+            if($mess)
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Detail updated to assigned candidates successfully.',
+                ], 200);
+            else
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Detail not updated of assigned candidates',
+                ], 400);
         }
     }
     

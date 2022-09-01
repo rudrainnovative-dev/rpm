@@ -33,6 +33,7 @@ import AssignList from "./views/assign/List.vue";
 import AssignAdd from "./views/assign/Add.vue";
 import AssignSend from "./views/assign/Send.vue";
 import AssignSendOne from "./views/assign/SendOne.vue";
+import AssignEditOne from "./views/assign/EditOne.vue";
 
 import OnlineTest from "./views/front/Test.vue";
 import OnlineTestPreview from "./views/preview/TestPerview.vue";
@@ -282,6 +283,18 @@ const routes = [
         component: AssignSendOne,
         name: 'AssignSendOne',
         meta: { title: 'Mail Send to Candidates | RPM', authOnly: true }
+      }
+    ],
+  },
+  {
+    path: '/assign/:id/edit',
+    component: DashboardLayout,
+    children: [
+      {
+        path: '',
+        component: AssignEditOne,
+        name: 'AssignEditOne',
+        meta: { title: 'Edit Details - RPM', authOnly: true }
       }
     ],
   },

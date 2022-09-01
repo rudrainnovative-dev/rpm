@@ -30,7 +30,7 @@ export default {
 
   async update(id, assign) {
     let token = localStorage.access_token;
-    return Api.post(`/assign/${id}`, assign, { headers: { "Authorization" : `Bearer ${token}`} });
+    return Api.put(`/assign/${id}`, assign, { headers: { "Authorization" : `Bearer ${token}`} });
   },
 
   async getAllTest() {

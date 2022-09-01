@@ -153,10 +153,15 @@ class OnlinetestController extends Controller
                     $total_marks = $total_marks + $item->question->marks;
                 }
             }
-
+            
+            date_default_timezone_set('Asia/Kolkata');
+            $currentDate = date("Y-m-d H:m:s");
+            
             $candidate = Assigncandidate::where('test_id', $test_id)
                         ->where('email', $request->email)
+                        ->where('share', 1)
                         ->where('status', 0)
+                        ->whereRaw("end > start AND end > '$currentDate' AND '$currentDate' > start")
                         ->orderBy('id', 'desc')
                         ->first();
 

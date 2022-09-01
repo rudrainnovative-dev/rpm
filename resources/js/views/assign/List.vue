@@ -44,6 +44,7 @@
                                <tr class="fw-bold fs-6 text-gray-800 border-bottom border-gray-200">
                                    <th class="fw-bolder align-middle">Candidate</th>
                                    <th class="fw-bolder align-middle">Test Name</th>
+                                   <th class="fw-bolder align-middle">Status</th>
                                    <th class="fw-bolder align-middle text-center">Share</th>
                                    <th class="fw-bolder align-middle text-center">Action</th>
                                </tr>
@@ -55,15 +56,21 @@
                                     <small class="d-block text-muted" v-if="assign.assessment_type === 2">{{ assign.start | formatFullDate }} - {{ assign.end | formatFullDate }}</small>
                                  </td>
                                  <td class="align-middle">{{ assign.test.name }}</td>
+                                 <td class="align-middle"><span class="badge badge-warning" v-if="!assign.status">Progress</span> <span class="badge badge-success" v-else>Completed</span></td>
                                  <td class="align-middle text-center"><span v-if="assign.share">Yes</span><span v-else>No</span></td>
                                  <td class="align-middle action-td text-center">
                                     <ul class="list-unstyled list-inline m-0">
                                        <li class="list-inline-item mb-2" title="View" v-tooltip="tooltip.share">
                                           <router-link :to='{name:"AssignSendOne",params:{id:assign.id}}'><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button"><i class="p-0 fa fa-paper-plane"></i></button></router-link>
+                                       </li> 
+
+                                       <li class="list-inline-item mb-2" title="Edit" v-tooltip="tooltip.edit" v-if="assign.status == 0">
+                                          <router-link :to='{name:"AssignEditOne",params:{id:assign.id}}'><button class="btn btn-sm btn-light-warning p-0 text-center h-30px w-30px" type="button"><i class="p-0 fa fa-edit"></i></button></router-link>
                                        </li>
-                                       <li class="list-inline-item mb-2" title="Delete" v-tooltip="tooltip.delete">
+                                       <li class="list-inline-item mb-2" title="Delete" v-tooltip="tooltip.delete"  v-if="assign.status == 0">
                                           <button class="btn btn-sm btn-light-danger p-0 text-center h-30px w-30px" type="button" @click="deleteCandidate(assign.id)"><i class="p-0 fa fa-trash"></i></button>
                                        </li>
+                           
                                     </ul>
                                 </td>
                                </tr>
@@ -102,9 +109,10 @@
             assignedData: [],
             loader_spin: false,
             tooltip: {
-               share: 'Share to Candidates'
+               share: 'Share to Candidates',
+               edit: 'Edit details'
             },
-            search: ''
+            search: '',
          }
       },
       mounted() {
@@ -116,7 +124,8 @@
             Assign.index(page, this.search).then(response => {
                this.assigned = response.data.assigned
                this.assignedData = response.data.assigned.data
-               this.loader_spin = false
+               this.loader_spin = false 
+               
             })
             .catch(error=> {
                 this.assigned = []
