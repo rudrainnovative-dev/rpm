@@ -145,12 +145,12 @@ class AssignController extends Controller
             if($mess)
                 return response()->json([
                     'success' => true,
-                    'message' => 'Detail updated to assigned candidates successfully.',
+                    'message' => 'Details updated to assigned candidates successfully.',
                 ], 200);
             else
                 return response()->json([
                     'success' => false,
-                    'message' => 'Detail not updated of assigned candidates',
+                    'message' => 'Details not updated of assigned candidates',
                 ], 400);
         }
     }
