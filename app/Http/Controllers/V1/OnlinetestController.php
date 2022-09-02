@@ -23,8 +23,7 @@ use App\Http\Controllers\V1\ReportController;
 
 class OnlinetestController extends Controller
 {
-    public function index(Request $request, $public_id) {
-
+    public function index(Request $request, $public_id) { 
         if($request->cid && $request->cid != 'YWRtaW4=') {
             $cid = base64_decode($request->cid);
             $candidate = Assigncandidate::where('id', $cid)->first();
@@ -154,12 +153,12 @@ class OnlinetestController extends Controller
                 }
             }
             
-            date_default_timezone_set('Asia/Kolkata');
-            $currentDate = date("Y-m-d H:m:s");
+            // $currentDate = date("Y-m-d H:m:s");
+            $currentDate = Carbon::now();
             
             $candidate = Assigncandidate::where('test_id', $test_id)
                         ->where('email', $request->email)
-                        ->where('share', 1) 
+                        ->where('share', 1)   
                         ->whereRaw("status != 1 AND end > start AND end > '$currentDate' AND '$currentDate' > start")
                         ->orderBy('id', 'desc')
                         ->first();
@@ -206,7 +205,6 @@ class OnlinetestController extends Controller
                     }
 
                     Testtakeranswer::insert($answerLoad);
-
                     Assigncandidate::where('email', $request->email)->update(["status" => -1]);
 
                     return response()->json([
@@ -217,8 +215,8 @@ class OnlinetestController extends Controller
 
                 }
                 else {
-                    $isCanResume = Assigncandidate::select('resume')->where('email', $request->email)->first();
-                    if($isCanResume->resume){
+                    $isCanResume = Assigncandidate::select(['resume', 'status'])->where('email', $request->email)->first();
+                    if($isCanResume->resume || $isCanResume->status == 0){
                         Assigncandidate::where('email', $request->email)->update(["status" => -1]);
                         return response()->json([
                             'success' => true,
@@ -365,7 +363,7 @@ class OnlinetestController extends Controller
                     ]);
             Assigncandidate::where('test_id', $request->id)
                 ->where('email', $request->taker_email)
-                ->where('status', 0)
+                ->where('status', -1)
                 ->update(['status' => 1]);
         }
     }
