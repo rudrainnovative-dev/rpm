@@ -11,7 +11,6 @@ use Auth;
 
 class AssignController extends Controller
 {
-
     public function index(Request $request) {
         
         $search = "";

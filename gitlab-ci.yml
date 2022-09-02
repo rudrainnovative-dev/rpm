@@ -1,0 +1,41 @@
+before_script:       
+    - echo "Before script"    
+building:
+    stage: build
+    tags:
+        - rpm
+    variables:
+        ENV_FILE: "$ENV_FILE"
+        API_JS: "$API_JS"
+    script:       
+        - sudo rm -rf /home/ubuntu/rpm-testing/*                     
+        - sudo rsync -av --progress . /home/ubuntu/rpm-testing --exclude .git
+        - cd /home/ubuntu/rpm-testing/
+        - composer install --ignore-platform-reqs
+        - cp $ENV_FILE .env
+        - rm /home/ubuntu/rpm-testing/resources/js/apis/Api.js
+        - cp $API_JS /home/ubuntu/rpm-testing/resources/js/apis/Api.js
+        - php artisan key:generate
+        - php artisan migrate:refresh
+        - sudo npm update
+        - npm run production
+        - sudo chown -R www-data:www-data /home/ubuntu/rpm-testing/
+        - sudo find /home/ubuntu/rpm-testing/ -type f -exec chmod 664 {} \;
+        - sudo find /home/ubuntu/rpm-testing/ -type d -exec chmod 775 {} \;
+        - sudo chgrp -R www-data storage bootstrap/cache
+        - sudo chmod -R ug+rwx storage bootstrap/cache
+testing:
+    stage: test
+    tags:
+        - rpm
+    script:
+        - cd /home/ubuntu/rpm-testing   
+        - php artisan test
+deploying:
+    stage: deploy
+    tags:
+        - rpm
+    script:
+        - sudo rsync -av --progress /home/ubuntu/rpm-testing/* /var/www/html/rpm/ --exclude .env --exclude .gitlab-ci.yml --exclude .env.gitlab-ci --exclude .git --exclude .gitignore --exclude .gitattributes
+        - cd /var/www/html/rpm/
+        - php artisan cache:clear
