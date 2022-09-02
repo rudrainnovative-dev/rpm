@@ -159,9 +159,8 @@ class OnlinetestController extends Controller
             
             $candidate = Assigncandidate::where('test_id', $test_id)
                         ->where('email', $request->email)
-                        ->where('share', 1)
-                        ->where('status', 0)
-                        ->whereRaw("end > start AND end > '$currentDate' AND '$currentDate' > start")
+                        ->where('share', 1) 
+                        ->whereRaw("status != 1 AND end > start AND end > '$currentDate' AND '$currentDate' > start")
                         ->orderBy('id', 'desc')
                         ->first();
 
@@ -184,8 +183,8 @@ class OnlinetestController extends Controller
                     $taker->total_marks = $total_marks;
                     $taker->user_id = $candidate->user_id;
                     $taker->status = 1;
-                    $taker->save();
-                    
+                    $taker->save(); 
+
                     $answerLoad = [];
                     $i = 0;
                     foreach($test->test_questions as $item) {
@@ -208,6 +207,8 @@ class OnlinetestController extends Controller
 
                     Testtakeranswer::insert($answerLoad);
 
+                    Assigncandidate::where('email', $request->email)->update(["status" => -1]);
+
                     return response()->json([
                         'success' => true,
                         'message' => 'Registation successfully.',
@@ -216,11 +217,22 @@ class OnlinetestController extends Controller
 
                 }
                 else {
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Already Registation.',
-                        'taker' => $testTaker
-                    ], 200);
+                    $isCanResume = Assigncandidate::select('resume')->where('email', $request->email)->first();
+                    if($isCanResume->resume){
+                        Assigncandidate::where('email', $request->email)->update(["status" => -1]);
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Already Registation.',
+                            'taker' => $testTaker
+                        ], 200);
+                    }else{
+                        return response()->json([
+                            'success' => false,
+                            'error' => 'You are not allowed to resume test',
+                            'request' => $request->all(),
+                            'test' => $test_id
+                        ], 401);
+                    }
                 }
             }
 

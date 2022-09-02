@@ -181,7 +181,7 @@
             Assign.update(this.$route.params.id, {candidate: this.candidate_detail, id: this.$route.params.id, for: "update_assigned_candidate"}).then(response => {
                this.$toast.success(response.data.message)
                if(action == 'save_share') {
-                  this.$router.push({name:"AssignSend", params: {id: this.$route.params.id}})
+                  this.$router.push({name:"AssignSendOne", params: {id: this.$route.params.id}})
                }
                else {
                   this.$router.push({name:"AssignList"})  

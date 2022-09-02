@@ -53,10 +53,10 @@
                               <tr v-for="assign in this.assignedData">
                                  <td class="align-middle">
                                     {{ assign.email }}
-                                    <small class="d-block text-muted" v-if="assign.assessment_type === 2">{{ assign.start | formatFullDate }} - {{ assign.end | formatFullDate }}</small>
+                                    <small class="d-block text-muted">{{ assign.start | formatFullDate }} - {{ assign.end | formatFullDate }}</small>
                                  </td>
                                  <td class="align-middle">{{ assign.test.name }}</td>
-                                 <td class="align-middle"><span class="badge badge-warning" v-if="!assign.status">Progress</span> <span class="badge badge-success" v-else>Completed</span></td>
+                                 <td class="align-middle"><span class="badge badge-warning" v-if="assign.status == -1">In Progress</span> <span class="badge badge-success" v-else-if = "assign.status == 1">Completed</span> <span class="badge badge-danger" v-else>Pending</span></td>
                                  <td class="align-middle text-center"><span v-if="assign.share">Yes</span><span v-else>No</span></td>
                                  <td class="align-middle action-td text-center">
                                     <ul class="list-unstyled list-inline m-0">
