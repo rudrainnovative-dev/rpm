@@ -64,7 +64,7 @@
                                           <router-link :to='{name:"AssignSendOne",params:{id:assign.id}}'><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button"><i class="p-0 fa fa-paper-plane"></i></button></router-link>
                                        </li> 
 
-                                       <li class="list-inline-item mb-2" title="Edit" v-tooltip="tooltip.edit" v-if="assign.status == 0">
+                                       <li class="list-inline-item mb-2" title="Edit" v-tooltip="tooltip.edit" v-if="(assign.status == 0 || assign.status == -1)">
                                           <router-link :to='{name:"AssignEditOne",params:{id:assign.id}}'><button class="btn btn-sm btn-light-warning p-0 text-center h-30px w-30px" type="button"><i class="p-0 fa fa-edit"></i></button></router-link>
                                        </li>
                                        <li class="list-inline-item mb-2" title="Delete" v-tooltip="tooltip.delete"  v-if="assign.status == 0">

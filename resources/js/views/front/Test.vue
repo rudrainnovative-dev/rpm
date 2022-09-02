@@ -222,6 +222,7 @@
                     this.test.id = id
                     this.test.name = name
                     this.test.duration = duration*60
+                    console.log(duration);
                     if(assessment_type == 'Timed Assessment') {
                         this.timer_enable = true
                         var total_duration = response.data.total_duration
