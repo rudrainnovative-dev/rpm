@@ -184,7 +184,7 @@
                   this.$router.push({name:"AssignSendOne", params: {id: this.$route.params.id}})
                }
                else {
-                  this.$router.push({name:"AssignList"})  
+                  this.$router.push({name:"AssignList"})
                }
                this.disabled = false
             })
