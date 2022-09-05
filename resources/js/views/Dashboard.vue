@@ -14,7 +14,7 @@
           <div class="col-md-6 col-12 d-flex">
             <div class="card card-xl-stretch mb-xl-8 w-100">
               <div class="card-header border-0">
-                <h3 class="card-title fw-bolder text-dark m-0">Upcoming Tests</h3>
+                <h3 class="card-title fw-bolder text-dark m-0">Upcoming Test(s)</h3>
               </div>
               <div class="separator mb-2"></div>
               <div class="card-body">
