@@ -17,10 +17,10 @@ building:
         - sudo rm -rf /mnt/storage/cicdapps/rpm/*                     
         - sudo rsync -av --progress . /mnt/storage/cicdapps/rpm --exclude .git
         - cd /mnt/storage/cicdapps/rpm
-        - composer install --ignore-platform-reqs
-        - touch .env
+        - composer install --ignore-platform-reqs        
+        - rm .env
         - echo $ENV_FILE >> .env
-        - rm /mnt/storage/cicdapps/rpm/resources/js/apis/Api.js
+        - rm /mnt/storage/cicdapps/rpm/resources/js/apis/Api.js        
         - echo $API_JS >> /mnt/storage/cicdapps/rpm/resources/js/apis/Api.js
         - php artisan key:generate
         - php artisan migrate:refresh --seed
