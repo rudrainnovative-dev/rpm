@@ -1,9 +1,15 @@
+stages:
+    - build
+    - test
+    - deploy
 before_script:       
     - echo "Before script"    
 building:
     stage: build
+    only:
+        - master
     tags:
-        - rpm
+        - rpm        
     variables:
         ENV_FILE: "$ENV_FILE"
         API_JS: "$API_JS"
@@ -28,7 +34,9 @@ building:
 testing:
     stage: test
     tags:
-        - rpm
+        - rpm        
+    only:
+        - master
     script:
         - cd /mnt/storage/cicdapps/rpm  
         - php artisan test
@@ -36,6 +44,8 @@ deploying:
     stage: deploy
     tags:
         - rpm
+    only:
+        - master
     script:
         - sudo rsync -av --progress /mnt/storage/cicdapps/rpm/* /mnt/storage/applications/rpm --exclude .env --exclude .gitlab-ci.yml --exclude .env.gitlab-ci --exclude .git --exclude .gitignore --exclude .gitattributes --exclude node_modules
         - cd /mnt/storage/applications/rpm
