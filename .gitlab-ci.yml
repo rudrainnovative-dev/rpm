@@ -1,37 +1,54 @@
-# This file is a template, and might need editing before it works on your project.
-# Select image from https://hub.docker.com/_/php/
-image: php:latest
+stages:
+    - build
+    - test
+    - deploy
+before_script:       
+    - echo "Before script"    
+building:
+    stage: build
+    only:
+        - master
+    tags:
+        - rpm        
+    variables:
+        ENV_FILE: "$ENV_FILE"
+        API_JS: "$API_JS"
+    script:       
+        - sudo rm -rf /mnt/storage/cicdapps/rpm/*                     
+        - sudo rsync -av --progress . /mnt/storage/cicdapps/rpm --exclude .git
+        - cd /mnt/storage/cicdapps/rpm
+        - composer install --ignore-platform-reqs
+        - cp $ENV_FILE .env
+        - rm /mnt/storage/cicdapps/rpm/resources/js/apis/Api.js
+        - cp $API_JS /mnt/storage/cicdapps/rpm/resources/js/apis/Api.js
+        - php artisan key:generate
+        - php artisan migrate:refresh --seed
+        - sudo npm update
+        - npm run production
+        - sudo chown -R www-data:www-data /mnt/storage/cicdapps/rpm/
+        - sudo find /mnt/storage/cicdapps/rpm -type f -exec chmod 664 {} \;
+        - sudo find /mnt/storage/cicdapps/rpm -type d -exec chmod 775 {} \;
+        - sudo chgrp -R www-data storage bootstrap/cache
+        - sudo chmod -R ug+rwx storage bootstrap/cache
 
-# Select what we should cache between builds
-cache:
-  paths:
-    - vendor/
-
-before_script:
-  - apt-get update -yqq
-  - apt-get install -yqq git libmcrypt-dev libpq-dev libcurl4-gnutls-dev libicu-dev libvpx-dev libjpeg-dev libpng-dev libxpm-dev zlib1g-dev libfreetype6-dev libxml2-dev libexpat1-dev libbz2-dev libgmp3-dev libldap2-dev unixodbc-dev libsqlite3-dev libaspell-dev libsnmp-dev libpcre3-dev libtidy-dev
-  # Install PHP extensions
-  - docker-php-ext-install mbstring mcrypt pdo_pgsql curl json intl gd xml zip bz2 opcache
-  # Install & enable Xdebug for code coverage reports
-  - pecl install xdebug
-  - docker-php-ext-enable xdebug
-  # Install and run Composer
-  - curl -sS https://getcomposer.org/installer | php
-  - php composer.phar install
-
-# Bring in any services we need http://docs.gitlab.com/ee/ci/docker/using_docker_images.html#what-is-a-service
-# See http://docs.gitlab.com/ee/ci/services/README.html for examples.
-services:
-  - mysql:5.7
-
-# Set any variables we need
-variables:
-  # Configure mysql environment variables (https://hub.docker.com/r/_/mysql/)
-  MYSQL_DATABASE: mysql_database
-  MYSQL_ROOT_PASSWORD: mysql_strong_password
-
-# Run our tests
-# If Xdebug was installed you can generate a coverage report and see code coverage metrics.
-test:
-  script:
-    - vendor/bin/phpunit --configuration phpunit.xml --coverage-text --colors=never
+testing:
+    stage: test
+    tags:
+        - rpm        
+    only:
+        - master
+    script:
+        - cd /mnt/storage/cicdapps/rpm  
+        - php artisan test
+deploying:
+    stage: deploy
+    tags:
+        - rpm
+    only:
+        - master
+    script:
+        - sudo rsync -av --progress /mnt/storage/cicdapps/rpm/* /mnt/storage/applications/rpm --exclude .env --exclude .gitlab-ci.yml --exclude .env.gitlab-ci --exclude .git --exclude .gitignore --exclude .gitattributes --exclude node_modules
+        - cd /mnt/storage/applications/rpm
+        # uncomment below line, if need to recreate and seed data again.
+        # php artisan migrate:refresh --seed
+        - php artisan cache:clear
