@@ -14,7 +14,7 @@ building:
         ENV_FILE: "$ENV_FILE"
         API_JS: "$API_JS"
     script:       
-       - sudo rm -rf /mnt/storage/cicdapps/rpm
+        - sudo rm -rf /mnt/storage/cicdapps/rpm
         - mkdir /mnt/storage/cicdapps/rpm
         - rsync -av --progress . /mnt/storage/cicdapps/rpm --exclude .git
         - cd /mnt/storage/cicdapps/rpm
@@ -23,6 +23,7 @@ building:
         - composer install --ignore-platform-reqs
         - composer dump-autoload
         - rm /mnt/storage/cicdapps/rpm/resources/js/apis/Api.js
+        - touch /mnt/storage/cicdapps/rpm/resources/js/apis/Api.js
         - echo $API_JS >> /mnt/storage/cicdapps/rpm/resources/js/apis/Api.js
         - php artisan cache:clear
         - php artisan key:generate
