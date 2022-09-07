@@ -9,6 +9,9 @@
                   <router-link :to='{name:"Dashboard"}' class="text-link small fs-6">Dashboard</router-link>
                </li>
                <li class="breadcrumb-item text-muted">
+                  <router-link :to='{name:"AssignList"}' class="text-link small fs-6">Assigned Candidates to Test</router-link>
+               </li>
+               <li class="breadcrumb-item text-muted">
                   <p class="text-muted m-0 small fs-6">Update Candidate Details</p>
                </li>
             </ul>

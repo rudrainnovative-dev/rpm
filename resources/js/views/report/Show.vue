@@ -11,8 +11,11 @@
                         <li class="breadcrumb-item text-muted">
                             <router-link :to='{name:"Test"}' class="text-link small fs-6">Test</router-link>
                         </li>
+                         <li class="breadcrumb-item text-muted">
+                            <router-link :to='{name:"ReportList"}' class="text-link small fs-6">Test Performance</router-link>
+                        </li>
                         <li class="breadcrumb-item text-muted">
-                            <p class="text-muted m-0 small fs-6">Test Performance</p>
+                            <p class="text-muted m-0 small fs-6">Test Report</p>
                         </li>
                     </ul>
                 </div>
@@ -30,7 +33,7 @@
                         </div>
                     </div>
                     <div class="col-md-6 col-12 text-right mb-2">
-                        <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary ml-4">Back</router-link>
+                        <router-link :to='{name:"ReportList"}' class="btn btn-sm btn-secondary ml-4">Back</router-link>
                     </div>
                 </div>
                 <div class="row" v-if="report">

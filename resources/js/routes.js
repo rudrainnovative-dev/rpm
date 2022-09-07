@@ -323,7 +323,7 @@ const routes = [
     ],
   },
   {
-    path: '/report/:id/test',
+    path: '/test/:id/report',
     component: DashboardLayout,
     children: [
       {
@@ -335,7 +335,7 @@ const routes = [
     ],
   },
   {
-    path: '/report/:id/show',
+    path: '/test/report/:id/show',
     component: DashboardLayout,
     children: [
       {
