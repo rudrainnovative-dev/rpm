@@ -25,12 +25,13 @@ building:
         - cp $API_JS /mnt/storage/cicdapps/rpm/resources/js/apis/Api.js
         - php artisan cache:clear
         - php artisan key:generate
-        - php artisan migrate:refresh --seed
+        - php artisan migrate:fresh --seed
         - npm update
         - npm run production
         - sudo chown -R www-data:www-data /mnt/storage/cicdapps/rpm/
         - sudo find /mnt/storage/cicdapps/rpm -type f -exec chmod 664 {} \;
         - sudo find /mnt/storage/cicdapps/rpm -type d -exec chmod 775 {} \;
+        - sudo chmod -R 775 /mnt/storage/applications/rpm/storage/
         - sudo chgrp -R www-data storage bootstrap/cache
         - sudo chmod -R ug+rwx storage bootstrap/cache
 testing:
@@ -52,5 +53,5 @@ deploying:
         - sudo rsync -av --progress /mnt/storage/cicdapps/rpm/* /mnt/storage/applications/rpm --exclude .env --exclude .gitlab-ci.yml --exclude .env.gitlab-ci --exclude .git --exclude .gitignore --exclude .gitattributes --exclude node_modules
         - cd /mnt/storage/applications/rpm
         # uncomment below line, if need to recreate and seed data again.
-        # php artisan migrate:refresh --seed
-        - php artisan cache:clear
+        - php artisan migrate:fresh --seed
+        - php artisan optimize:clear

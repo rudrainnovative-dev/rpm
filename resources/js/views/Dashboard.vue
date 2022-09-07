@@ -38,7 +38,7 @@
                   </tbody>
                   <tbody v-else>
                     <tr>
-                      <td colspan="3" class="align-middle">No any Upcoming Tests.</td>
+                      <td colspan="3" class="align-middle">No any Upcoming Test(s).</td>
                     </tr>
                   </tbody>
                 </table>
