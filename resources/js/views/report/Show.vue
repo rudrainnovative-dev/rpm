@@ -12,7 +12,7 @@
                             <router-link :to='{name:"Test"}' class="text-link small fs-6">Test</router-link>
                         </li>
                          <li class="breadcrumb-item text-muted">
-                            <router-link :to='{name:"ReportList"}' class="text-link small fs-6">Test Performance</router-link>
+                            <router-link :to='{name:"ReportList",params: {id: report.test_id}}' class="text-link small fs-6">Test Performance</router-link>
                         </li>
                         <li class="breadcrumb-item text-muted">
                             <p class="text-muted m-0 small fs-6">Test Report</p>
@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div class="col-md-6 col-12 text-right mb-2">
-                        <router-link :to='{name:"ReportList"}' class="btn btn-sm btn-secondary ml-4">Back</router-link>
+                        <router-link :to='{name:"ReportList" ,params: {id: report.test_id}}' class="btn btn-sm btn-secondary ml-4">Back</router-link>
                     </div>
                 </div>
                 <div class="row" v-if="report">
@@ -247,6 +247,9 @@
                             </div>
                         </div>
                     </div>
+                    <div class="my-2 col-md-12 shadow-sm">
+                        <div class="bg-primary rounded-bottom text-white text-center py-1">Copyright © 2022 RudraInnovative Software. All Rights Reserved</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -268,7 +271,7 @@ export default {
     data() {
         return {
             report: {},
-            dummy_image: '../../../img/dummy-img.png',
+            dummy_image: '/img/dummy-img.png',
             loader_spin: false,
             chartOptions: {
                 chart: {

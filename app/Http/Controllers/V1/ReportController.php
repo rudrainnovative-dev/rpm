@@ -43,8 +43,7 @@ class ReportController extends Controller
                     ->orderBy('id', 'desc')
                     ->paginate(10);
 
-        $upcomming = Assigncandidate::with(['test'])
-                    ->where('user_id', $user_id)
+        $upcomming = Assigncandidate::with(['test'])->where('test_id', $test_id)->where('user_id', $user_id)
                     ->where('status', 0)
                     ->whereDate('end', '>', Carbon::now())
                     ->orderBy('id', 'desc')

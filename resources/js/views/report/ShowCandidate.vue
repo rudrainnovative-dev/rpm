@@ -221,11 +221,15 @@
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                     <div class="row" v-else>
                         <div class="col-md-12">
                             <div class="alert alert-danger">Invalid candidate.</div>
                         </div>
+                    </div>
+                    <div class="my-2 col-md-12 shadow-sm">
+                        <div class="bg-primary rounded-bottom  text-white text-center py-1">Copyright © 2022 RudraInnovative Software. All Rights Reserved</div>
                     </div>
                 </div>
             </div>
@@ -248,7 +252,7 @@ export default {
     data() {
         return {
             report: {},
-            dummy_image: '../../../img/dummy-img.png',
+            dummy_image: '/img/dummy-img.png',
             loader_spin: false,
             chartOptions: {
                 chart: {

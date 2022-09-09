@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Assign;
 use App\Models\Assigncandidate;
+use App\Models\Testtaker;
 use Auth;
 
 class AssignController extends Controller
@@ -14,17 +15,27 @@ class AssignController extends Controller
     public function index(Request $request) {
         
         $search = "";
+        $filter = "";
+
         if($request->has('search')) {
             $search = $request->search;
         }
 
-        $assigned = Assigncandidate::with(['test'])
+        if($request->has('filter')) {
+            $filter = $request->filter;
+        }
+        $assigned = Assigncandidate::with(['test', 'test_taker'])
                     ->where(function($query) use($search) {
                         if($search) {
                             $query->where('email', 'like', '%'.$search.'%');
                         }
                     })
-                    ->orderBy('status', 'asc')->orderBy('id', 'desc')
+                    ->where(function($query) use($filter) {
+                        if($filter != '') {
+                            $query->where('status', $filter);
+                        }
+                    })
+                    ->orderBy('id', 'desc')
                     ->where('user_id', Auth::id())
                     ->paginate(10);
         
@@ -54,7 +65,7 @@ class AssignController extends Controller
 
             $resume = isset($request->settings['resume'])?$request->settings['resume']:0;
 
-            if(isset($request->default_check)) {
+            if($request->default_check == true) {
                 $start = Date('Y-m-d H:i:s', strtotime($request->settings['start']));
                 $end = Date('Y-m-d H:i:s', strtotime($request->settings['end']));    
             }
@@ -71,13 +82,13 @@ class AssignController extends Controller
                     $assign_candidate->email = $list['email'];
                     $assign_candidate->test_id = $list['test_id'];
 
-                    if(!isset($request->default_check) && $list['start']) {
+                    if(!$request->default_check && $list['start']) {
                        $start = Date('Y-m-d H:i:s', strtotime($list['start']));
                     }
 
                     $assign_candidate->start = $start;
 
-                    if(!isset($request->default_check) && $list['end']) {
+                    if(!$request->default_check && $list['end']) {
                        $end = Date('Y-m-d H:i:s', strtotime($list['end']));
                     }
 
@@ -120,14 +131,14 @@ class AssignController extends Controller
         //
     }
 
-    public function update(Request $request, Assign $assign) { 
+    public function update(Request $request) { 
 
         if(!empty($request->lists) && $request->message) {
-            
             $data['subject'] = 'Online Test';
             $data['lists'] = $request->lists;
-            $data['message'] = $request->message;
-
+            $data['message'] = $request->message; 
+            
+            // dd($data);
             $job = (new \App\Jobs\SendEmail($data))
                 ->delay(now()->addSeconds(2)); 
 
@@ -156,6 +167,7 @@ class AssignController extends Controller
     }
     
     public function destroy($id) { 
+        Testtaker::whereRaw("email in (select email from assign_candidates where id = $id)")->delete();
         Assigncandidate::where('id', $id)->where('user_id', Auth::id())->delete();
         return response()->json([
             'success' => true,

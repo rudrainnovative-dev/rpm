@@ -30,6 +30,6 @@ class Assigncandidate extends Model
     }
 
     public function test_taker() {
-        return $this->hasOne(Testtaker::class, 'email', 'email');
+        return $this->hasOne(Testtaker::class, 'email', 'email')->select(['email', 'id']);
     }
 }

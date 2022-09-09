@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Mail;
 use App\Models\Assigncandidate;
 use App\Models\Test;
+use Exception;
 
 class SendEmail implements ShouldQueue
 {
@@ -65,13 +66,17 @@ class SendEmail implements ShouldQueue
                         'resume' => $list['resume'],
                         'text_message' => $text_message
                     ];
-
-            Mail::send('mail.share', $data, function($message) use($inputs){
-                $message->to($inputs['email'], $inputs['name'])
-                    ->subject($inputs['subject']);
-            });
-
-            Assigncandidate::where('id', $list['id'])->update(['status' => '0', 'share' => 1, 'updated_at' => Date('Y-m-d H:i:s')]);
+            try {
+                
+                Mail::send('mail.share', $data, function($message) use($inputs){
+                    $message->to($inputs['email'], $inputs['name'])
+                        ->subject($inputs['subject']);
+                });
+                Assigncandidate::where('id', $list['id'])->update(['status' => '0', 'share' => 1, 'updated_at' => Date('Y-m-d H:i:s')]);
+            } catch (Exception $e) {
+                //throw $th;
+                Assigncandidate::where('id', $list['id'])->update(['status' => '0', 'share' => 1, 'updated_at' => Date('Y-m-d H:i:s')]);
+            }
         }
     }
 }

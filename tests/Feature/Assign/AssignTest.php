@@ -53,7 +53,8 @@ class AssignTest extends TestCase
                     'start' => Date('Y-m-d'),
                     'end' => Date('Y-m-d', strtotime('+1 Day')),
                     'type' => 1,
-                    'resume' => 0
+                    'resume' => 0,
+                    'default_check' => false,
                 ]
             ;
 
