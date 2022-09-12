@@ -85,7 +85,7 @@ class ReportController extends Controller
                         ->whereDate('created_at', '<=', $taker->created_at)
                         ->orderBy('id', 'desc')
                         ->first();
-
+        // dd($get_performance);
         $sections = Testtakeranswer::where('taker_id', $taker->id)
                             ->select('category_id', DB::Raw('sum(marks) as total_marks'))
                             ->groupBy('category_id')
@@ -107,7 +107,7 @@ class ReportController extends Controller
         $performance = [];
         if(isset($get_performance->options)) {
             foreach($get_performance->options as $option) {
-
+                // dd($option);
                 $performance[$option->op_criteria->id]['name'] = $option->op_criteria->name;
 
                 if($option->formula == '=') {

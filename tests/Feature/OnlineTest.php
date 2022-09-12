@@ -186,7 +186,7 @@ class OnlineTest extends TestCase
                 $token = $user->createToken('auth_token')->plainTextToken;
                 $response = $this->withHeaders(['Authorization' => "Bearer $token"])
                                     ->json('GET', '/api/report/'.$taker->id.'/pdf');
-
+                // dd($response);
                 $response->assertStatus(200);
             }
             else {
