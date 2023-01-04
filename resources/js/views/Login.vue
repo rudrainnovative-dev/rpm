@@ -79,6 +79,7 @@ export default {
           this.$root.$emit("login", true);
           localStorage.setItem("auth", "true");
           localStorage.setItem("access_token", res.data.access_token);
+          localStorage.setItem("user_id", res.data.user_id);
           localStorage.setItem("user_name", res.data.user_name);
           this.$router.push({ name: "Dashboard" });
           this.disabled = false

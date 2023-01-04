@@ -84,6 +84,8 @@ Route::middleware('auth:sanctum')->group(function () {
             'tests' => Test::orderBy('id','desc')->select('id', 'name', 'assessment_type')->get()
         ], 200);
     });
+
+    Route::post('/profile/{token}', [DashboardController::class, 'profile']);
 });
 
 
