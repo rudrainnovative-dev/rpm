@@ -49,28 +49,10 @@ class DashboardController extends Controller
 
             $user = User::find(decrypt($user));
             
-            if($request->old_password && !\Hash::check($request->old_password,Auth::user()->password)){
+            if($request->confirm_password ==  $request->password ){
 
-                return response()->json([
-                    'status' => false,
-                    'message' => 'The old password does not match in our database',
-                ], 200);
+                $user->password = \Hash::make($request->password);
 
-            }else{
-                if($request->old_password != '' && $request->password !=''){
-
-                    if(\Hash::check($request->password,Auth::user()->password) == true){
-                        
-                        return response()->json([
-                            'status' => false,
-                            'message' => 'Enter new password ',
-                        ], 200);
-    
-                    }else{
-    
-                        $user->password = \Hash::make($request->password);
-                    }
-                }
             }
             
             $user->name = $request->user_name;
@@ -79,7 +61,7 @@ class DashboardController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Profile successfully updated',
-                'user_name'=>$request->user_name
+                'user_name'=>$request->user_name 
             ], 200);
         }
         

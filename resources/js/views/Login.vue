@@ -72,7 +72,7 @@ export default {
   methods: {
     login() {
       this.disabled = true
-
+ 
       User.login(this.form)
         .then((res) => {
           this.errors = [];
@@ -81,6 +81,7 @@ export default {
           localStorage.setItem("access_token", res.data.access_token);
           localStorage.setItem("user_id", res.data.user_id);
           localStorage.setItem("user_name", res.data.user_name);
+          localStorage.setItem("user_email", res.data.user_email);
           this.$router.push({ name: "Dashboard" });
           this.disabled = false
         })
