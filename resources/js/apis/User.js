@@ -22,7 +22,10 @@ export default {
     let token = localStorage.access_token;
     return Api.get("/user", { headers: { "Authorization" : `Bearer ${token}`} });
   },
-
+  async profileSave(id, form) {
+    let token = localStorage.access_token;
+    return Api.post(`/profile/${id}`, form, { headers: { "Authorization" : `Bearer ${token}`} });
+  },
   async forget(form) {
     return Api.post("/password/email", form);
   },

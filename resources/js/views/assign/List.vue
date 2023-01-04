@@ -108,7 +108,7 @@
                                        v-else>Pending</span></td>
                                  <td class="align-middle text-center"><span v-if="assign.share">Yes</span><span
                                        v-else>No</span></td>
-                                 <td class="align-middle action-td text-center">
+                                 <td class="text-center">
                                     <ul class="list-unstyled list-inline m-0">
                                        <li class="list-inline-item mb-2" title="View" v-tooltip="tooltip.share">
                                           <router-link :to='{name:"AssignSendOne",params:{id:assign.id}}'><button
@@ -141,7 +141,7 @@
                            </tbody>
                            <tbody v-else>
                               <tr>
-                                 <td colspan="4">No Record Found</td>
+                                 <td colspan="5" class="text-center text-danger"> No Record Found</td>
                               </tr>
                            </tbody>
                         </table>

@@ -58,7 +58,7 @@
           <div class="min-w-lg-300px"></div>
           <div class="d-flex align-items-center">
             <div class="d-flex align-items-center">
-              <p class="m-0 fw-bold">{{ user_name }}</p>
+              <p class="m-0 fw-bold"><router-link title="Profile" :to='{name:"Profile",params:{id:user_token}}'>{{ user_name }}</router-link></p>
             </div>
             <span class="h-20px border-gray-200 border-start mx-5"></span>
             <div class="d-flex align-items-center">
@@ -126,7 +126,8 @@ export default {
 data() {
 return {
 isLoggedIn: false,
-user_name: localStorage.user_name
+user_name: localStorage.user_name,
+user_token: localStorage.user_id,
 };
 },
 mounted() {

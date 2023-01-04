@@ -43,9 +43,23 @@ import ReportShow from "./views/report/Show.vue";
 import ReportShowCandidate from "./views/report/ShowCandidate.vue";
 import PageNotFound from "./views/PageNotFound.vue";
 
+import Profile from './views/Profile.vue';
+
 Vue.use(VueRouter);
 
 const routes = [
+  {
+    path: '/profile/:id/',
+    component: DashboardLayout,
+    children: [
+      {
+        path: '',
+        component: Profile,
+        name: 'Profile',
+        meta: { title: 'User Profile | RPM', authOnly: true }
+      }
+    ],
+  },
   {
     path: '/',
     component: DashboardLayout,

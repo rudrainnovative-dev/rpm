@@ -19,5 +19,12 @@
     <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/html2canvas.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-form-validator.js') }}"></script>
+    <script>
+
+        $(function(){
+            $.validate();
+        })
+    </script>
 </body>
 </html>

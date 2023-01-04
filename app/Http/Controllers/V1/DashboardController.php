@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Assigncandidate;
@@ -42,5 +43,45 @@ class DashboardController extends Controller
             'user' => $request->user()
         ], 200);
     }
+    public function profile(Request $request,$user){
 
+        if($request->user_name != ''){
+
+            $user = User::find(decrypt($user));
+            
+            if($request->old_password && !\Hash::check($request->old_password,Auth::user()->password)){
+
+                return response()->json([
+                    'status' => false,
+                    'message' => 'The old password does not match in our database',
+                ], 200);
+
+            }else{
+                if($request->old_password != '' && $request->password !=''){
+
+                    if(\Hash::check($request->password,Auth::user()->password) == true){
+                        
+                        return response()->json([
+                            'status' => false,
+                            'message' => 'Enter new password ',
+                        ], 200);
+    
+                    }else{
+    
+                        $user->password = \Hash::make($request->password);
+                    }
+                }
+            }
+            
+            $user->name = $request->user_name;
+            $user->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Profile successfully updated',
+                'user_name'=>$request->user_name
+            ], 200);
+        }
+        
+    }
 }
