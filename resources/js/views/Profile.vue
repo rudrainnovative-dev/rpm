@@ -23,7 +23,7 @@
                     <div class=" col-md-4 col-12">
                         <div class="form-group">
                             <label class="mb-3 fw-bolder fs-5">User Name<span class="text-danger">*</span></label>
-                            <input type="text" data-validation="required" class="form-control form-control-solid form-control-sm"  placeholder="Enter User Name" v-model="profile.user_name" required/>
+                            <input type="text" data-validation="required" class="form-control form-control-sm"  placeholder="Enter User Name" v-model="profile.user_name" required/>
                         </div>
                     </div>
                     
@@ -34,20 +34,22 @@
                     <div class="col-md-4 col-12"></div>
                     <div class=" col-md-4 col-12">
                         <div class="form-group">
-                            <label class="mb-3 fw-bolder fs-5">Old Password</label>
-                            <input type="password" class="form-control form-control-solid form-control-sm"  placeholder="Enter Test Name" data-validation-optional="true" data-validation="length" data-validation-length="min8" v-model="profile.old_password" />
+                            <label class="mb-3 fw-bolder fs-5">User Email</label>
+                            <input type="email" class="form-control form-control-solid form-control-sm"  placeholder="Enter Email Name" v-model="user_email" :disabled="user_email" />
                         </div>
                     </div>
                     
                     <div class="col-md-4 col-12"></div>
                     
                 </div>
+                <hr />
                 <div class="row">
                     <div class="col-md-4 col-12"></div>
                     <div class=" col-md-4 col-12">
                         <div class="form-group">
                             <label class="mb-3 fw-bolder fs-5">New Password</label>
-                            <input type="password" class="form-control form-control-solid form-control-sm"  placeholder="Enter Test Name" data-validation-optional="true" data-validation="length" data-validation-length="min8"  v-model="profile.password" />
+                            <input type="password" class="form-control  form-control-sm"  placeholder="Enter New Password" data-validation-optional="true" data-validation="length" data-validation-length="min8"  v-model="profile.password" />
+                            <small class="text-info">Leave it empty, if you don't want to change password</small>
                         </div>
                     </div>
                     
@@ -59,7 +61,7 @@
                     <div class=" col-md-4 col-12">
                         <div class="form-group">
                             <label class="mb-3 fw-bolder fs-5">Confirm Password</label>
-                            <input type="password" class="form-control form-control-solid form-control-sm"  placeholder="Enter Test Name" data-validation-optional="true"  data-validation="length" data-validation-length="min8"  v-model="profile.confirm_password" />
+                            <input type="password" class="form-control  form-control-sm"  placeholder="Enter Confirm Password" data-validation-optional="true"  data-validation="length" data-validation-length="min8"  v-model="profile.confirm_password" />
                         </div>
                     </div>
                     
@@ -69,7 +71,7 @@
                 <div class="row">
                     <div class="col-md-4 col-12"></div>
                     <div class=" col-md-4 col-12">
-                        <button type="submit" class="btn btn-dark btn-sm float-right">Update</button>
+                        <button type="submit" :disabled="disabled" class="btn btn-dark btn-sm float-right">Update</button>
                     </div>
                     
                     <div class="col-md-4 col-12"></div>
@@ -91,10 +93,10 @@
                 loader_spin: true,
                 profile:{
                     user_name: localStorage.user_name,
-                    old_password:'',
                     password:'',
                     confirm_password:'',
-                }
+                },
+                user_email:localStorage.user_email,
                 
 
             }
@@ -105,37 +107,35 @@
         },
         methods:{
             async update(){
-                if(this.profile.old_password === '' || this.profile.old_password && this.profile.password   &&   this.profile.password == this.profile.confirm_password ){
 
-                    this.disabled = true
-                    User.profileSave(this.$route.params.id, this.profile).then(response => {  
-                        console.log(response);
-                        if(response.data.status){
+                this.disabled = true
 
-                            this.$toast.success(response.data.message);
-                            localStorage.setItem('user_name',response.data.user_name);
-                            this.profile.old_password ='',
-                            this.profile.password ='',
-                            this.profile.confirm_password ='',
-                            this.disabled = false
-                        }else{
-                            this.$toast.error(response.data.message);
-                            this.disabled = false
-                        }
-                    }).catch(error=>{
-                        this.disabled = false
-                    })
+                if(this.profile.password && this.profile.confirm_password && this.profile.password !== this.profile.confirm_password || this.profile.confirm_password =='' && this.profile.password || this.profile.confirm_password  && this.profile.password ==''){
+
+                    this.$toast.error('New password and confirmation password does not match');
+                    this.disabled = false;
+
                 }else{
 
-                    if(this.profile.password != '' && this.profile.confirm_password != '' && this.profile.password !== this.profile.confirm_password){
+                    
+                    User.profileSave(this.$route.params.id, this.profile).then(response => {  
+    
+                        this.$toast.success(response.data.message);
+                        localStorage.setItem('user_name',response.data.user_name);
+                        this.profile.password ='',
+                        this.profile.confirm_password ='',
+                        this.disabled = false
 
-                        this.$toast.error('Your password and confirmation password do not match');
-                    }else{
-                        this.$toast.error('Password and confirm password required !');
-                    }
+                        
+                    }).catch(error=>{
+
+                        this.disabled = false
+                    })
                 }
+
+
+            }
                 
-            } 
-        }
+        } 
     }
 </script>
