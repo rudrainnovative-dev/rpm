@@ -59,7 +59,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'Bearer',
             'user_id'=>encrypt($user->id),
-            'user_email'=> $user->email,
+            'user_email'=> $user->email, 
         ], 201);
     }
 

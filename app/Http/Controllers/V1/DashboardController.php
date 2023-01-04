@@ -52,7 +52,7 @@ class DashboardController extends Controller
             if($request->confirm_password ==  $request->password ){
 
                 $user->password = \Hash::make($request->password);
-                
+
             }
             
             $user->name = $request->user_name;
@@ -61,7 +61,7 @@ class DashboardController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Profile successfully updated',
-                'user_name'=>$request->user_name
+                'user_name'=>$request->user_name 
             ], 200);
         }
         

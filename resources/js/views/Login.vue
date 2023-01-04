@@ -72,7 +72,7 @@ export default {
   methods: {
     login() {
       this.disabled = true
-
+ 
       User.login(this.form)
         .then((res) => {
           this.errors = [];

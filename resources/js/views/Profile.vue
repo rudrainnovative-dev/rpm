@@ -114,7 +114,7 @@
 
                     this.$toast.error('New password and confirmation password does not match');
                     this.disabled = false;
-
+                    
                 }else{
 
                     
