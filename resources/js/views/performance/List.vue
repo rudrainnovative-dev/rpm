@@ -106,6 +106,10 @@ export default {
           .catch(error=> {
             this.performance = []
             this.loader_spin = false
+            if (error.response.status === 401) {
+                this.$toast.error(error.response.data.message);
+                this.$router.push({ name: "Login" });
+            }
           });
         },
         deletePerformance(id) {
@@ -115,6 +119,10 @@ export default {
                     this.$toast.success(response.data.message);
                 }).catch(error=>{
                     this.loader_spin = false 
+                    if (error.response.status === 401) {
+                        this.$toast.error(error.response.data.message);
+                        this.$router.push({ name: "Login" });
+                    }
                 });
             }
         }

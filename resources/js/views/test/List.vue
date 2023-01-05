@@ -195,6 +195,10 @@ export default {
           .catch(error=> {
             this.tests = []
             this.loader_spin = false
+            if (error.response.status === 401) {
+                this.$toast.error(error.response.data.message);
+                this.$router.push({ name: "Login" });
+            }
           });
         },
         deleteTest(id) {
@@ -203,6 +207,10 @@ export default {
                     this.getTests()
                     this.$toast.success(response.data.message);
                 }).catch(error=>{
+                if (error.response.status === 401) {
+                    this.$toast.error(error.response.data.message);
+                    this.$router.push({ name: "Login" });
+                }
                   
                 })
             }
@@ -222,6 +230,10 @@ export default {
                 this.$toast.success(response.data.message);
             }).catch(error=>{
                 this.loader_spin = true
+                if (error.response.status === 401) {
+                    this.$toast.error(error.response.data.message);
+                    this.$router.push({ name: "Login" });
+                }
             })
         },
         async closed() {

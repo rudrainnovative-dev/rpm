@@ -433,6 +433,10 @@
 
                 }).catch(error=> {
                     this.loader_spin = false
+                    if (error.response.status === 401) {
+                        this.$toast.error(error.response.data.message);
+                        this.$router.push({ name: "Login" });
+                    }
                 })
             },
             async getPurposes() {
@@ -441,6 +445,10 @@
               })
               .catch(error=> {
                 this.purposes = []
+                if (error.response.status === 401) {
+                    this.$toast.error(error.response.data.message);
+                    this.$router.push({ name: "Login" });
+                }
               });
             },
             async getCriteria() {
@@ -448,6 +456,10 @@
                     this.criterias = response.data.criterias;
                 }).catch(error=> {
                     this.criterias = []
+                    if (error.response.status === 401) {
+                        this.$toast.error(error.response.data.message);
+                        this.$router.push({ name: "Login" });
+                    }
                 });
             },
             async getCategory() {
@@ -455,6 +467,10 @@
                     this.categories = response.data.categories;
                 }).catch(error=> {
                     this.categories = []
+                    if (error.response.status === 401) {
+                        this.$toast.error(error.response.data.message);
+                        this.$router.push({ name: "Login" });
+                    }
                 });
             },
             async update() {
@@ -466,6 +482,10 @@
                     this.disabled = false
                 }).catch(error=>{
                     this.disabled = false
+                    if (error.response.status === 401) {
+                        this.$toast.error(error.response.data.message);
+                        this.$router.push({ name: "Login" });
+                    }
                 })
             },
             async SelectedSkills(event) {
@@ -478,6 +498,10 @@
                         this.loader_spin = false
                     }).catch(error=> {
                         this.loader_spin = false
+                        if (error.response.status === 401) {
+                            this.$toast.error(error.response.data.message);
+                            this.$router.push({ name: "Login" });
+                        }
                     });
                 }
                 else if(event.target.value == 2 ) {
@@ -501,6 +525,10 @@
                     this.wait_enable = false
                 }).catch(error=> {
                     this.wait_enable = false
+                    if (error.response.status === 401) {
+                        this.$toast.error(error.response.data.message);
+                        this.$router.push({ name: "Login" });
+                    }
                 });
             },
             async GetSelectedCategoryQuestion(event) {
@@ -510,6 +538,10 @@
                     this.wait_enable = false
                 }).catch(error=> {
                     this.wait_enable = false
+                    if (error.response.status === 401) {
+                        this.$toast.error(error.response.data.message);
+                        this.$router.push({ name: "Login" });
+                    }
                 });
             },
             async DoneModel() {

@@ -3,7 +3,7 @@
         
         <Navigation />
         <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
-            <HeaderTop />
+            <HeaderTop :name="user_name"/>
             <router-view />     
         </div>
     </div>
@@ -13,6 +13,11 @@
     import Navigation from "../components/Navigation.vue";
     import HeaderTop from "../components/Header.vue";
     export default {
+        data(){
+            return {
+                user_name: localStorage.getItem('user_name'),
+            }
+        },
         components: {
             Navigation,
             HeaderTop

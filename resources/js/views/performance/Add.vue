@@ -144,6 +144,10 @@ export default {
             this.disabled = false
          }).catch(error=> {
              this.disabled = false
+            if (error.response.status === 401) {
+               this.$toast.error(error.response.data.message);
+               this.$router.push({ name: "Login" });
+            }
          })
       },
       async getPerformance() {
@@ -190,6 +194,10 @@ export default {
          .catch(error=> {
             this.loader_spin=false
             this.performance_type = []
+            if (error.response.status === 401) {
+               this.$toast.error(error.response.data.message);
+               this.$router.push({ name: "Login" });
+            }
          });
       },
       async addRow(id) {

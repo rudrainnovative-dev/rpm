@@ -64,6 +64,10 @@ export default {
           })
           .catch(error=> {
             this.categories = []
+            if (error.response.status === 401) {
+                this.$toast.error(error.response.data.message);
+                this.$router.push({ name: "Login" });
+            }
           });
         },
         deleteCategory(id) {
@@ -71,6 +75,10 @@ export default {
                 Category.delete(id).then(response => {
                     this.getCategories()
                 }).catch(error=>{
+                if (error.response.status === 401) {
+                    this.$toast.error(error.response.data.message);
+                    this.$router.push({ name: "Login" });
+                }
                   
                 })
             }

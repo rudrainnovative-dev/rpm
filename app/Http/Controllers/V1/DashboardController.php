@@ -49,7 +49,7 @@ class DashboardController extends Controller
 
             $user = User::find(decrypt($user));
             
-            if($request->confirm_password ==  $request->password ){
+            if(!empty($request->password) && !empty($request->confirm_password) && $request->confirm_password ==  $request->password ){
 
                 $user->password = \Hash::make($request->password);
 

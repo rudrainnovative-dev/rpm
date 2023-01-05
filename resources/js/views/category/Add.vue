@@ -46,6 +46,11 @@ export default {
             Category.add(this.category).then(response => {
                 this.$router.push({name:"Category"})
             }).catch(error=> {
+
+                if (error.response.status === 401) {
+                    this.$toast.error(error.response.data.message);
+                    this.$router.push({ name: "Login" });
+                }
             })
         }
     }

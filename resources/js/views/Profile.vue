@@ -125,11 +125,20 @@
                         this.profile.password ='',
                         this.profile.confirm_password ='',
                         this.disabled = false
+                        this.$router.go({name:"Profile"})  
 
                         
                     }).catch(error=>{
 
                         this.disabled = false
+                        if (error.response.status === 422) {
+                            this.errors = error.response.data.errors;
+                        }
+
+                        if (error.response.status === 401) {
+                            this.$toast.error(error.response.data.message);
+                            this.$router.push({ name: "Login" });
+                        }
                     })
                 }
 

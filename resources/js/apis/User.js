@@ -14,7 +14,11 @@ export default {
 
   async logout(access_token) {
     await Csrf.getCookie();
+    localStorage.removeItem("auth");
     localStorage.removeItem("access_token");
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("user_email");
+    localStorage.removeItem("user_id");
     return Api.post("/logout");
   },
 
