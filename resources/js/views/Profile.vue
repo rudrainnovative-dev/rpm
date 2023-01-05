@@ -22,7 +22,7 @@
                     <div class="col-md-4 col-12"></div>
                     <div class=" col-md-4 col-12">
                         <div class="form-group">
-                            <label class="mb-3 fw-bolder fs-5">User Name<span class="text-danger">*</span></label>
+                            <label class="mb-3 fw-bolder fs-5">Name<span class="text-danger">*</span></label>
                             <input type="text" data-validation="required" class="form-control form-control-sm"  placeholder="Enter User Name" v-model="profile.user_name" required/>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                     <div class="col-md-4 col-12"></div>
                     <div class=" col-md-4 col-12">
                         <div class="form-group">
-                            <label class="mb-3 fw-bolder fs-5">User Email</label>
+                            <label class="mb-3 fw-bolder fs-5">Email</label>
                             <input type="email" class="form-control form-control-solid form-control-sm"  placeholder="Enter Email Name" v-model="user_email" :disabled="user_email" />
                         </div>
                     </div>
@@ -125,11 +125,20 @@
                         this.profile.password ='',
                         this.profile.confirm_password ='',
                         this.disabled = false
+                        this.$router.go({name:"Profile"})  
 
                         
                     }).catch(error=>{
 
                         this.disabled = false
+                        if (error.response.status === 422) {
+                            this.errors = error.response.data.errors;
+                        }
+
+                        if (error.response.status === 401) {
+                            this.$toast.error(error.response.data.message);
+                            this.$router.push({ name: "Login" });
+                        }
                     })
                 }
 

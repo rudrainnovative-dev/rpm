@@ -165,6 +165,10 @@ export default {
                 this.loader_spin = false
             }).catch(error=> {
                 this.loader_spin = false
+                if (error.response.status === 401) {
+                    this.$toast.error(error.response.data.message);
+                    this.$router.push({ name: "Login" });
+                }
             })
 
         },
@@ -174,6 +178,10 @@ export default {
           })
           .catch(error=> {
             this.categories = []
+            if (error.response.status === 401) {
+                this.$toast.error(error.response.data.message);
+                this.$router.push({ name: "Login" });
+            }
           });
         }
     }

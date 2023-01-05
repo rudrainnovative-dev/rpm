@@ -205,6 +205,10 @@
             .catch(error=> {
                this.tests = []
                this.loader_spin = false
+               if (error.response.status === 401) {
+               this.$toast.error(error.response.data.message);
+               this.$router.push({ name: "Login" });
+               }
             });
          },
          async addCandidate() {
@@ -302,6 +306,10 @@
             .catch(error=> {
                this.disabled = false
                this.$toast.error(error.data.message)
+               if (error.response.status === 401) {
+                  this.$toast.error(error.response.data.message);
+                  this.$router.push({ name: "Login" });
+               }
             });
          },
          async defaultCheckClick() {

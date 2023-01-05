@@ -50,6 +50,10 @@ export default {
                 this.category.name = name
             }).catch(error=> {
                 console.log(error)
+                if (error.response.status === 401) {
+                    this.$toast.error(error.response.data.message);
+                    this.$router.push({ name: "Login" });
+                }
             })
         },
         async update(){
@@ -57,6 +61,10 @@ export default {
                 this.$router.push({name:"Category"})
             }).catch(error=>{
                 console.log(error)
+                if (error.response.status === 401) {
+                    this.$toast.error(error.response.data.message);
+                    this.$router.push({ name: "Login" });
+                }
             })
         }
     }
