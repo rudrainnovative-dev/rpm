@@ -75,7 +75,7 @@
                     </div>
                     
                     <div class="col-md-4 col-12"></div>
-                    <Header :name="profile.user_name" />
+                    <Header :name="user_name" />
                 </div>
             </form>
         </div>
@@ -95,6 +95,7 @@
 
                 disabled: false,
                 loader_spin: true,
+                user_name:'',
                 profile:{
                     user_name: localStorage.user_name,
                     password:'',
@@ -106,7 +107,7 @@
             }
         },
         mounted() {
-            this.profile.user_name = localStorage.getItem('user_name');
+           this.user_name = localStorage.getItem('user_name');
 
         },
         methods:{
@@ -126,6 +127,7 @@
     
                         
                         localStorage.setItem('user_name',response.data.user_name);
+                        this.user_name =response.data.user_name;
                         this.profile.password ='',
                         this.profile.confirm_password ='',
                         this.disabled = false
