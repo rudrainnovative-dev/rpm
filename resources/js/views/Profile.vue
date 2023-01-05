@@ -75,7 +75,7 @@
                     </div>
                     
                     <div class="col-md-4 col-12"></div>
-                    
+                    <Header :name="profile.user_name" />
                 </div>
             </form>
         </div>
@@ -84,8 +84,12 @@
 
 <script>
     import User from '../apis/User';
+    import Header from '../components/Header.vue'
     export default {
         name:"profile",
+        components:{
+            Header
+        },
         data(){
             return {
 
@@ -102,7 +106,7 @@
             }
         },
         mounted() {
-            
+            this.profile.user_name = localStorage.getItem('user_name');
 
         },
         methods:{
@@ -120,12 +124,13 @@
                     
                     User.profileSave(this.$route.params.id, this.profile).then(response => {  
     
-                        this.$toast.success(response.data.message);
+                        
                         localStorage.setItem('user_name',response.data.user_name);
                         this.profile.password ='',
                         this.profile.confirm_password ='',
                         this.disabled = false
-                        this.$router.go({name:"Profile"})  
+                        this.$toast.success(response.data.message);
+                        // this.$router.push({name:"Profile"})  
 
                         
                     }).catch(error=>{
