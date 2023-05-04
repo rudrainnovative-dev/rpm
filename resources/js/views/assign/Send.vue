@@ -9,7 +9,7 @@
                   <router-link :to='{name:"Dashboard"}' class="text-link small">Dashboard</router-link>
                </li>
                <li class="breadcrumb-item text-muted">
-                  <router-link :to='{name:"AssignList"}' class="text-link small">Assigned Candidates to Test</router-link>
+                  <router-link :to='{name:"AssignList"}' class="text-link small">Assigned Candidates</router-link>
                </li>
                <li class="breadcrumb-item text-muted">
                   <p class="text-muted m-0 small">Share with Candidates</p>

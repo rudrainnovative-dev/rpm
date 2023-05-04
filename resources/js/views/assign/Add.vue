@@ -3,16 +3,16 @@
    <div class="toolbar" id="kt_toolbar">
       <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
          <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title me-3 mb-5 mb-lg-0 lh-1">
-            <h1 class="d-flex align-items-center text-dark fw-bolder m-0 fs-3">Assign Candidate to Test</h1>
+            <h1 class="d-flex align-items-center text-dark fw-bolder m-0 fs-3">Invite New Candidate</h1>
             <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 mt-3">
                <li class="breadcrumb-item text-muted">
                   <router-link :to='{name:"Dashboard"}' class="text-link small fs-6">Dashboard</router-link>
                </li>
                <li class="breadcrumb-item text-muted">
-                  <router-link :to='{name:"AssignList"}' class="text-link small fs-6">Assigned Candidates to Test</router-link>
+                  <router-link :to='{name:"AssignList"}' class="text-link small fs-6">Assigned Candidates</router-link>
                </li>
                <li class="breadcrumb-item text-muted">
-                  <p class="text-muted m-0 small fs-6">Assign Candidate to Test</p>
+                  <p class="text-muted m-0 small fs-6">Invite New Candidate</p>
                </li>
             </ul>
          </div>
@@ -22,6 +22,11 @@
       <div id="kt_content_container" class="container">
          <div class="row">
             <div class="col-md-12 col-12">
+                <div class="d-flex align-items-center justify-content-md-end mb-4">
+                    <router-link :to='{name:"AssignList"}' class="btn btn-sm btn-secondary">Back to List</router-link>
+                </div>
+            </div>
+            <div class="col-md-12 col-12">
                <div class="card card-xl-stretch w-100 mb-xl-8 mb-5">
                   <div class="card-body">
                      <form @submit.prevent="addCandidate">
@@ -29,7 +34,7 @@
                            <div class="col-md-4 col-12">
                               <div class="form-group">
                                  <label class="mb-2 fw-bold">Select Test</label>
-                                 <select class="form-control form-control-solid form-control-sm" v-model="test_id" required>
+                                 <select class="form-control form-control-solid form-control-sm status-filter" v-model="test_id" required>
                                     <option :value="test.id" v-for="test in tests">{{ test.name }}</option>
                                  </select>
                               </div>

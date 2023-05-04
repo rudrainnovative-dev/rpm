@@ -54,7 +54,7 @@
                                           <div class="col-md-4 col-12">
                                              <div class="form-group">
                                                 <label class="w-100 mb-2 fw-bold">Criteria Type<small class="text-danger">*</small></label>
-                                                <select class="form-control form-control-solid form-control-sm" :name="row.criteria" v-model="row.criteria" required>
+                                                <select class="form-control form-control-solid form-control-sm status-filter" :name="row.criteria" v-model="row.criteria" required>
                                                   <option :value="'Section'">Section</option>
                                                   <option :value="'Overall'">Overall</option>
                                                 </select>
@@ -63,7 +63,7 @@
                                           <div class="col-md-4 col-12">
                                              <div class="form-group">
                                                 <label class="w-100 mb-2 fw-bold">Formula Value<small class="text-danger">*</small></label>
-                                                <select class="form-control form-control-solid form-control-sm" :name="row.formula" v-model="row.formula" required>
+                                                <select class="form-control form-control-solid form-control-sm status-filter" :name="row.formula" v-model="row.formula" required>
                                                    <option :value="'>'">Greater Than</option>
                                                    <option :value="'='">Equal Than</option>
                                                    <option :value="'<'">Less Than</option>

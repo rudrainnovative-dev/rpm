@@ -5,13 +5,13 @@
             <div data-kt-place="true" data-kt-place-mode="prepend"
                data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
                class="page-title me-3 mb-5 mb-lg-0 lh-1">
-               <h1 class="d-flex align-items-center text-dark fw-bolder m-0 fs-3">Assigned Candidates to Test</h1>
+               <h1 class="d-flex align-items-center text-dark fw-bolder m-0 fs-3">Assigned Candidates</h1>
                <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 mt-3">
                   <li class="breadcrumb-item text-muted">
                      <router-link :to='{name:"Dashboard"}' class="fs-6 text-link small">Dashboard</router-link>
                   </li>
                   <li class="breadcrumb-item text-muted">
-                     <p class="text-muted m-0 fs-6">Assigned Candidates to Test</p>
+                     <p class="text-muted m-0 fs-6">Assigned Candidates</p>
                   </li>
                </ul>
             </div>
@@ -23,7 +23,7 @@
                <div class="col-md-12 col-12 d-flex">
                   <div class="card card-xl-stretch w-100">
                      <div class="card-header border-0">
-                        <div class="form-group my-3">
+                        <div class="form-group my-3 ">
                            <div class="input-group">
                               <input type="text" placeholder="Search Candidate..."
                                  class="form-control form-control-sm form-control-solid bg-white" v-model="search"
@@ -50,10 +50,10 @@
                               </div>
                            </div>
                         </div>
-                        <div class="form-group my-3">
+                        <div class="form-group my-3 ml-3">
                            <div class="input-group">
                               <select v-model="filter" @change="filterClick"
-                                 class="form-control form-control-sm form-control-solid bg-white">
+                                 class="form-control form-control-sm form-control-solid bg-white status-filter">
                                  <option value="" selected>Select To filter by status</option>
                                  <option value="0">Pending</option>
                                  <option value="1">Completed</option>
@@ -61,8 +61,8 @@
                               </select>
                            </div>
                         </div>
-                        <div class="d-flex align-items-center py-1">
-                           <router-link :to='{name:"AssignAdd"}' class="btn btn-sm btn-primary">Assign Candidate to Test
+                        <div class="d-flex align-items-center py-1 ml-auto">
+                           <router-link :to='{name:"AssignAdd"}' class="btn btn-sm btn-primary">Invite New Candidate
                            </router-link>
                         </div>
                      </div>
@@ -74,7 +74,7 @@
                                  <th class="fw-bolder align-middle">Candidate</th>
                                  <th class="fw-bolder align-middle">Test Name</th>
                                  <th class="fw-bolder align-middle">Status</th>
-                                 <th class="fw-bolder align-middle text-center">Share</th>
+                                 <th class="fw-bolder align-middle text-center">Shared Invite</th>
                                  <th class="fw-bolder align-middle text-center">Action</th>
                               </tr>
                            </thead>
@@ -117,19 +117,19 @@
                                           </router-link>
                                        </li>
                                        <li class="list-inline-item mb-2" title="View Report" v-tooltip="tooltip.report"
-                                       v-if="(assign.test_taker)">
+                                       v-if="(assign.test_taker && assign.status == 1)">
                                        <router-link :to='{name:"ReportShow",params:{id:assign.test_taker.id}}' target="_blank"><button
                                              class="btn btn-sm btn-light-info p-0 text-center h-30px w-30px"
                                              type="button"><i class="p-0 fa fa-eye"></i></button></router-link>
                                        </li>
                                        <li class="list-inline-item mb-2" title="Edit" v-tooltip="tooltip.edit"
-                                          v-if="(assign.status == 0 || assign.status == -1)">
+                                          v-if="(assign.status == 0)">
                                           <router-link :to='{name:"AssignEditOne",params:{id:assign.id}}'><button
                                                 class="btn btn-sm btn-light-warning p-0 text-center h-30px w-30px"
                                                 type="button"><i class="p-0 fa fa-edit"></i></button></router-link>
                                        </li>
                                        <li class="list-inline-item mb-2" title="Delete" v-tooltip="tooltip.delete"
-                                          v-if="assign.status == 0">
+                                          v-if="(assign.status == 0 || assign.status == 1)">
                                           <button class="btn btn-sm btn-light-danger p-0 text-center h-30px w-30px"
                                              type="button" @click="deleteCandidate(assign.id)"><i
                                                 class="p-0 fa fa-trash"></i></button>

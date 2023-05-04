@@ -106,7 +106,7 @@
                   </svg>
                 </span>
               </span>
-              <span class="menu-title text-capitalize">Assigned Candidates to Test</span>
+              <span class="menu-title text-capitalize">Assigned Candidates</span>
             </router-link>
           </div>
         </div>
