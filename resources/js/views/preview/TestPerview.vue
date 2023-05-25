@@ -125,7 +125,7 @@
                         <div class="alert alert-success">
                             <h4 v-if="after_message">{{ after_message }}</h4>
                             <h4 v-else>Thank You!</h4>
-                            <span class="d-block mt-8">You can closed this window.</span>
+                            <span class="d-block mt-8">You can close this window.</span>
                         </div>
                     </div>
                     <Reportdisplay :after_message="after_message" :taker="test.taker_id" v-else/>
@@ -344,6 +344,7 @@
                 }
             },
             async nextSection() {
+
                 if(confirm('Are you sure want to change the section?')) {
                     var key = this.selected_category.key + 1
                     var index = key - 1
@@ -481,6 +482,36 @@
                         e.preventDefault()
                     }
                 }, false)
+
+                if(window.attachEvent) {
+                    if (document.readyState === "complete" || document.readyState === "interactive") {
+                        this.detectDevTool();
+                      window.attachEvent('onresize', this.detectDevTool);
+                      window.attachEvent('onmousemove', this.detectDevTool);
+                      window.attachEvent('onfocus', this.detectDevTool);
+                      window.attachEvent('onblur', this.detectDevTool);
+                    } 
+                    else {
+                        setTimeout(argument.callee, 0);
+                    }
+                } 
+                else {
+                    window.addEventListener('load', this.detectDevTool);
+                    window.addEventListener('resize', this.detectDevTool);
+                    window.addEventListener('mousemove', this.detectDevTool);
+                    window.addEventListener('focus', this.detectDevTool);
+                    window.addEventListener('blur', this.detectDevTool);
+                }
+            },
+            async detectDevTool(allow) {
+                if(isNaN(+allow)) allow = 100;
+                    var start = +new Date();
+                    debugger;
+                    var end = +new Date();
+                if(isNaN(start) || isNaN(end) || end - start > allow) {
+                    alert('DEVTOOLS detected. all operations will be terminated.');
+                  document.write('DEVTOOLS detected and test is marked as completed!');
+                }
             },
             getCurrentBrowser() {
                 var ua=navigator.userAgent,tem,M=ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []

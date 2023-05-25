@@ -22,6 +22,11 @@
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <div id="kt_content_container" class="container">
                 <div class="row">
+                  <div class="col-md-12 col-12">
+                      <div class="d-flex align-items-center justify-content-md-end mb-4">
+                          <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary">Back to List</router-link>
+                      </div>
+                  </div>
                     <div class="col-md-12 col-12 d-flex">
                         <div class="card card-xl-stretch mb-xl-8 w-100">
                             <div class="card-header border-0">
@@ -40,7 +45,7 @@
                                         <div class="col-md-4 col-12">
                                             <div class="form-group">
                                             <label for="ques-category" class="mb-3 fw-bolder fs-5">Purpose of the Test<span class="text-danger">*</span></label>
-                                                <select class="form-control form-control-solid form-control-sm" v-model="test.purpose_id" placeholder="Purpose of test" required>
+                                                <select class="form-control form-control-solid form-control-sm status-filter" v-model="test.purpose_id" placeholder="Purpose of test" required>
                                                     <option v-for="purpose in purposes" :value="purpose.id">{{ purpose.purpose }}</option>
                                                 </select>
                                             </div>

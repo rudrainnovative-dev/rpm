@@ -33,7 +33,7 @@
                                     <div class="col-md-4 col-12">
                                         <div class="form-group">
                                             <label for="ques-category" class="mb-2 fw-bolder fs-5">Question Category<span class="text-danger">*</span></label>
-                                            <select class="form-control form-control-solid form-control-sm" v-model="question.category_id" placeholder="Question Category" disabled required>
+                                            <select class="form-control form-control-solid form-control-sm status-filter" v-model="question.category_id" placeholder="Question Category" disabled required>
                                                 <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
                                             </select>
                                         </div>

@@ -1,5 +1,5 @@
 <template>
-    <div class="post d-flex flex-column-fluid" id="kt_post">
+    <div class="post d-flex flex-column-fluid" id="kt_post" @click.right.prevent @copy.prevent @paste.prevent>
         <div id="kt_content_container" class="container-fluid" ref="screenPrint">
             <div class="row align-items-center position-relative py-2">
                 <div class="col-md-3 col-12">
@@ -170,7 +170,7 @@
                         <div class="alert alert-success">
                             <h4 v-if="after_message">{{ after_message }}</h4>
                             <h4 v-else>Thank You!</h4>
-                            <span class="d-block mt-8">You can closed this window.</span>
+                            <span class="d-block mt-8">You can close this window.</span>
                         </div>
                     </div>
                     <Reportdisplay :after_message="after_message" :taker="test.taker_id" v-else />
@@ -184,6 +184,15 @@
                                 Test</button>
                         </div>
                     </div>
+                </div>
+                <div class="row" v-if="forcetestfinish">
+                    <div class="col-md-12 my-8 text-center" v-if="!report_display">
+                        <div class="alert alert-danger">
+                            <h4>Dev Tools Detected</h4>
+                            <span class="d-block mt-8">Your test has marked as completed. You can close this window.</span>
+                        </div>
+                    </div>
+                    <Reportdisplay :after_message="after_message" :taker="test.taker_id" v-else />
                 </div>
             </div>
             <div class="row my-8" v-else>
@@ -258,6 +267,7 @@
                 fixed_section: false,
                 last_selected_page: 1,
                 finishTestButton: false,
+                forcetestfinish: false,
             }
         },
         methods: {
@@ -560,6 +570,17 @@
                     this.stopWebCam()
                 }
             },
+            async forceFinishTest() {
+                    this.finishTestButton = true;
+                    var globThis = this;
+                    this.updateTestStatus().then(res => {
+                        this.test_screen = false
+                        setTimeout(function () {
+                            globThis.forcetestfinish = true;
+                        }, 100)
+                    })
+                    this.stopWebCam()
+            },
             async updateTestStatus() {
                 this.loader_spin = true;
                 Online.updateStatus(this.test.taker_id, this.test).then(response => {
@@ -580,6 +601,35 @@
                         e.preventDefault()
                     }
                 }, false)
+                if(window.attachEvent) {
+                    if (document.readyState === "complete" || document.readyState === "interactive") {
+                        this.detectDevTool();
+                      window.attachEvent('onresize', this.detectDevTool);
+                      window.attachEvent('onmousemove', this.detectDevTool);
+                      window.attachEvent('onfocus', this.detectDevTool);
+                      window.attachEvent('onblur', this.detectDevTool);
+                    } 
+                    else {
+                        setTimeout(argument.callee, 0);
+                    }
+                } 
+                else {
+                    window.addEventListener('load', this.detectDevTool);
+                    window.addEventListener('resize', this.detectDevTool);
+                    window.addEventListener('mousemove', this.detectDevTool);
+                    window.addEventListener('focus', this.detectDevTool);
+                    window.addEventListener('blur', this.detectDevTool);
+                }
+            },
+            async detectDevTool(allow) {
+                if(isNaN(+allow)) allow = 100;
+                    var start = +new Date();
+                    debugger;
+                    var end = +new Date();
+                if(isNaN(start) || isNaN(end) || end - start > allow) {
+                    alert('DEVTOOLS detected. all operations will be terminated.');
+                    this.forceFinishTest()
+                }
             },
             getCurrentBrowser() {
                 var ua = navigator.userAgent, tem, M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []

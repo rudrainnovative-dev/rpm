@@ -22,6 +22,11 @@
             <div id="kt_content_container" class="container">
                 <form @submit.prevent="update">
                     <div class="row">
+                      <div class="col-md-12 col-12">
+                          <div class="d-flex align-items-center justify-content-md-end mb-4">
+                              <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary">Back to List</router-link>
+                          </div>
+                      </div>
                         <div class="col-md-12 col-12 d-flex mb-5">
                             <div class="card card-xl-stretch mb-xl-1 w-100">
                                 <div class="card-header border-0">
@@ -51,7 +56,7 @@
                                         <div class="col-md-4 col-12">
                                             <div class="form-group">
                                                 <label class="mb-3 fw-bolder fs-5">Purpose of the Test<span class="text-danger">*</span></label>
-                                                <select class="form-control form-control-solid form-control-sm" v-model="test.purpose_id" placeholder="Purpose of test" required>
+                                                <select class="form-control form-control-solid form-control-sm status-filter" v-model="test.purpose_id" placeholder="Purpose of test" required>
                                                     <option v-for="purpose in purposes" :value="purpose.id">{{ purpose.purpose }}</option>
                                                 </select>
                                             </div>
@@ -89,7 +94,7 @@
                                             <div class="col-md-4 col-12">
                                                 <div class="form-group">
                                                     <label class="mb-3 fw-bolder fs-5">Search & Add Skill to the Test<span class="text-danger">*</span></label>
-                                                    <select class="form-control form-control-solid form-control-sm" v-model="selected_skills" v-on:change="SelectedSkills($event)">
+                                                    <select class="form-control form-control-solid form-control-sm status-filter" v-model="selected_skills" v-on:change="SelectedSkills($event)">
                                                         <option :value="1">Select Question From Other Test</option>
                                                         <option :value="2">Select Question From Question Bank</option>
                                                         <option :value="3">Add Question</option>
@@ -209,7 +214,7 @@
                                                             </div>
                                                             <div class="col-md-4 col-12">
                                                                 <div class="form-group">
-                                                                    <select class="form-control form-control-solid form-control-sm" v-model="select_selection">
+                                                                    <select class="form-control form-control-solid form-control-sm status-filter" v-model="select_selection">
                                                                         <option :value="category.id" v-for="category in categories">{{ category.name }}</option>
                                                                     </select>
                                                                 </div>
@@ -285,7 +290,7 @@
                                     </div>
                                     <div class="col-sm-12 px-0" v-if="selected_skills == 2">
                                         <label class="mb-3 fw-bolder fs-5">Select Category</label>
-                                        <select class="form-control form-control-solid form-control-sm" v-model="select_category_question" v-on:change="GetSelectedCategoryQuestion($event)">
+                                        <select class="form-control form-control-solid form-control-sm status-filter" v-model="select_category_question" v-on:change="GetSelectedCategoryQuestion($event)">
                                             <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
                                         </select>
                                     </div>
