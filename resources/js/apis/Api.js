@@ -1,9 +1,6 @@
 import axios from "axios";
-
-let Api = axios.create({
-  // baseURL: "https://rpm.protacto.com/api"
-  // baseURL: "http://192.168.1.30:8000/api"
-   baseURL: "http://127.0.0.1:8000/api"
+let Api = axios.create({  
+   baseURL: process.env.MIX_API_URL
 });
 
 Api.defaults.withCredentials = true;
