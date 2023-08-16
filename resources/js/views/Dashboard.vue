@@ -100,7 +100,7 @@
                       <td class="align-middle">{{ test_taker.name }}</td>
                       <td class="align-middle">{{ test_taker.created_at | formatDate }}</td>
                       <td class="align-middle">{{ test_taker.test_name }}</td>
-                      <td class="align-middle text-center">
+                      <td class="align-middle text-center" v-if="test_taker.status==2">
                         <ul class="list-unstyled list-inline m-0">
                           <li class="list-inline-item">
                             <router-link :to='{name:"ReportShow",params:{id:test_taker.id}}'><button class="btn btn-sm btn-light-dark p-0 text-center h-30px w-30px" type="button" v-tooltip="'Show Report'"><i class="p-0 fa fa-eye"></i></button></router-link>
@@ -110,6 +110,7 @@
                           </li>
                         </ul>
                       </td>
+                      <td v-else class="align-middle text-center">pending</td>
                     </tr>
                   </tbody>
                   <tbody v-else>
