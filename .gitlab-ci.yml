@@ -53,5 +53,5 @@ deploying:
         - sudo rsync -av --progress /mnt/storage/cicdapps/rpm/* /mnt/storage/applications/rpm --exclude .env --exclude .gitlab-ci.yml --exclude .env.gitlab-ci --exclude .git --exclude .gitignore --exclude .gitattributes --exclude node_modules
         - cd /mnt/storage/applications/rpm
         # uncomment below line, if need to recreate and seed data again.
-        - php artisan migrate:fresh --seed
+        #- php artisan migrate:fresh --seed
         - php artisan optimize:clear
