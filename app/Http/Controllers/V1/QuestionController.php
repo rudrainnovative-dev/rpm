@@ -50,7 +50,7 @@ class QuestionController extends Controller
                             }
                         })
                         ->orderBy('id','desc')
-                        ->paginate(5);
+                        ->paginate(15);
             
             return response()->json([
                 'success' => true,
