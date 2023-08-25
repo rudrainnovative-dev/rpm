@@ -9,6 +9,7 @@ use App\Models\Assign;
 use App\Models\Assigncandidate;
 use App\Models\Testtaker;
 use Auth;
+use Log;
 
 class AssignController extends Controller
 {
@@ -53,6 +54,7 @@ class AssignController extends Controller
     public function store(Request $request) {
         
         if(isset($request->lists)) {
+            $requestData = $request->all();
             
             $assign = new Assign;
             $assign->user_id = Auth::id();
@@ -71,7 +73,8 @@ class AssignController extends Controller
             }
 
             foreach($request->lists as $list) {
-                $checkCandidate = Assigncandidate::where('email', $list['email'])->where('test_id', $list['test_id'])->where('status', '0')->first();
+                $checkCandidate = Assigncandidate::where('email', $list['email'])->where('test_id', $list['test_id'])->whereNotIn('status', ['1'])->first();
+               
                 if(empty($checkCandidate)) {
                     $assign_candidate = new Assigncandidate;
                     $assign_candidate->assign_id = $assign->id;
@@ -103,15 +106,23 @@ class AssignController extends Controller
                     $assign_candidate->share = 0;
                     $assign_candidate->user_id = Auth::id();
                     $assign_candidate->save(); 
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Test assigned to candidates successfully.',
+                        'id' => $assign->id,
+                        'actions' => $request->actions
+                    ], 200);
+                }else{
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'This test is already assigned to this user.',
+                        'actions' => "not_saved"
+                    ], 400);
+
                 }
             }
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Test assigned to candidates successfully.',
-                'id' => $assign->id,
-                'actions' => $request->actions
-            ], 200);
+            
         }
 
     }
