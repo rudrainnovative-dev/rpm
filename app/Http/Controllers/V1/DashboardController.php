@@ -10,6 +10,7 @@ use App\Models\Assigncandidate;
 use App\Models\Testtaker;
 use Carbon\Carbon;
 use Auth;
+use Log;
 
 class DashboardController extends Controller
 {
@@ -31,9 +32,11 @@ class DashboardController extends Controller
 
         $completed_test = Testtaker::where('user_id', $user_id)
                             ->orderBy('id', 'desc')
+                            ->where('status','2')
                             ->limit(5)
                             ->get();
 
+        
         return response()->json([
             'success' => true,
             'message' => 'All Question.',

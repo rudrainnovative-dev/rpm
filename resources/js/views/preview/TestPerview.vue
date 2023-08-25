@@ -56,7 +56,7 @@
                             <div class="row" v-for="(q,k) in test.question.data" :key="k">
                                 <div class="col-md-12">
                                     <div class="ques-title bg-secondary px-6 py-5 rounded">
-                                        <h4 class="m-0 text-dark d-flex align-items-center"><strong class="h-40px w-40px rounded-circle bg-dark text-white d-flex align-items-center justify-content-center me-4">{{ test.question.current_page }}</strong> <span v-html="q.question.title"></span></h4>
+                                        <h4 class="m-0 text-dark d-flex align-items-center"><strong class="rounded-circle bg-dark text-white d-flex align-items-center d-inline-block counter-list justify-content-center me-4">{{ test.question.current_page }}</strong> <span v-html="q.question.title"></span></h4>
                                     </div>
                                     <div class="options mt-4">
                                         <ul class="list-unstyled mb-0 mt-md-8 mt-4 ps-lg-7" v-if="q.question.options.length > 0">

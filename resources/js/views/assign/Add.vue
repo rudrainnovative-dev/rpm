@@ -301,20 +301,30 @@
             Assign.add(this.candidates).then(response => {
                this.$toast.success(response.data.message)
                if(response.data.actions == 'save_share') {
+                  console.log('Response from the API1:', response.data)
                   this.$router.push({name:"AssignSend", params: {id:response.data.id}})
                }
                else {
+                
                   this.$router.push({name:"AssignList"})  
                }
+               
                this.disabled = false
             })
             .catch(error=> {
                this.disabled = false
-               this.$toast.error(error.data.message)
+               // this.$toast.error(error.data.message)
+
                if (error.response.status === 401) {
                   this.$toast.error(error.response.data.message);
                   this.$router.push({ name: "Login" });
                }
+               if (error.response.status === 400) {
+                  console.log('Response from the API1:', error.response.data.message)
+                  this.$toast.error(error.response.data.message);
+                  // this.$router.push({ name: "AssignAdd", });
+               }
+
             });
          },
          async defaultCheckClick() {
