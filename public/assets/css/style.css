@@ -38,3 +38,11 @@ body .table-striped tbody tr:nth-of-type(odd) {
 	}
 }
 
+@media only screen and (max-width: 767px) {
+		
+    label.radio.in-properText-st{
+        width:100%;
+        max-width:500px;
+    }
+}
+

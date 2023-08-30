@@ -73,7 +73,7 @@
                                 <div class="col-md-12">
                                     <div class="ques-title bg-secondary px-6 py-5 rounded">
                                         <h4 class="m-0 text-dark d-flex align-items-center"><strong
-                                                class="h-40px w-40px rounded-circle bg-dark text-white d-flex align-items-center justify-content-center me-4">{{
+                                                class="min-h-40px min-w-40px rounded-circle bg-dark text-white d-flex align-items-center justify-content-center me-4">{{
                                                 test.question.current_page }}</strong> <span
                                                 v-html="q.question.title"></span></h4>
                                     </div>
@@ -81,7 +81,7 @@
                                         <ul class="list-unstyled mb-0 mt-md-8 mt-4 ps-lg-7"
                                             v-if="q.question.options.length > 0">
                                             <li class="mb-5" v-for="(option,index) in q.question.options">
-                                                <label class="radio">
+                                                <label class="radio in-properText-st">
                                                     <input type="radio" :name="'option'+q.question_id"
                                                         v-model="selected_answers[q.question_id]" :value="index"
                                                         v-on:change="answerSelected(q.question_id, index, test.id)">
@@ -624,7 +624,7 @@
             async detectDevTool(allow) {
                 if(isNaN(+allow)) allow = 100;
                     var start = +new Date();
-                    debugger;
+                    // debugger;
                     var end = +new Date();
                 if(isNaN(start) || isNaN(end) || end - start > allow) {
                     alert('DEVTOOLS detected. all operations will be terminated.');
