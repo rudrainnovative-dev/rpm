@@ -22,7 +22,7 @@
       <div id="kt_content_container" class="container">
          <div class="row">
             <div class="col-md-12 col-12">
-                <div class="d-flex align-items-center justify-content-md-end mb-4">
+                <div class="d-flex align-items-center justify-content-md-end mb-4 mt-3">
                     <router-link :to='{name:"AssignList"}' class="btn btn-sm btn-secondary">Back to List</router-link>
                 </div>
             </div>
@@ -96,7 +96,7 @@
                         </div>
                      </form>
                   </div>
-               </div>  
+               </div>
             </div>
          </div>
          <div class="row">
@@ -140,7 +140,7 @@
                            </div>
                         </div>
                      </div>
-                  </div>                           
+                  </div>
                </div>
             </div>
             <div class="col-md-12 col-12 text-md-end" v-if="this.candidates.lists.length > 0">
@@ -176,7 +176,7 @@
             default_check: '',
             default_start: '',
             default_end: '',
-            default_resume: false,           
+            default_resume: false,
             candidates: {
                lists: [],
                settings: {
@@ -230,7 +230,7 @@
                if(!this.candidates.lists.some(field => field.email === this.emails)) {
                   this.errors.email = ''
                   var Obj = { email: this.emails, test_id: this.test_id,  start: '', end: '', type: type,resume: false}
-                  this.candidates.lists.push(Obj) 
+                  this.candidates.lists.push(Obj)
                   this.emails = ''
                }
                else {
@@ -281,7 +281,7 @@
                }
             }
             else {
-               
+
                var flags = 0
                this.required_emails = []
                this.candidates.lists.forEach((element, index) => {
@@ -305,10 +305,10 @@
                   this.$router.push({name:"AssignSend", params: {id:response.data.id}})
                }
                else {
-                
-                  this.$router.push({name:"AssignList"})  
+
+                  this.$router.push({name:"AssignList"})
                }
-               
+
                this.disabled = false
             })
             .catch(error=> {
@@ -331,6 +331,6 @@
             this.required_emails = []
          }
       },
-      
+
    }
 </script>

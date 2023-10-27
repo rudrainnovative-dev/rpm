@@ -3,7 +3,7 @@
         <div class="toolbar" id="kt_toolbar">
             <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
                 <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title me-3 mb-5 mb-lg-0 lh-1">
-                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Registration Fields for Candidate</h1>    
+                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Registration Fields for Candidate</h1>
                     <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-3">
                         <li class="breadcrumb-item text-muted">
                             <router-link :to='{name:"Dashboard"}' class="text-link fs-5">Dashboard</router-link>
@@ -22,13 +22,13 @@
             <div id="kt_content_container" class="container">
                 <div class="row">
                     <div class="col-md-12 col-12">
-                        <div class="d-flex align-items-center justify-content-md-end mb-4">
+                        <div class="d-flex align-items-center justify-content-md-end mb-4 mt-3">
                             <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary router-link-active">Back to List</router-link>
                         </div>
                     </div>
                     <div class="col-md-12 col-12 d-flex">
                         <div class="card card-xl-stretch mb-xl-8 w-100">
-                            
+
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-12 col-12">
@@ -86,9 +86,9 @@
 </template>
 
 <script>
-    
+
     import RegistationField from "../../apis/Registation";
-    
+
     export default {
         name:"registation-fields",
         data(){
@@ -116,9 +116,9 @@
             },
             async update(event, key) {
                 this.disabled = true
-                this.registation_fields[key]['_method'] = "patch"                
+                this.registation_fields[key]['_method'] = "patch"
                 RegistationField.update(this.$route.params.id, this.registation_fields[key]).then(response => {
-                    console.log(response) 
+                    console.log(response)
                     this.$toast.success(response.data.message);
                     this.disabled = false
                 }).catch(error=>{
