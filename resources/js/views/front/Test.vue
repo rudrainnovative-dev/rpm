@@ -608,11 +608,11 @@
                       window.attachEvent('onmousemove', this.detectDevTool);
                       window.attachEvent('onfocus', this.detectDevTool);
                       window.attachEvent('onblur', this.detectDevTool);
-                    } 
+                    }
                     else {
                         setTimeout(argument.callee, 0);
                     }
-                } 
+                }
                 else {
                     window.addEventListener('load', this.detectDevTool);
                     window.addEventListener('resize', this.detectDevTool);

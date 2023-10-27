@@ -14,7 +14,7 @@ use Log;
 class AssignController extends Controller
 {
     public function index(Request $request) {
-        
+
         $search = "";
         $filter = "";
 
@@ -25,6 +25,7 @@ class AssignController extends Controller
         if($request->has('filter')) {
             $filter = $request->filter;
         }
+        $this->updateTestExpire();
         $assigned = Assigncandidate::with(['test', 'test_taker'])
                     ->where(function($query) use($search) {
                         if($search) {
@@ -39,7 +40,7 @@ class AssignController extends Controller
                     ->orderBy('id', 'desc')
                     ->where('user_id', Auth::id())
                     ->paginate(10);
-        
+
         return response()->json([
                 'success' => true,
                 'message' => 'Assigned lists.',
@@ -52,10 +53,10 @@ class AssignController extends Controller
     }
 
     public function store(Request $request) {
-        
+
         if(isset($request->lists)) {
             $requestData = $request->all();
-            
+
             $assign = new Assign;
             $assign->user_id = Auth::id();
             $assign->created_at = Date('Y-m-d H:i:s');
@@ -69,12 +70,12 @@ class AssignController extends Controller
 
             if($request->default_check == true) {
                 $start = Date('Y-m-d H:i:s', strtotime($request->settings['start']));
-                $end = Date('Y-m-d H:i:s', strtotime($request->settings['end']));    
+                $end = Date('Y-m-d H:i:s', strtotime($request->settings['end']));
             }
 
             foreach($request->lists as $list) {
                 $checkCandidate = Assigncandidate::where('email', $list['email'])->where('test_id', $list['test_id'])->whereNotIn('status', ['1'])->first();
-               
+
                 if(empty($checkCandidate)) {
                     $assign_candidate = new Assigncandidate;
                     $assign_candidate->assign_id = $assign->id;
@@ -105,7 +106,7 @@ class AssignController extends Controller
                     $assign_candidate->assessment_type = $list['type'];
                     $assign_candidate->share = 0;
                     $assign_candidate->user_id = Auth::id();
-                    $assign_candidate->save(); 
+                    $assign_candidate->save();
                     return response()->json([
                         'success' => true,
                         'message' => 'Test assigned to candidates successfully.',
@@ -122,7 +123,7 @@ class AssignController extends Controller
                 }
             }
 
-            
+
         }
 
     }
@@ -142,26 +143,26 @@ class AssignController extends Controller
         //
     }
 
-    public function update(Request $request) { 
+    public function update(Request $request) {
 
         if(!empty($request->lists) && $request->message) {
             $data['subject'] = 'Online Test';
             $data['lists'] = $request->lists;
-            $data['message'] = $request->message; 
-            
+            $data['message'] = $request->message;
+
             // dd($data);
             $job = (new \App\Jobs\SendEmail($data))
-                ->delay(now()->addSeconds(2)); 
+                ->delay(now()->addSeconds(2));
 
             $this->dispatch($job);
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Mail sent.',
             ], 200);
-            
+
         }else if(isset($request->for) && $request->for == "update_assigned_candidate") {
-            
+
             $mess = Assigncandidate::where('id', $request->id)
             ->update($request->candidate);
             if($mess)
@@ -176,8 +177,8 @@ class AssignController extends Controller
                 ], 400);
         }
     }
-    
-    public function destroy($id) { 
+
+    public function destroy($id) {
         Testtaker::whereRaw("email in (select email from assign_candidates where id = $id)")->delete();
         Assigncandidate::where('id', $id)->where('user_id', Auth::id())->delete();
         return response()->json([
@@ -193,5 +194,13 @@ class AssignController extends Controller
             'message' => 'Candidates list.',
             'assign' => $assign
         ], 200);
+    }
+
+    public function updateTestExpire() {
+        // status 0 is for pending
+        // status -1 is for in-progress
+        // status 1 is for completed
+        // status 2 is for expired
+        return Assigncandidate::where(['user_id'=>Auth::id(),'status'=>-1])->orWhere(['status'=>0])->whereDate('end','<',date('Y-m-d H:i:s'))->update(['status'=>2]);
     }
 }

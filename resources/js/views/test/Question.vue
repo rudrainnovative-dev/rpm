@@ -3,7 +3,7 @@
         <div class="toolbar" id="kt_toolbar">
             <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
                 <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title me-3 mb-5 mb-lg-0 lh-1">
-                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Test Questions</h1>    
+                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Test Questions</h1>
                     <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-3">
                         <li class="breadcrumb-item text-muted">
                             <router-link :to='{name:"Dashboard"}' class="text-link fs-6">Dashboard</router-link>
@@ -21,8 +21,8 @@
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <div id="kt_content_container" class="container">
                 <div class="row">
-                    <div class="col-md-12 col-12 text-right mb-2">
-                        <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary ms-0 mb-2">Back</router-link>
+                    <div class="col-md-12 col-12 text-right mb-2 mt-3">
+                        <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary ms-0 mb-2">Back to List</router-link>
                     </div>
                 </div>
                 <div class="row">
@@ -64,7 +64,7 @@
                                         <div class="d-flex justify-content-end align-items-center flex-wrap">
                                             <pagination :data="test_questions" :limit="2" @pagination-change-page="getTestQuestions"></pagination>
                                         </div>
-                                    </div>  
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-    
+
     import Test from "../../apis/Test";
 
     export default {
