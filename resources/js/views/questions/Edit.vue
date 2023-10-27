@@ -3,7 +3,7 @@
         <div class="toolbar" id="kt_toolbar">
             <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
                 <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title me-3 mb-5 mb-lg-0 lh-1">
-                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Edit Question</h1>                               
+                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Edit Question</h1>
                     <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-3">
                         <li class="breadcrumb-item text-muted">
                             <router-link :to='{name:"Dashboard"}' class="text-link fs-6 ">Dashboard</router-link>
@@ -21,22 +21,22 @@
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <div id="kt_content_container" class="container">
                 <div class="row">
-                    <div class="col-md-12 col-12">
-                        <div class="d-flex align-items-center justify-content-md-end mb-4">
-                            <router-link :to='{name:"Question"}' class="btn btn-sm btn-secondary">Back to List</router-link>
-                        </div>
-                    </div>
                     <div class="col-md-12 col-12 d-flex">
                         <div class="card card-xl-stretch w-100">
                             <div class="card-body">
                                 <form @submit.prevent="update">
                                     <div class="row mb-3">
-                                        <div class="col-md-4 col-12">
+                                        <div class="col-md-4 col-6">
                                             <div class="form-group">
                                                 <label for="ques-category" class="mb-2 fw-bolder fs-5">Question Category<span class="text-danger">*</span></label>
                                                 <select class="form-control form-control-solid form-control-sm status-filter" v-model="question.category_id" placeholder="Question Category" required>
                                                     <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            <div class="d-flex align-items-center justify-content-md-end mb-4">
+                                                <router-link :to='{name:"Question"}' class="btn btn-sm btn-secondary">Back to List</router-link>
                                             </div>
                                         </div>
                                     </div>
@@ -162,9 +162,9 @@ export default {
     methods:{
         async showQuestion() {
             Question.show(this.$route.params.id).then(response => {
-                
+
                 const { category_id, title, correct, marks, answers_justification } = response.data.question
-                const options = response.data.options    
+                const options = response.data.options
 
                 this.question.category_id = category_id
                 this.question.title = title
@@ -190,7 +190,7 @@ export default {
 
         },
         async update(){
-            
+
             if(!this.question.correct) {
                 this.$toast.error('Checked atleast one correct option.');
                 return false

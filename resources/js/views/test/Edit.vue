@@ -3,7 +3,7 @@
         <div class="toolbar" id="kt_toolbar">
             <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
                 <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title me-3 mb-5 mb-lg-0 lh-1">
-                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Edit Test</h1>    
+                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Edit Test</h1>
                     <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-3">
                         <li class="breadcrumb-item text-muted">
                             <router-link :to='{name:"Dashboard"}' class="text-link fs-6">Dashboard</router-link>
@@ -23,7 +23,7 @@
                 <form @submit.prevent="update">
                     <div class="row">
                       <div class="col-md-12 col-12">
-                          <div class="d-flex align-items-center justify-content-md-end mb-4">
+                          <div class="d-flex align-items-center justify-content-md-end mb-3 mt-3">
                               <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary">Back to List</router-link>
                           </div>
                       </div>
@@ -31,7 +31,7 @@
                             <div class="card card-xl-stretch mb-xl-1 w-100">
                                 <div class="card-header border-0">
                                     <h3 class="card-title fw-bolder text-dark m-0">&nbsp;</h3>
-                                   
+
                                         <ul class="list-unstyled list-inline mt-3 mb-0 text-md-end">
                                             <li class="list-inline-item">
                                                 <router-link :to='{name:"TestAdd"}' class="btn btn-primary btn-sm">Create Test</router-link>
@@ -40,11 +40,11 @@
                                                 <router-link :to='{name:"OnlineTestPreview", params:{id:public_id, user:"admin"}}' class="btn btn-dark btn-sm w-100" target="_blank">Preview Test</router-link>
                                             </li>
                                         </ul>
-                                   
+
                                 </div>
 
                                 <div class="separator"></div>
-                              
+
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-4 col-12">
@@ -88,7 +88,7 @@
                         </div>
                         <div class="col-md-12 col-12 d-flex mb-5">
                             <div class="card card-xl-stretch mb-xl-8 w-100">
-                               
+
                                     <div class="card-body">
                                         <div class="row mb-3">
                                             <div class="col-md-4 col-12">
@@ -100,7 +100,7 @@
                                                         <option :value="3">Add Question</option>
                                                     </select>
                                                 </div>
-                                            </div>  
+                                            </div>
 
                                             <div class="col-md-4 col-12"></div>
                                             <div class="col-md-4 col-12"></div>
@@ -253,7 +253,7 @@
                                                 <button type="submit" class="btn btn-primary btn-sm">Submit</button>
                                             </div>
                                         </div>
-                                    </div>  
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -320,7 +320,7 @@
                                                 <tr>
                                                     <td colspan="2" class="align-middle">No Question(s) found.</td>
                                                 </tr>
-                                            </tbody>                                 
+                                            </tbody>
                                         </table>
                                         </div>
                                     </div>
@@ -343,7 +343,7 @@
 </template>
 
 <script>
-    
+
     import Test from "../../apis/Test";
     import Testpurpose from "../../apis/Testpurpose";
     import Question from "../../apis/Question";
@@ -408,7 +408,7 @@
         methods:{
             async getTest() {
                 Test.show(this.$route.params.id).then(response => {
-                    
+
                     const { name, purpose_id,  assessment_type, duration, public_id, start_message, end_message } = response.data.test
 
                     this.public_id = public_id
@@ -418,19 +418,19 @@
                     this.test.end_message = end_message
                     if(assessment_type == 'Timed Assessment') {
                         this.test.assessment_type = 1
-                    } 
+                    }
                     else {
-                        this.test.assessment_type = 2 
+                        this.test.assessment_type = 2
                     }
 
                     this.test.duration = duration
-                   
+
                     const { test_settings, section_settings, order_settings, selected_questions } = response.data
 
                     this.test.test_settings = test_settings
                     this.test.section_settings = section_settings
                     this.test.order_settings = order_settings
-                    
+
                     this.test.selected_question = selected_questions
                     this.DoneModel()
 
@@ -481,7 +481,7 @@
             async update() {
                 this.disabled = true
                 console.log(this.test)
-                Test.update(this.$route.params.id, this.test).then(response => {  
+                Test.update(this.$route.params.id, this.test).then(response => {
                     this.$toast.success(response.data.message);
                     this.$router.push({name:"Test"})
                     this.disabled = false
@@ -557,7 +557,7 @@
                 var ObjSections = {}
 
                 if(this.test.selected_question.length > 0) {
-                    
+
                     ObjQuestion = this.test.selected_question
 
                     this.test.selected_question.forEach(element => {

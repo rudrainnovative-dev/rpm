@@ -21,9 +21,9 @@
                <div class="col-md-12 col-12">
                   <div class="d-flex align-items-center justify-content-md-end mb-4">
                      <div class="badge-custom me-3">
-                        <span class="badge badge-light-primary fw-normal p-3">Currently v{{ version }}</span>
+                        <span class="badge badge-light-primary fw-normal p-3 mt-3">Currently v{{ version }}</span>
                      </div>
-                     <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
+                     <div class="d-flex align-items-center ms-1 ms-lg-3 mt-3" id="kt_header_user_menu_toggle">
                         <div class="dropdown">
                            <button type="button" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-sm btn-primary" :class="(this.performance_history.length == 0)?'disabled':''">See Older Versions<i class="fa fa-angle-down ms-2 p-0"></i></button>
                            <ul aria-labelledby="" role="menu" class="dropdown-menu p-0 w-100 overflow-hidden z-index-1" style="">
@@ -44,7 +44,7 @@
                                  <h5 class="fw-bolder fs-3 text-capitalize">{{ type.name }}</h5>
                               </div>
                               <div class="row" v-for="(rows, index) in performance.data" :key="index" v-if="type.id == index">
-                                 <div class="col-md-12 col-12" v-for="(row, indx) in rows"> 
+                                 <div class="col-md-12 col-12" v-for="(row, indx) in rows">
                                     <div class="'alert'.indx alert-dismissible fade show position-relative p-0" role="'alert'.indx">
                                        <div class="row">
                                           <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-light-dark bg-image-none btn-close bottom-0 end-0 top-unset opacity-100" data-bs-dismiss="'alert'.indx" aria-label="Close" v-if="indx > 0" v-on:click="removeRow(type.id, indx)">
@@ -109,7 +109,7 @@
       <div class="loading" v-if="loader_spin">
          <div class="loader"></div>
      </div>
-   </div>         
+   </div>
 </template>
 
 
@@ -155,7 +155,7 @@ export default {
             this.performance_type = response.data.performance_type
             this.performance_history = response.data.performance_criterias
             this.current_performance = response.data.current_performance
-                        
+
             if(this.current_performance) {
                this.version = this.current_performance.id + '.0'
 
