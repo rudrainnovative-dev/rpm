@@ -23,7 +23,7 @@
         </div>
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <div id="kt_content_container" class="container">
-                <div class="row mt-3">
+                <div class="row mt-5">
                     <div class="col-md-6 col-12 mb-2">
                         <div class="input-group mb-3">
                             <input type="text" :value="share_link" class="form-control form-control-solid form-control-sm" ref="share_link" :readonly="true"/>
