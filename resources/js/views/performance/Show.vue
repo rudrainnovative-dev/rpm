@@ -22,7 +22,7 @@
          <div id="kt_content_container" class="container">
             <div class="row">
                <div class="col-md-12 col-12">
-                  <div class="d-flex align-items-center justify-content-md-end mb-4">
+                  <div class="d-flex align-items-center justify-content-md-end mb-4 mt-7">
                      <div class="badge-custom me-3">
                         <span class="badge badge-light-primary fw-normal p-3">Currently v{{ this.$route.params.id }}.0</span>
                         <span class="small m-0 text-muted" v-if="fromdate !== todate">(from {{ fromdate | formatDate }} to {{ todate | formatDate }})</span>
@@ -38,7 +38,7 @@
                               <h5 class="fw-bolder fs-3 text-capitalize">{{ type.name }}</h5>
                            </div>
                            <div class="row" v-for="(rows, index) in performance.data" :key="index" v-if="type.id == index">
-                              <div class="col-md-12 col-12" v-for="(row, indx) in rows"> 
+                              <div class="col-md-12 col-12" v-for="(row, indx) in rows">
                                  <div class="alert alert-dismissible fade show position-relative p-0" role="alert">
                                     <div class="row">
                                        <p class="h5 text-center my-4" v-if="indx > 0">Or</p>
@@ -92,7 +92,7 @@
       <div class="loading" v-if="loader_spin">
          <div class="loader"></div>
      </div>
-   </div>         
+   </div>
 </template>
 
 <script>
@@ -127,7 +127,7 @@ export default {
             this.todate = this.current_performance.updated_at
             var ObjPerformance = {}
             var ObjRemarks = {}
-            
+
             this.current_performance.options.forEach(element => {
                var Obj = { criteria: element.criteria, formula: element.formula, score: element.score }
                var type_id = element.performance_type_id;

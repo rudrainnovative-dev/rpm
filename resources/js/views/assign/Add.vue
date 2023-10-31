@@ -22,7 +22,7 @@
       <div id="kt_content_container" class="container">
          <div class="row">
             <div class="col-md-12 col-12">
-                <div class="d-flex align-items-center justify-content-md-end mb-4 mt-3">
+                <div class="d-flex align-items-center justify-content-md-end mb-4 mt-7">
                     <router-link :to='{name:"AssignList"}' class="btn btn-sm btn-secondary">Back to List</router-link>
                 </div>
             </div>

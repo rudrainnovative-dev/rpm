@@ -24,7 +24,7 @@
                 <div class="row">
                     <div class="col-md-12 col-12 d-flex">
                         <div class="card card-xl-stretch mb-xl-8 w-100">
-                            <div class="card-header border-0">
+                            <div class="card-header border-0 mt-4">
                                 <h3 class="card-title fw-bolder text-dark m-0">Create New Test</h3>
                                 <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary">Back to List</router-link>
                             </div>

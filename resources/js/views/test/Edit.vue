@@ -23,7 +23,7 @@
                 <form @submit.prevent="update">
                     <div class="row">
                       <div class="col-md-12 col-12">
-                          <div class="d-flex align-items-center justify-content-md-end mb-3 mt-3">
+                          <div class="d-flex align-items-center justify-content-md-end mb-2 mt-5">
                               <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary">Back to List</router-link>
                           </div>
                       </div>

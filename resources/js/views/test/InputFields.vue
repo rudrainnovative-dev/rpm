@@ -20,9 +20,9 @@
         </div>
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <div id="kt_content_container" class="container">
-                <div class="row">
+                <div class="row mt-7">
                     <div class="col-md-12 col-12">
-                        <div class="d-flex align-items-center justify-content-md-end mb-4 mt-3">
+                        <div class="d-flex align-items-center justify-content-md-end mb-4">
                             <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary router-link-active">Back to List</router-link>
                         </div>
                     </div>
