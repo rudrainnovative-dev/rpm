@@ -138,7 +138,7 @@
                                                                     class="p-0 fa fa-eye"></i></button></router-link>
                                                     </li>
                                                     <li class="list-inline-item mb-2" title="Edit" v-tooltip="tooltip.edit"
-                                                        v-if="(assign.status == 0 || assign.status == 2)">
+                                                        v-if="(assign.status == 0 || assign.status != 2)">
                                                         <router-link
                                                             :to='{ name: "AssignEditOne", params: { id: assign.id } }'><button
                                                                 class="btn btn-sm btn-light-warning p-0 text-center h-30px w-30px"

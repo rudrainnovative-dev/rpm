@@ -22,7 +22,7 @@
          <div id="kt_content_container" class="container">
             <div class="row">
               <div class="col-md-12 col-12">
-                  <div class="d-flex align-items-center justify-content-md-end mb-4">
+                  <div class="d-flex align-items-center justify-content-md-end mb-4 mt-4">
                       <router-link :to='{name:"AssignList"}' class="btn btn-sm btn-secondary">Back to List</router-link>
                   </div>
               </div>
@@ -31,13 +31,13 @@
                      <div class="card card-xl-stretch w-100 mb-xl-8 mb-5">
                         <div class="card-body">
                            <h5 class="fw-bolder fs-3 text-capitalize">Candidate Email:</h5>
-                           <div class="alert w-100 m-0 p-0 alert-dismissible fade show" :class="'alert'.index" v-for="(candidate, index) in this.assign.lists" v-if="assign.lists.length > 0">        
+                           <div class="alert w-100 m-0 p-0 alert-dismissible fade show" :class="'alert'.index" v-for="(candidate, index) in this.assign.lists" v-if="assign.lists.length > 0">
                               <div class="card-header border-0 d-flex justify-content-between align-items-center py-5 px-0 position-relative">
                                  <h6 class="text-normal text-dark m-0">{{ candidate.email}}</h6>
                            <!--<a href="javascript:void(0);" class="btn btn-icon btn-sm btn-light-dark bg-image-none btn-close top-50 translate-middle-y opacity-100" data-bs-dismiss="'alert'.index" aria-label="Close" style="right:1.25rem;" v-on:click="removeCandidate(index)">
                               <i class="fa fa-minus"></i>
                            </a>-->
-                        </div>      
+                        </div>
 
                      </div>
 
@@ -52,8 +52,8 @@
                            <button type="submit" class="btn btn-sm btn-primary" :disabled="disabled"><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" v-if="disabled"></span> Send Mail</button>
                         </div>
                      </div>
-                  </div>  
-               </div>  
+                  </div>
+               </div>
             </div>
          </form>
       </div>

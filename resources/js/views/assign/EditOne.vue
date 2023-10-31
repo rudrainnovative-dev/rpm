@@ -22,7 +22,7 @@
       <div id="kt_content_container" class="container">
          <div class="row">
            <div class="col-md-12 col-12">
-               <div class="d-flex align-items-center justify-content-md-end mb-4">
+               <div class="d-flex align-items-center justify-content-md-end mb-4 mt-7">
                    <router-link :to='{name:"AssignList"}' class="btn btn-sm btn-secondary">Back to List</router-link>
                </div>
            </div>
@@ -81,11 +81,11 @@
                         </div>
                      </form>
                   </div>
-               </div>  
+               </div>
             </div>
          </div>
          <div class="row">
-         
+
             <div class="col-md-12 col-12 text-md-end">
                <ul class="list-unstyled list-inline m-0">
                   <li class="list-inline-item">
@@ -120,13 +120,13 @@
             default_check: '',
             start_time: '',
             end_time: '',
-            is_resume: false, 
+            is_resume: false,
             candidate_detail:{
                email: '',
                end: '',
                test_id: '',
                name: '',
-               resume: '',  
+               resume: '',
             },
             errors: {
                email: '',
@@ -175,7 +175,7 @@
                   this.$router.push({ name: "Login" });
                }
             });
-         }, 
+         },
 
          async validationEmail(event) {
             if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(event.target.value)) {
@@ -186,7 +186,7 @@
             }
          },
 
-         async update(action) { 
+         async update(action) {
             this.disabled = true;
             this.candidate_detail.email = this.emails
             this.candidate_detail.start = moment(this.start_time).format('YYYY-MM-DD HH:mm:ss')
@@ -219,6 +219,6 @@
             this.required_emails = []
          }
       },
-      
+
    }
 </script>

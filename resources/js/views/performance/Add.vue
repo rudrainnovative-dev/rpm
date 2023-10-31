@@ -19,7 +19,7 @@
          <div id="kt_content_container" class="container">
             <div class="row">
                <div class="col-md-12 col-12">
-                  <div class="d-flex align-items-center justify-content-md-end mb-4">
+                  <div class="d-flex align-items-center justify-content-md-end mb-4 mt-4">
                      <div class="badge-custom me-3">
                         <span class="badge badge-light-primary fw-normal p-3 mt-3">Currently v{{ version }}</span>
                      </div>

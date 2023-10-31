@@ -3,7 +3,7 @@
         <div class="toolbar" id="kt_toolbar">
             <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
                 <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title me-3 mb-5 mb-lg-0 lh-1">
-                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Test Performance</h1>                               
+                    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Test Performance</h1>
                     <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-3">
                         <li class="breadcrumb-item text-muted">
                             <router-link :to='{name:"Dashboard"}' class="text-link small fs-6">Dashboard</router-link>
@@ -23,7 +23,7 @@
         </div>
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <div id="kt_content_container" class="container">
-                <div class="row">
+                <div class="row mt-5">
                     <div class="col-md-6 col-12 mb-2">
                         <div class="input-group mb-3">
                             <input type="text" :value="share_link" class="form-control form-control-solid form-control-sm" ref="share_link" :readonly="true"/>
@@ -98,13 +98,13 @@
                                                     <label for="section" class="opacity-75 py-0"><small class="fw-bold text-uppercase">Name</small></label>
                                                     <p class="m-0 fw-bolder fs-5">{{ report.name }}</p>
                                                 </div>
-                                            </div>                                                    
+                                            </div>
                                             <div class="col-md-4 col-12">
                                                 <div class="form-group row align-items-center">
                                                     <label for="section" class="opacity-75 py-0"><small class="fw-bold text-uppercase">Email</small></label>
                                                     <p class="m-0 fw-bolder fs-5">{{ report.email }}</p>
                                                 </div>
-                                            </div>                                                      
+                                            </div>
                                             <div class="col-md-4 col-12">
                                                 <div class="form-group row align-items-center">
                                                     <label for="section" class="opacity-75 py-0"><small class="fw-bold text-uppercase">Contact no.</small></label>
@@ -142,7 +142,7 @@
                                                     <img :src="dummy_image" alt="profile" class="img-fluid mw-75" v-else>
                                                 </div>
                                             </div>
-                                        </div>    
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -212,7 +212,7 @@
                                         <div class="row m-0" v-if="avatars.length > 0">
                                             <div class="col-md-12">
                                                 <h6 class="mb-3">Images of Test Taker</h6>
-                                            </div>                                                   
+                                            </div>
                                             <div class="col-md-6 col-12" v-for="avatar in avatars">
                                                 <div class="form-group align-items-center">
                                                     <img :src="avatar.snap" alt="image" class="border border-secondary rounded img-fluid">
@@ -222,7 +222,7 @@
                                         <div class="row mt-4" v-if="screenshots.length > 0">
                                             <div class="col-md-12">
                                                 <h6 class="mb-3">Screenshot of Test Taker</h6>
-                                            </div>                                                   
+                                            </div>
                                             <div class="col-md-6 col-12" v-for="screenshot in screenshots">
                                                 <div class="form-group align-items-center">
                                                     <img :src="screenshot.snap" alt="image" class="border border-secondary rounded img-fluid">
@@ -232,12 +232,12 @@
                                         <div class="row mt-4">
                                             <div class="col-md-12">
                                                 <h6 class="mb-3">{{ report.created_at | formatDate }}</h6>
-                                            </div>                                                   
+                                            </div>
                                             <div class="col-md-12 col-12">
                                                 <p><span class="text-muted">{{ report.created_at | formatTime }}</span> Started the test.</p>
                                                 <p v-if="avatars.length > 0"><span class="text-muted">{{ report.created_at | formatTime }}</span> Candidate gave us right to the following feeds: camera, microphone.</p>
                                                 <p v-for="(time, index) in logs" v-if="Object.keys(logs).length > 0">
-                                                    <span class="text-muted">{{ time | formatTime }}</span> Went to {{ categories[index] }} of the test. 
+                                                    <span class="text-muted">{{ time | formatTime }}</span> Went to {{ categories[index] }} of the test.
                                                 </p>
                                                 <p v-if="report.status === 2"><span class="text-muted">{{ report.updated_at | formatTime }}</span> Finished the test.</p>
                                             </div>
@@ -266,7 +266,7 @@ import {Chart} from 'highcharts-vue'
 export default {
     name:"questions",
     components: {
-        highcharts: Chart 
+        highcharts: Chart
     },
     data() {
         return {
@@ -450,13 +450,13 @@ export default {
             this.loader_spin = true
             Report.show(this.$route.params.id).then(response => {
                 const { taker, performance, categories, sections, correct_sections, avatars, screenshots, logs } = response.data
-            
+
                 this.report = taker
                 this.share_link = window.location.origin+'/share-report?key='+this.report.key
                 var total = this.report.correct_marks*100/this.report.total_marks
-                
+
                 total = Math.ceil(total)
-                
+
                 var label = ''
                 this.performance = performance
                 this.performance.forEach(element => {
@@ -468,9 +468,9 @@ export default {
                 var color = this.colors(label)
                 var Obj = { name: label, data: [total], color: color }
                 this.chartOptions.series.push(Obj)
-                
+
                 for(var i = 1; i <= Object.keys(categories).length; i++) {
-                    
+
                     let marks_total = 0
                     let section_label = 'Very Low'
 

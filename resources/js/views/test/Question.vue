@@ -21,7 +21,7 @@
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <div id="kt_content_container" class="container">
                 <div class="row">
-                    <div class="col-md-12 col-12 text-right mb-2 mt-3">
+                    <div class="col-md-12 col-12 text-right mb-2 mt-7">
                         <router-link :to='{name:"Test"}' class="btn btn-sm btn-secondary ms-0 mb-2">Back to List</router-link>
                     </div>
                 </div>

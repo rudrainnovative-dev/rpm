@@ -41,7 +41,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-8 col-6">
-                                            <div class="d-flex align-items-center justify-content-md-end mb-4">
+                                            <div class="d-flex align-items-center justify-content-md-end mb-3">
                                                 <router-link :to='{ name: "Question" }'
                                                     class="btn btn-sm btn-secondary">Back to
                                                     List</router-link>
